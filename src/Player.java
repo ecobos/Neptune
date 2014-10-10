@@ -33,13 +33,13 @@ public class Player extends JPanel implements ActionListener {
     }
 
     public static void main(String args[]) {
-        new Player().make();
+        new Player().run();
     }
 
-    public void make() {
+    public void run() {
         JFrame frame = new JFrame("nexTunes");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setJMenuBar(new TheMenu().get());
+        frame.setJMenuBar(new TheMenu().getMenu());
         frame.setMinimumSize(new Dimension(1050, 300));
 
         frame.add(mMainPanel);

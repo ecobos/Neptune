@@ -17,7 +17,7 @@ public class TheMenu {
         mMenuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
-        JMenu subMenu = new JMenu("Options");
+        JMenu subMenu = new JMenu("About");
 
         JMenuItem addSong = new JMenuItem("Add song to library");
         addSong.addActionListener(new AddSongActionListener());
@@ -32,7 +32,7 @@ public class TheMenu {
         mMenuBar.add(subMenu);
     }
 
-    public JMenuBar get() {
+    public JMenuBar getMenu() {
         return mMenuBar;
     }
 
