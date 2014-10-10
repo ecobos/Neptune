@@ -22,7 +22,8 @@ public class Player extends JPanel implements ActionListener {
     private JPanel mMainPanel, mTablePanel;
     private GridBagConstraints mBounds;
     private Library mSongs;
-    private JButton mAddButton, mPlayButton, mPauseButton, mPrevButton, mStopButton, mNextButton;
+    private PlayerButton mAddButton, mPlayButton, mPauseButton, mPrevButton, mStopButton, mNextButton;
+
 
     public Player() {
         mMainPanel = new JPanel();
@@ -30,13 +31,7 @@ public class Player extends JPanel implements ActionListener {
         mBounds = new GridBagConstraints();
         createButtons();
         createSongsTable();
-    }
-
-    public static void main(String args[]) {
-        new Player().run();
-    }
-
-    public void run() {
+        
         JFrame frame = new JFrame("nexTunes");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setJMenuBar(new TheMenu().getMenu());
@@ -47,36 +42,27 @@ public class Player extends JPanel implements ActionListener {
         frame.setVisible(true);
     }
 
-    private void createButtons() {
-        Icon playIcon = new ImageIcon(this.getClass().getResource("/resources/play.png"));
-        mPlayButton = new JButton(playIcon);
-        mPlayButton.setPreferredSize(new Dimension(95, 95));
+    public static void main(String args[]) {
+        new Player();
+    }
 
-        Icon prevIcon = new ImageIcon(this.getClass().getResource("/resources/prev.png"));
-        mPrevButton = new JButton(prevIcon);
-        mPrevButton.setPreferredSize(new Dimension(80, 80));
-
-        Icon pauseIcon = new ImageIcon(this.getClass().getResource("/resources/pause.png"));
-        mPauseButton = new JButton(pauseIcon);
-        mPauseButton.setPreferredSize(new Dimension(80, 80));
-        mPauseButton.createToolTip().setTipText("add a song");
-
-        Icon stopIcon = new ImageIcon(this.getClass().getResource("/resources/stop.png"));
-        mStopButton = new JButton(stopIcon);
-        mStopButton.setPreferredSize(new Dimension(80, 80));
-
-        Icon nextIcon = new ImageIcon(this.getClass().getResource("/resources/next.png"));
-        mNextButton = new JButton(nextIcon);
-        mNextButton.setPreferredSize(new Dimension(80, 80));
+    private void createButtons() {    
+        mPlayButton = new PlayerButton(95, 95, "/resources/play.png");
+        mPlayButton.addActionListener(this);
+        mPrevButton = new PlayerButton(80, 80, "/resources/prev.png");
+        mPrevButton.addActionListener(this);
+        mPauseButton = new PlayerButton(80, 80, "/resources/pause.png");
+        mPauseButton.addActionListener(this);
+        mStopButton = new PlayerButton(80, 80, "/resources/stop.png");
+        mStopButton.addActionListener(this);
+        mNextButton = new PlayerButton(80, 80, "/resources/next.png");
+        mNextButton.addActionListener(this);
+        mAddButton = new PlayerButton(80, 80, "/resources/add.png");
+        mAddButton.addActionListener(this);
 
         JTextArea textArea = new JTextArea(10, 25);
         textArea.setText("Current song Playing:\nShakira\nBrazil\nWorldCup\n2014");
         textArea.setEditable(false);
-
-        Icon addIcon = new ImageIcon(this.getClass().getResource("/resources/add.png"));
-        mAddButton = new JButton(addIcon);
-        mAddButton.setPreferredSize(new Dimension(80, 80));
-        mAddButton.addActionListener(this);
 
         mBounds.fill = GridBagConstraints.HORIZONTAL;
         mBounds.gridwidth = 1;
