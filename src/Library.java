@@ -200,7 +200,7 @@ public class Library {
             System.out.println("Error reading mp3 file");
         }
         if (mp3data != null){
-        ID3v1 id3v1Tags = mp3data.getId3v1Tag();
+            ID3v1 id3v1Tags = mp3data.getId3v1Tag();
             mSongData[0] = pathToFile;
             mSongData[1] = id3v1Tags.getTitle();
             mSongData[2] = id3v1Tags.getArtist();
