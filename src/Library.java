@@ -31,7 +31,7 @@ public class Library {
     public Library() {
         mSongs = new String[30][mAttributesLength]; // 30 will be replaced by songs count... that can be 
         // done with a query getting song count from library 
-
+        mSongData = new String[8];
         getSongs();
     }
 
@@ -83,6 +83,8 @@ public class Library {
                 mSongs[0][i] = ATTRIBUTES[i];
             }
 
+            //String headers[] = 
+            
             int ii = 0; // counter to traverse trough 2D array
             while (rs.next()) {
                 //int songCount = 1; // this will be the query that will get us the amount of row in the DB
@@ -96,7 +98,8 @@ public class Library {
                 String comment = rs.getString("comment");
                 String genre = rs.getString("genre");
                 String track_num = rs.getString("track_num");
-
+                
+                
                     //System.out.println(filepath + " " +  title + " " + artist + " " + album + " " + year +
                 //        " " + comment + " " + genre + " " + track_num);
                 for (int j = 0; j < mAttributesLength; j++) {
@@ -129,19 +132,21 @@ public class Library {
           //"2016", "Just inserted", "5", "20");
     }
 
-    private void insertSong(String filepath, String title, String artist, String album,
-            String year, String comment, String genre, String track_num) {
+    
+    
+    public void addSongToLibrary(String filepath) {
         connectDB(); // We should probably include this in the constructor to avoid calling it everytime we need to update database
+        getSongTags(filepath);
         try {
             PreparedStatement pstat = conn.prepareStatement("INSERT INTO Songs(filepath, title, artist, album, year, comment, genre, track_num) VALUES(?,?,?,?,?,?,?,?)");
-            pstat.setString(1, filepath); // sets first ? to the value of filepath
-            pstat.setString(2, title); // sets second ? to value of title and so on... 
-            pstat.setString(3, artist);
-            pstat.setString(4, album);
-            pstat.setString(5, year);
-            pstat.setString(6, comment);
-            pstat.setString(7, genre);
-            pstat.setString(8, track_num);
+            pstat.setString(1, mSongData[0]); // value of filepath
+            pstat.setString(2, mSongData[1]); // value of title
+            pstat.setString(3, mSongData[2]); // value of artist
+            pstat.setString(4, mSongData[3]); // value of album
+            pstat.setString(5, mSongData[4]); // value year
+            pstat.setString(6, mSongData[5]); // value of comment
+            pstat.setString(7, mSongData[6]); // value genre
+            pstat.setString(8, mSongData[7]); // value of track_num
             pstat.executeUpdate();
             this.getSongs();
         } catch (SQLException e) {
@@ -182,7 +187,7 @@ public class Library {
         return panel;
     }
     
-    public void addSongToLibrary(String pathToFile){
+    private void getSongTags(String pathToFile){
         Mp3File mp3data = null;
         try{
             mp3data = new Mp3File(pathToFile);
@@ -196,15 +201,24 @@ public class Library {
         }
         if (mp3data != null){
         ID3v1 id3v1Tags = mp3data.getId3v1Tag();
-        insertSong(pathToFile, id3v1Tags.getTitle(), id3v1Tags.getArtist(), 
-                id3v1Tags.getAlbum(), id3v1Tags.getYear(), id3v1Tags.getComment(), 
-                id3v1Tags.getGenreDescription(), id3v1Tags.getTrack());
+            mSongData[0] = pathToFile;
+            mSongData[1] = id3v1Tags.getTitle();
+            mSongData[2] = id3v1Tags.getArtist();
+            mSongData[3] = id3v1Tags.getAlbum();
+            mSongData[4] = id3v1Tags.getYear();
+            mSongData[5] = id3v1Tags.getComment();
+            mSongData[6] = id3v1Tags.getGenreDescription();
+            mSongData[7] = id3v1Tags.getTrack();
+        //insertSong(pathToFile, id3v1Tags.getTitle(), id3v1Tags.getArtist(), 
+          //      id3v1Tags.getAlbum(), id3v1Tags.getYear(), id3v1Tags.getComment(), 
+           //     id3v1Tags.getGenreDescription(), id3v1Tags.getTrack());
         //System.out.println("The id3v1 artist tag is " + mp3data.getId3v1Tag().getArtist());
         }
     }
 
     // Data members
-    private static final String[] ATTRIBUTES = {"Filepath", "Title", "Artist", "Album",
+    private String[] mSongData;
+    private String[] ATTRIBUTES = {"Filepath", "Title", "Artist", "Album",
         "Album Year", "Track #", "Genre", "Comments"};
     private final int mAttributesLength = ATTRIBUTES.length;
     private final String[][] mSongs;
