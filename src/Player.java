@@ -42,9 +42,9 @@ public class Player extends JPanel implements ActionListener {
         frame.setVisible(true);
     }
 
-    public static void main(String args[]) {
-        new Player();
-    }
+//    public static void main(String args[]) {
+//        new Player();
+//    }
 
     private void createButtons() {    
         mPlayButton = new PlayerButton(95, 95, "/resources/play.png");

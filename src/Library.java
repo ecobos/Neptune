@@ -8,6 +8,7 @@ import java.io.IOException;
 //import java.sql.DriverManager;
 //import java.sql.SQLException;
 import java.sql.*;
+import static java.sql.Types.NULL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -29,7 +30,7 @@ host: mysql.karldotson.com
 public class Library {
 
     public Library() {
-        mSongs = new String[30][mAttributesLength]; // 30 will be replaced by songs count... that can be 
+        mSongs = new String[30][mColumnHeaderLength]; // 30 will be replaced by songs count... that can be 
         // done with a query getting song count from library 
         mSongData = new String[8];
         getSongs();
@@ -79,30 +80,30 @@ public class Library {
             //int songCount = rs.getInt(1);
 
             // populate column data 
-            for (int i = 0; i < mAttributesLength; i++) {
-                mSongs[0][i] = ATTRIBUTES[i];
+            for (int column = 0; column < mColumnHeaderLength; column++) {
+                mSongs[0][column] = COLUMN_HEADER[column];
             }
 
             //String headers[] = 
             
-            int ii = 0; // counter to traverse trough 2D array
+            int row = 0; // counter to traverse trough 2D array
             while (rs.next()) {
                 //int songCount = 1; // this will be the query that will get us the amount of row in the DB
 
                 //for (int i = 0; i < songCount; i++) {
-                String filepath = rs.getString("filepath");
-                String title = rs.getString("title");
-                String artist = rs.getString("artist");
-                String album = rs.getString("album");
-                String year = rs.getString("year");
-                String comment = rs.getString("comment");
-                String genre = rs.getString("genre");
-                String track_num = rs.getString("track_num");
+                mSongs[row][0] = rs.getString("filepath");
+                mSongs[row][1] = rs.getString("title");
+                mSongs[row][2] = rs.getString("artist");
+                mSongs[row][3] = checkForEmptyString(rs.getString("album"));
+                mSongs[row][4] = checkForEmptyString(rs.getString("year"));
+                mSongs[row][5] = checkForEmptyString(rs.getString("comment"));
+                mSongs[row][6] = checkForEmptyString(rs.getString("genre"));
+                mSongs[row][7] = checkForEmptyString(rs.getString("track_num"));
                 
                 
                     //System.out.println(filepath + " " +  title + " " + artist + " " + album + " " + year +
                 //        " " + comment + " " + genre + " " + track_num);
-                for (int j = 0; j < mAttributesLength; j++) {
+                /*for (int j = 0; j < mAttributesLength; j++) {
                     mSongs[ii][0] = filepath;
                     mSongs[ii][1] = title;
                     mSongs[ii][2] = artist;
@@ -111,8 +112,8 @@ public class Library {
                     mSongs[ii][5] = track_num;
                     mSongs[ii][6] = genre;
                     mSongs[ii][7] = comment;
-                }
-                ii++;
+                } */
+                row++;
                 //}
             }
         } 
@@ -132,7 +133,12 @@ public class Library {
           //"2016", "Just inserted", "5", "20");
     }
 
-    
+    private String checkForEmptyString(String stringToCheck){
+        if(stringToCheck.isEmpty()){
+            return "Unkown";
+        }
+        return stringToCheck;
+    }
     
     public void addSongToLibrary(String filepath) {
         connectDB(); // We should probably include this in the constructor to avoid calling it everytime we need to update database
@@ -178,7 +184,7 @@ public class Library {
      * Create GUI for table
      */
     public JPanel createTable() {
-        mSongsTable = new JTable(mSongs, ATTRIBUTES);
+        mSongsTable = new JTable(mSongs, COLUMN_HEADER);
         mSongsTable.setPreferredScrollableViewportSize(new Dimension(1000, 100));
         mSongsTable.setFillsViewportHeight(true);
         mScrollPane = new JScrollPane(mSongsTable);
@@ -201,6 +207,7 @@ public class Library {
         }
         if (mp3data != null){
             ID3v1 id3v1Tags = mp3data.getId3v1Tag();
+            
             mSongData[0] = pathToFile;
             mSongData[1] = id3v1Tags.getTitle();
             mSongData[2] = id3v1Tags.getArtist();
@@ -218,9 +225,9 @@ public class Library {
 
     // Data members
     private String[] mSongData;
-    private String[] ATTRIBUTES = {"Filepath", "Title", "Artist", "Album",
+    private static final String[] COLUMN_HEADER = {"Filepath", "Title", "Artist", "Album",
         "Album Year", "Track #", "Genre", "Comments"};
-    private final int mAttributesLength = ATTRIBUTES.length;
+    private final int mColumnHeaderLength = COLUMN_HEADER.length;
     private final String[][] mSongs;
     private JTable mSongsTable;
     private JScrollPane mScrollPane;
