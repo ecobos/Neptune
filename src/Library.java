@@ -210,6 +210,18 @@ public class Library implements MouseListener{
         mSongsTable.addMouseListener((MouseListener) this);
         mScrollPane = new JScrollPane(mSongsTable);
         JPanel panel = new JPanel();
+        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1500, (mSongs.length + 10) * 10));
+        mSongsTable.setFillsViewportHeight(true);
+        mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(400);
+        mSongsTable.getColumnModel().getColumn(1).setPreferredWidth(200);
+        mSongsTable.getColumnModel().getColumn(2).setPreferredWidth(200);
+        mSongsTable.getColumnModel().getColumn(3).setPreferredWidth(200);
+        mSongsTable.getColumnModel().getColumn(4).setPreferredWidth(100);
+        mSongsTable.getColumnModel().getColumn(5).setPreferredWidth(100);
+        mSongsTable.getColumnModel().getColumn(6).setPreferredWidth(100);
+        mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(200);
+        mScrollPane = new JScrollPane(mSongsTable);
         panel.add(mScrollPane);
         return panel;
     }
