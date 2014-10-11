@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -36,17 +37,18 @@ public class MusicPlayer extends JPanel implements ActionListener {
     private GridBagConstraints mBounds;
     private Library mSongs;
     private PlayerButton mAddButton, mPlayButton, mPauseButton, mPrevButton, mStopButton, mNextButton;
-    private Player player;
+    private Player mPlayer;
+    private JTextArea mTextArea;
     
     public MusicPlayer() {
         mMainPanel = new JPanel();
         mMainPanel.setLayout(new GridBagLayout());
         mBounds = new GridBagConstraints();
-        player = new Player();
+        mPlayer = new Player();
         createButtons();
         createSongsTable();
 
-        JFrame frame = new JFrame("nexTunes");
+        JFrame frame = new JFrame("Neptune");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setJMenuBar(new TheMenu().getMenu());
         frame.setMinimumSize(new Dimension(1050, 300));
@@ -74,9 +76,10 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mAddButton = new PlayerButton(80, 80, "/resources/add.png");
         mAddButton.addActionListener(this);
 
-        JTextArea textArea = new JTextArea(10, 25);
-        textArea.setText("Current song Playing:\nShakira\nBrazil\nWorldCup\n2014");
-        textArea.setEditable(false);
+        mTextArea = new JTextArea(10, 35);
+        mTextArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        mTextArea.setForeground(Color.ORANGE);
+        mTextArea.setEditable(false);
 
         mBounds.fill = GridBagConstraints.HORIZONTAL;
         mBounds.gridwidth = 1;
@@ -99,9 +102,9 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mMainPanel.add(mNextButton, mBounds);
         mBounds.gridx = 5;
         mBounds.gridy = 0;
-        mBounds.insets = new Insets(10, 40, 10, 0);;
-        mMainPanel.add(textArea, mBounds);
-        mBounds.insets = new Insets(0, 100, 90, 0);;
+        mBounds.insets = new Insets(10, 40, 10, 0);
+        mMainPanel.add(mTextArea, mBounds);
+        mBounds.insets = new Insets(0, 100, 90, 0);
         mBounds.gridx = 6;
         mBounds.gridy = 0;
         mBounds.ipady = 0;
@@ -123,18 +126,27 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mMainPanel.setBackground(Color.DARK_GRAY);
     }
     
+    private void playSong(String [] songToPlay){
+        mPlayer.setSourceLocation(songToPlay[0]);
+        mTextArea.setText("\n\n Current song playing:\n\tArtist: " + songToPlay[1] 
+                        + "\n\tSong: "+ songToPlay[2] + "\n\tAlbum: " 
+                        + songToPlay[3]);
+        mPlayer.play();
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
-        JFileChooser fc = new JFileChooser();
+        
 
         //String filepath = "C:\\Users\\Kelby\\Desktop\\song.mp3";
-        String filepath = "/Users/ecobos/Music/iTunes/iTunes Music/A Day To Remember/Homesick/08 Homesick.mp3";
+        //String filepath = "/Users/ecobos/Music/iTunes/iTunes Music/A Day To Remember/Homesick/08 Homesick.mp3";
         //FileInputStream songFile = new FileInputStream("C:\\Users\\Kelby\\Desktop\\song.mp3");
-        player.setSourceLocation(filepath);
+        //player.setSourceLocation(filepath);
         
         
         //Handle open button action.
         if (e.getSource() == mAddButton) {
+            JFileChooser fc = new JFileChooser();
             int returnVal = fc.showOpenDialog(MusicPlayer.this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -156,33 +168,24 @@ public class MusicPlayer extends JPanel implements ActionListener {
                 
                 //FileInputStream songFile = new FileInputStream("C:\\Users\\Kelby\\Desktop\\song.mp3");
                 //Player p = new Player(songFile);
-                player.play();
+                playSong(mSongs.getCurrentSongSelected());
+               
                 
             } catch (Exception exc) {
                 exc.printStackTrace();
                 System.out.println("Unable to play song");
             }
             // debugging 
+        } else if (e.getSource() == mStopButton) {
+            mPlayer.stop();
+        } else if (e.getSource() == mPauseButton) {
+            mPlayer.pause();
+        } else if(e.getSource() == mNextButton) {
+            playSong(mSongs.getNextSong());
         }
-        
-        else if (e.getSource() == mStopButton) {
-            player.stop();
+        else if (e.getSource() == mPrevButton){
+            playSong(mSongs.getPrevSong());
         }
-        
-        else if (e.getSource() == mPauseButton) {
-            player.pause();
-        }
-//        else if (e.getSource() == saveButton) {
-//            int returnVal = fc.showSaveDialog(SwingFileChooserDemo.this);
-//            if (returnVal == JFileChooser.APPROVE_OPTION) {
-//                File file = fc.getSelectedFile();
-//                //This is where a real application would save the file.
-//                log.append("Saving: " + file.getName() + "." + newline);
-//            } else {
-//                log.append("Save command cancelled by user." + newline);
-//            }
-//            log.setCaretPosition(log.getDocument().getLength());
-//        }
     }
 
 }
