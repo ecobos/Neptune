@@ -76,7 +76,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mAddButton = new PlayerButton(80, 80, "/resources/add.png");
         mAddButton.addActionListener(this);
 
-        mTextArea = new JTextArea(10, 35);
+        mTextArea = new JTextArea(10, 45);
         mTextArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         mTextArea.setForeground(Color.ORANGE);
         mTextArea.setEditable(false);

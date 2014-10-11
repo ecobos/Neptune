@@ -205,12 +205,12 @@ public class Library implements MouseListener{
      */
     public JPanel createTable() {
         mSongsTable = new JTable(mSongs, COLUMN_HEADER);
-        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1000, 100));
+        //mSongsTable.setPreferredScrollableViewportSize(new Dimension(1000, 100));
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.addMouseListener((MouseListener) this);
         mScrollPane = new JScrollPane(mSongsTable);
         JPanel panel = new JPanel();
-        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1500, (mSongs.length + 10) * 10));
+        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongs.length +10) *10));
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(400);
