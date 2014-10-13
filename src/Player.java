@@ -118,7 +118,7 @@ public class Player extends JPanel implements ActionListener {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
-                mSongs.addSongToLibrary(file.getAbsolutePath());
+                mSongs.addSongToDatabase(file.getAbsolutePath());
                
                 //System.out.println("Opening: " + file.getAbsolutePath() + ".\n");
             } else {

@@ -30,10 +30,8 @@ host: mysql.karldotson.com
 public class Library implements MouseListener{
 
     public Library() {
-        mSongs = new String[getSongCount()][mColumnHeaderLength]; // 30 will be replaced by songs count... that can be 
-        // done with a query getting song count from library 
-        mSongTags = new String[8];
-        getSongs();
+        mSongs = new String[getSongCount()][mColumnHeaderLength]; 
+        getSongsFromDatabase();
     }
 
     /**
@@ -59,50 +57,44 @@ public class Library implements MouseListener{
 
     private int getSongCount() {
         connectDB();
-        int count = 0;
+        
         try {
             Statement stat = conn.createStatement();
 
             // get song count from database
             ResultSet countRS = stat.executeQuery("SELECT COUNT(*) AS total FROM Songs");
             countRS.next(); // moves pointer to first element
-            count = countRS.getInt("total");
+            mSongCount = countRS.getInt("total");
             //System.out.println(songCount + " songs in library");
+            conn.close();
         }
         catch(SQLException e) {
             e.printStackTrace();
         }
-        mSongCount = count; //needs review
-        return count;
+        
+        return mSongCount;
     }
     /**
      * Gets the songs from library needed to populate table connect to DB and
      * retrieve songs, songs 2-D array will get populated here
      */
-    private void getSongs() {
+    private void getSongsFromDatabase() {
         connectDB(); // connects to DB
 
         try {
             Statement stat = conn.createStatement();
-
-            // get song count from database
-//            ResultSet countRS = stat.executeQuery("SELECT COUNT(*) AS total FROM Songs");
-//            countRS.next(); // moves pointer to first element
-//            songCount = countRS.getInt("total");
-//            System.out.println(songCount + " songs in library");
-//
             String query = "SELECT * FROM Songs";
             ResultSet rs = stat.executeQuery(query);
-            //ResultSetMetaData metaData = rs.getMetaData();
-            ///rs.next();
-            //int songCount = rs.getInt(1);
 
-            // populate column data 
+            // Copy data from COLUMN_HEADER into the Songs array
+            System.arraycopy(COLUMN_HEADER, 0, mSongs[0], 0, mColumnHeaderLength); 
+            
+            /*
+            ^^^ the above does the same as below but the above is optimized ^^^
             for (int column = 0; column < mColumnHeaderLength; column++) {
                 mSongs[0][column] = COLUMN_HEADER[column];
             }
-
-            //String headers[] = 
+            */
             
             int row = 0; // counter to traverse trough 2D array
             while (rs.next()) {
@@ -159,21 +151,21 @@ public class Library implements MouseListener{
         return stringToCheck;
     }
     
-    public void addSongToLibrary(String filepath) {
+    public void addSongToDatabase(String filepath) {
         connectDB(); // We should probably include this in the constructor to avoid calling it everytime we need to update database
-        getSongTags(filepath);
+        String[] songTags = getSongTags(filepath);
         try {
             PreparedStatement pstat = conn.prepareStatement("INSERT INTO Songs(filepath, title, artist, album, year, comment, genre, track_num) VALUES(?,?,?,?,?,?,?,?)");
-            pstat.setString(1, mSongTags[0]); // value of filepath
-            pstat.setString(2, mSongTags[1]); // value of title
-            pstat.setString(3, mSongTags[2]); // value of artist
-            pstat.setString(4, mSongTags[3]); // value of album
-            pstat.setString(5, mSongTags[4]); // value year
-            pstat.setString(6, mSongTags[5]); // value of comment
-            pstat.setString(7, mSongTags[6]); // value genre
-            pstat.setString(8, mSongTags[7]); // value of track_num
+            pstat.setString(1, songTags[0]); // value of filepath
+            pstat.setString(2, songTags[1]); // value of title
+            pstat.setString(3, songTags[2]); // value of artist
+            pstat.setString(4, songTags[3]); // value of album
+            pstat.setString(5, songTags[4]); // value year
+            pstat.setString(6, songTags[5]); // value of comment
+            pstat.setString(7, songTags[6]); // value genre
+            pstat.setString(8, songTags[7]); // value of track_num
             pstat.executeUpdate();
-            this.getSongs();
+            this.getSongsFromDatabase(); //update the JTable after a song insert is made
         } catch (SQLException e) {
             System.out.println("Unable to insert song. Song may already exist");
             e.printStackTrace();
@@ -225,8 +217,9 @@ public class Library implements MouseListener{
         return panel;
     }
     
-    private void getSongTags(String pathToFile){
+    private String[] getSongTags(String pathToFile){
         Mp3File mp3data = null;
+        String[] songTags = new String[8];
         try{
             mp3data = new Mp3File(pathToFile);
         } catch (UnsupportedTagException ex) {
@@ -237,65 +230,63 @@ public class Library implements MouseListener{
         catch(IOException ioe){
             System.out.println("Error reading mp3 file");
         }
+        
         if (mp3data != null){
             ID3v1 id3v1Tags = mp3data.getId3v1Tag();
             
-            mSongTags[0] = pathToFile;
-            mSongTags[1] = id3v1Tags.getTitle();
-            mSongTags[2] = id3v1Tags.getArtist();
-            mSongTags[3] = id3v1Tags.getAlbum();
-            mSongTags[4] = id3v1Tags.getYear();
-            mSongTags[5] = id3v1Tags.getComment();
-            mSongTags[6] = id3v1Tags.getGenreDescription();
-            mSongTags[7] = id3v1Tags.getTrack();
-        //insertSong(pathToFile, id3v1Tags.getTitle(), id3v1Tags.getArtist(), 
-          //      id3v1Tags.getAlbum(), id3v1Tags.getYear(), id3v1Tags.getComment(), 
-           //     id3v1Tags.getGenreDescription(), id3v1Tags.getTrack());
-        //System.out.println("The id3v1 artist tag is " + mp3data.getId3v1Tag().getArtist());
+            songTags[0] = pathToFile;
+            songTags[1] = id3v1Tags.getTitle();
+            songTags[2] = id3v1Tags.getArtist();
+            songTags[3] = id3v1Tags.getAlbum();
+            songTags[4] = id3v1Tags.getYear();
+            songTags[5] = id3v1Tags.getComment();
+            songTags[6] = id3v1Tags.getGenreDescription();
+            songTags[7] = id3v1Tags.getTrack();
         }
+        return songTags; //possibly returning null...need to double check
     }
     
     public String[] getCurrentSongSelected(){
-        String[] currentSong  = new String[8];
-        for(int index = 0; index < mColumnHeaderLength; index++){
-            currentSong[index] = mSongs[mCurrentSongSelectedIndex][index];
+        String[] currentSongRow  = new String[8];
+        for(int column = 0; column < mColumnHeaderLength; column++){
+            currentSongRow[column] = mSongs[mCurrentSongSelectedIndex][column];
         } 
         mSongsTable.setRowSelectionInterval(mCurrentSongSelectedIndex, mCurrentSongSelectedIndex);
-        return currentSong;
+        return currentSongRow;
     }
     
     public String[] getNextSong(){
         mCurrentSongSelectedIndex++;
-        String[] currentSong  = new String[8];
+        String[] currentSongRow  = new String[8];
         if(mCurrentSongSelectedIndex >= mSongCount){
             mCurrentSongSelectedIndex = 0;
         }
-        for(int index = 0; index < mColumnHeaderLength; index++){
-            currentSong[index] = mSongs[mCurrentSongSelectedIndex][index];
+        for(int column = 0; column < mColumnHeaderLength; column++){
+            currentSongRow[column] = mSongs[mCurrentSongSelectedIndex][column];
         } 
         System.out.println("Next song:" + mCurrentSongSelectedIndex + " song count = "+ mSongCount );
         mSongsTable.setRowSelectionInterval(mCurrentSongSelectedIndex, mCurrentSongSelectedIndex);
-        return currentSong;
+        return currentSongRow;
     }
     
     public String[] getPrevSong(){
         mCurrentSongSelectedIndex--;
-        String[] currentSong  = new String[8];
+        String[] currentSongRow  = new String[8];
         if(mCurrentSongSelectedIndex < 0){
             mCurrentSongSelectedIndex = mSongCount-1; //wrap around the index
         }
-        for(int index = 0; index < mColumnHeaderLength; index++){
-            currentSong[index] = mSongs[mCurrentSongSelectedIndex][index];
+        for(int column = 0; column < mColumnHeaderLength; column++){
+            currentSongRow[column] = mSongs[mCurrentSongSelectedIndex][column];
         } 
         mSongsTable.setRowSelectionInterval(mCurrentSongSelectedIndex, mCurrentSongSelectedIndex);
-        return currentSong;
+        return currentSongRow;
         
     }
   
 
     // Data members
     private int mSongCount;
-    private String[] mSongTags;
+    //private String[] songTags;
     private static final String[] COLUMN_HEADER = {"Filepath", "Title", "Artist", "Album",
         "Album Year", "Track #", "Genre", "Comments"};
     private final int mColumnHeaderLength = COLUMN_HEADER.length;

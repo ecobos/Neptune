@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import maryb.player.Player;
+import maryb.player.PlayerState;
 //import javazoom.jl.decoder.JavaLayerException;
 //import javazoom.jl.decoder.Control;
 //import javazoom.jl.decoder.JavaLayerException;
@@ -130,6 +131,12 @@ public class MusicPlayer extends JPanel implements ActionListener {
     }
     
     private void playSong(String [] songToPlay){
+//        if(songToPlay.equals(mPlayer.getSourceLocation())){
+//            //do nothing
+//        }
+        if(mPlayer.getState() == PlayerState.PLAYING){
+            mPlayer.stop();
+        }
         mPlayer.setSourceLocation(songToPlay[0]);
         mTextArea.setText("\n\n Current song playing:\n\tArtist: " + songToPlay[1] 
                         + "\n\tSong: "+ songToPlay[2] + "\n\tAlbum: " 
@@ -147,7 +154,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
-                mSongs.addSongToLibrary(file.getAbsolutePath());
+                mSongs.addSongToDatabase(file.getAbsolutePath());
                
                 //System.out.println("Opening: " + file.getAbsolutePath() + ".\n");
             } else {
