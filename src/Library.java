@@ -14,8 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
-// I CHANGED THIS LINE
-// What does the Sapien say??
+
 /*
 Database login: 
 username: cecs343keg
@@ -261,7 +260,7 @@ public class Library implements MouseListener{
         for(int index = 0; index < mColumnHeaderLength; index++){
             currentSong[index] = mSongs[mCurrentSongSelectedIndex][index];
         } 
-        
+        mSongsTable.setRowSelectionInterval(mCurrentSongSelectedIndex, mCurrentSongSelectedIndex);
         return currentSong;
     }
     
@@ -275,6 +274,7 @@ public class Library implements MouseListener{
             currentSong[index] = mSongs[mCurrentSongSelectedIndex][index];
         } 
         System.out.println("Next song:" + mCurrentSongSelectedIndex + " song count = "+ mSongCount );
+        mSongsTable.setRowSelectionInterval(mCurrentSongSelectedIndex, mCurrentSongSelectedIndex);
         return currentSong;
     }
     
@@ -287,7 +287,7 @@ public class Library implements MouseListener{
         for(int index = 0; index < mColumnHeaderLength; index++){
             currentSong[index] = mSongs[mCurrentSongSelectedIndex][index];
         } 
-        
+        mSongsTable.setRowSelectionInterval(mCurrentSongSelectedIndex, mCurrentSongSelectedIndex);
         return currentSong;
         
     }

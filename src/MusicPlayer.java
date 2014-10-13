@@ -39,6 +39,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
     private PlayerButton mAddButton, mPlayButton, mPauseButton, mPrevButton, mStopButton, mNextButton;
     private Player mPlayer;
     private JTextArea mTextArea;
+    private TheMenu mMenuBar; 
     
     public MusicPlayer() {
         mMainPanel = new JPanel();
@@ -50,7 +51,9 @@ public class MusicPlayer extends JPanel implements ActionListener {
 
         JFrame frame = new JFrame("Neptune");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setJMenuBar(new TheMenu().getMenu());
+        mMenuBar = new TheMenu();
+        mMenuBar.getAddSongItem().addActionListener(this);
+        frame.setJMenuBar(mMenuBar.getMenu());
         frame.setMinimumSize(new Dimension(1050, 300));
 
         frame.add(mMainPanel);
@@ -137,15 +140,8 @@ public class MusicPlayer extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-
-        //String filepath = "C:\\Users\\Kelby\\Desktop\\song.mp3";
-        //String filepath = "/Users/ecobos/Music/iTunes/iTunes Music/A Day To Remember/Homesick/08 Homesick.mp3";
-        //FileInputStream songFile = new FileInputStream("C:\\Users\\Kelby\\Desktop\\song.mp3");
-        //player.setSourceLocation(filepath);
-        
-        
         //Handle open button action.
-        if (e.getSource() == mAddButton) {
+        if (e.getSource() == mAddButton || e.getSource() == mMenuBar.getAddSongItem()) {
             JFileChooser fc = new JFileChooser();
             int returnVal = fc.showOpenDialog(MusicPlayer.this);
 
