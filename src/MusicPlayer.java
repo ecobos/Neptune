@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import maryb.player.Player;
+import maryb.player.decoder.MP3Decoder;
 import maryb.player.PlayerState;
 //import javazoom.jl.decoder.JavaLayerException;
 //import javazoom.jl.decoder.Control;
@@ -135,13 +136,25 @@ public class MusicPlayer extends JPanel implements ActionListener {
 //            //do nothing
 //        }
         if(mPlayer.getState() == PlayerState.PLAYING){
+            System.out.println("Stopping player");
             mPlayer.stop();
         }
         mPlayer.setSourceLocation(songToPlay[0]);
         mTextArea.setText("\n\n Current song playing:\n\tArtist: " + songToPlay[1] 
                         + "\n\tSong: "+ songToPlay[2] + "\n\tAlbum: " 
-                        + songToPlay[3]);
-        mPlayer.play();
+                        + songToPlay[3] + "\n\tSong " +  (mSongs.getCurrentSongSelectedIndex() + 1) + " of " + mSongs.getSongsCount());
+        try {
+            mPlayer.play();
+        }
+        catch(Exception e)
+        {
+            if(mPlayer.isEndOfMediaReached()) {
+                playSong(mSongs.getNextSong());
+            }
+        }
+        
+        // avoids throwing exception if song reaches end
+        
     }
     
     @Override
@@ -155,7 +168,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 mSongs.addSongToDatabase(file.getAbsolutePath());
-               
+                mSongs.createTable();
                 //System.out.println("Opening: " + file.getAbsolutePath() + ".\n");
             } else {
                 System.out.println("Open command cancelled by user.\n");
@@ -166,7 +179,9 @@ public class MusicPlayer extends JPanel implements ActionListener {
         
         else if (e.getSource() == mPlayButton) {
             // Debugging playing
-            System.out.println("inside play event");
+            playSong(mSongs.getCurrentSongSelected());
+            System.out.println("Playing: " +  mSongs.getCurrentSongSelected()[1]);
+            /*
             try {
                 
                 //FileInputStream songFile = new FileInputStream("C:\\Users\\Kelby\\Desktop\\song.mp3");
@@ -178,6 +193,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
                 exc.printStackTrace();
                 System.out.println("Unable to play song");
             }
+            */
             // debugging 
         } else if (e.getSource() == mStopButton) {
             mPlayer.stop();

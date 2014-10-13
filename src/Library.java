@@ -166,7 +166,11 @@ public class Library extends JPanel implements MouseListener {
             System.out.println("Unable to insert song. Song may already exist");
             e.printStackTrace();
         }
-
+        
+        // redraw table to update library table, but first update local 2-D array
+        //this.getSongsFromDatabase();
+        //this.createTable();
+        
         //System.out.println("Song : " + title + " by " + artist + " was added.");
     }
 
@@ -261,6 +265,14 @@ public class Library extends JPanel implements MouseListener {
         mSongsTable.setRowSelectionInterval(mCurrentSongSelectedIndex, mCurrentSongSelectedIndex);
         return currentSongRow;
     }
+    
+    public int getCurrentSongSelectedIndex() {
+        return mCurrentSongSelectedIndex;
+    }
+    
+    public int getSongsCount() { 
+        return mSongCount;
+    }
 
     public String[] getNextSong() {
         mCurrentSongSelectedIndex++;
@@ -277,7 +289,9 @@ public class Library extends JPanel implements MouseListener {
     }
 
     public String[] getPrevSong() {
+        System.out.println("Song index prev: " + mCurrentSongSelectedIndex);
         mCurrentSongSelectedIndex--;
+        System.out.println("Index: " + mCurrentSongSelectedIndex);
         String[] currentSongRow = new String[8];
         if (mCurrentSongSelectedIndex < 0) {
             mCurrentSongSelectedIndex = mSongCount - 1; //wrap around the index
@@ -330,7 +344,7 @@ public class Library extends JPanel implements MouseListener {
             //JTable result = (JTable) e.getSource();
             //System.out.println(mSongsTable.getSelectedRow());
             mCurrentSongSelectedIndex = mSongsTable.getSelectedRow(); //changed by Edgar
-            //System.out.println(mCurrentSongSelectedIndex);
+            System.out.println(mCurrentSongSelectedIndex);
         }
 
     }
