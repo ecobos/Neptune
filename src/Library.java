@@ -2,7 +2,17 @@ import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -11,6 +21,7 @@ import java.io.IOException;
 //import java.sql.DriverManager;
 //import java.sql.SQLException;
 import java.sql.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -27,7 +38,7 @@ import javax.swing.*;
  *
  * @author Kelby, Edgar, Gil
  */
-public class Library extends JPanel implements MouseListener {
+public class Library extends JPanel implements MouseListener, DropTargetListener {
 
     public Library() {
         mSongs = new String[getSongCount()][mColumnHeaderLength];
@@ -109,7 +120,7 @@ public class Library extends JPanel implements MouseListener {
                 mSongs[row][6] = checkForEmptyString(rs.getString("genre"));
                 mSongs[row][7] = checkForEmptyString(rs.getString("track_num"));
 
-                    //System.out.println(filepath + " " +  title + " " + artist + " " + album + " " + year +
+                //System.out.println(filepath + " " +  title + " " + artist + " " + album + " " + year +
                 //        " " + comment + " " + genre + " " + track_num);
                 /*for (int j = 0; j < mAttributesLength; j++) {
                  mSongs[ii][0] = filepath;
@@ -195,8 +206,10 @@ public class Library extends JPanel implements MouseListener {
         //mSongsTable.setPreferredScrollableViewportSize(new Dimension(1000, 100));
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.addMouseListener((MouseListener) this);
+
         mScrollPane = new JScrollPane(mSongsTable);
         JPanel panel = new JPanel();
+        new DropTarget(panel, this);
         mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongs.length + 10) * 10));
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -319,13 +332,12 @@ public class Library extends JPanel implements MouseListener {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 this.addSongToDatabase(file.getAbsolutePath());
-               
+
                 //System.out.println("Opening: " + file.getAbsolutePath() + ".\n");
             } else {
                 System.out.println("Open command cancelled by user.\n");
             }
-        } 
-        else if (e.getSource() == mSongsTable) {
+        } else if (e.getSource() == mSongsTable) {
             System.out.println("The Jtable was clicked");
             //JTable result = (JTable) e.getSource();
             //System.out.println(mSongsTable.getSelectedRow());
@@ -348,6 +360,54 @@ public class Library extends JPanel implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); 
+    }
+
+    @Override
+    public void dragEnter(DropTargetDragEvent dragEnter) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void dragOver(DropTargetDragEvent dragOver) {
+        mSongsTable.setBackground(Color.red);
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void dropActionChanged(DropTargetDragEvent dropActionChanged) {
+
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void dragExit(DropTargetEvent dragExit) {
+        mSongsTable.setBackground(Color.white);
+    }
+
+    @Override
+    public void drop(DropTargetDropEvent drop) {
+        drop.acceptDrop(DnDConstants.ACTION_COPY);
+        Transferable transferable = drop.getTransferable();
+        DataFlavor[] dataTypes = transferable.getTransferDataFlavors();
+        mSongsTable.setBackground(Color.white);
+        for (DataFlavor type : dataTypes) {
+
+            try {
+                if (type.isFlavorJavaFileListType()) {
+                    List<File> files = (List) transferable.getTransferData(type);
+                    for (File file : files) {
+                        System.out.println(file.getAbsolutePath());
+                    }
+                }
+            } catch (UnsupportedFlavorException ex) {
+                Logger.getLogger(Library.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Library.class.getName()).log(Level.SEVERE, null, ex);
+
+            }
+
+        }
+        System.out.println("Something was dropped here...is it yours?");
     }
 
 }
