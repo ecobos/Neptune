@@ -55,6 +55,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mMenuBar = new TheMenu();
         mMenuBar.getAddSongItem().addActionListener(this);
+        mMenuBar.getDeleteSongItem().addActionListener(this);
         frame.setJMenuBar(mMenuBar.getMenu());
         frame.setMinimumSize(new Dimension(1050, 300));
 
@@ -143,6 +144,10 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mTextArea.setText("\n\n Current song playing:\n\tArtist: " + songToPlay[1] 
                         + "\n\tSong: "+ songToPlay[2] + "\n\tAlbum: " 
                         + songToPlay[3] + "\n\tSong " +  (mSongs.getCurrentSongSelectedIndex() + 1) + " of " + mSongs.getSongsCount());
+        
+        // still need to check this
+        // a while loop might be needed to keep on checking for isEndOfMediaReached()
+        // might mean lots of overhead
         try {
             mPlayer.play();
         }
@@ -176,7 +181,11 @@ public class MusicPlayer extends JPanel implements ActionListener {
 
             //Handle save button action.
         }
-        
+        else if(e.getSource() == mMenuBar.getDeleteSongItem()) {
+            mSongs.deleteSong(mSongs.getCurrentSongSelected()[0]);
+            mSongs.createTable();
+            System.out.println("Deleted song: " + mSongs.getCurrentSongSelected()[2]);
+        }
         else if (e.getSource() == mPlayButton) {
             // Debugging playing
             playSong(mSongs.getCurrentSongSelected());

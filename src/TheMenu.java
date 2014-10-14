@@ -48,6 +48,10 @@ public class TheMenu extends JPanel implements ActionListener{
     public JMenuItem getAddSongItem(){
         return mAddSong;
     }
+    
+    public JMenuItem getDeleteSongItem() {
+        return mDeleteSong;
+    }
 
     public void actionPerformed(ActionEvent event) {
             // will want to close the database connection first

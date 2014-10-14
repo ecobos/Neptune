@@ -107,7 +107,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
              }
              */
             int row = 0; // counter to traverse trough 2D array
-            while (rs.next()) {
+            while (rs.next() && row < mSongCount) {
                 //int songCount = 1; // this will be the query that will get us the amount of row in the DB
 
                 //for (int i = 0; i < songCount; i++) {
@@ -190,12 +190,13 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
      *
      * @param filepath
      */
-    private void deleteSong(String filepath) {
+    public void deleteSong(String filepath) {
         connectDB();
         try {
             PreparedStatement pstat = conn.prepareStatement("DELETE FROM Songs WHERE filepath = ?");
             pstat.setString(1, filepath);
             pstat.executeUpdate();
+            this.getSongsFromDatabase(); //update the JTable after a song insert is made
         } catch (SQLException e) {
             System.out.println("Unable to delete song");
         }
