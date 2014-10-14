@@ -195,7 +195,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         else if (e.getSource() == mPlayButton) {
             // Debugging playing
             mLastSongPlayedIndex = mSongs.getCurrentSongSelectedIndex(); // saves the last song played
-            playSong(mSongs.getCurrentSongSelected());
+            playSong(mSongs.getCurrentSongSelected(mLastSongPlayedIndex));
             System.out.println("Playing: " +  mSongs.getCurrentSongSelected()[1]);
             /*
             try {
@@ -232,7 +232,8 @@ public class MusicPlayer extends JPanel implements ActionListener {
                 playSong(mSongs.getCurrentSongSelected(++mLastSongPlayedIndex)); // updates first, then uses the value
             }
             else { // already at the stopped state, so just play from here
-                playSong(mSongs.getNextSong());
+                //playSong(mSongs.getNextSong();
+                playSong(mSongs.getCurrentSongSelected(mLastSongPlayedIndex));
             }
             
             
@@ -252,7 +253,8 @@ public class MusicPlayer extends JPanel implements ActionListener {
                 playSong(mSongs.getCurrentSongSelected(--mLastSongPlayedIndex)); // updates first, then uses the value
             }
             else {
-                playSong(mSongs.getPrevSong());
+                //playSong(mSongs.getPrevSong());
+                playSong(mSongs.getCurrentSongSelected(mLastSongPlayedIndex));
             }
             
         }
