@@ -184,6 +184,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         else if(e.getSource() == mMenuBar.getDeleteSongItem()) {
             mSongs.deleteSong(mSongs.getCurrentSongSelected()[0]);
             mSongs.createTable();
+            //this.createSongsTable();
             System.out.println("Deleted song: " + mSongs.getCurrentSongSelected()[2]);
         }
         else if (e.getSource() == mPlayButton) {

@@ -238,7 +238,8 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         mMenuAddSong = new JMenuItem("Add a song");
         mMenuAddSong.addMouseListener(this);
         mMenuRemoveSong = new JMenuItem("Remove selected song");
-
+        mMenuRemoveSong.addMouseListener(this);
+        //popupMenu.addMouseListener(this);
         popupMenu.add(mMenuAddSong);
         popupMenu.add(mMenuRemoveSong);
         return popupMenu;
@@ -353,7 +354,12 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             } else {
                 System.out.println("Open command cancelled by user.\n");
             }
-        } else if (e.getSource() == mSongsTable) {
+        } 
+        else if(e.getSource() == mMenuRemoveSong) {
+            System.out.println("Remove song was clicked");
+            this.deleteSong(mSongs[mCurrentSongSelectedIndex][0]);
+        }
+        else if (e.getSource() == mSongsTable) {
             System.out.println("The Jtable was clicked");
             //JTable result = (JTable) e.getSource();
             //System.out.println(mSongsTable.getSelectedRow());
