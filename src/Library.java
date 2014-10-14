@@ -282,6 +282,15 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         return currentSongRow;
     }
     
+    public String[] getCurrentSongSelected(int index) {
+        String[] currentSongRow = new String[8];
+        for (int column = 0; column < mColumnHeaderLength; column++) {
+            currentSongRow[column] = mSongs[index][column];
+        }
+        mSongsTable.setRowSelectionInterval(index, index);
+        return currentSongRow;
+    }
+    
     public int getCurrentSongSelectedIndex() {
         return mCurrentSongSelectedIndex;
     }
