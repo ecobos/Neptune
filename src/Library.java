@@ -216,6 +216,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         new DropTarget(panel, this);
         mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongs.length + 10) * 10));
         mSongsTable.setFillsViewportHeight(true);
+        mSongsTable.setAutoCreateRowSorter(true);
         mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(400);
         mSongsTable.getColumnModel().getColumn(1).setPreferredWidth(200);
