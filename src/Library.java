@@ -1,4 +1,6 @@
+import com.mpatric.mp3agic.AbstractID3v2Tag;
 import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
@@ -54,7 +56,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         COLUMN_HEADER.addElement("Track #");
         COLUMN_HEADER.addElement("Genre");
         COLUMN_HEADER.addElement("Comments");
-        
+
         getSongsFromDatabase();
     }
 
@@ -80,29 +82,30 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
     }
 
     /* already exists below "getCurrentSongSelectedIndex" function
-    private int getSongsCount() {
-//        connectDB();
-//
-//        try {
-//            Statement stat = conn.createStatement();
-//
-//            // get song count from database
-//            ResultSet countRS = stat.executeQuery("SELECT COUNT(*) AS total FROM Songs");
-//            countRS.next(); // moves pointer to first element
-//            mSongCount = countRS.getInt("total");
-//            //System.out.println(songCount + " songs in library");
-//            conn.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+     private int getSongsCount() {
+     //        connectDB();
+     //
+     //        try {
+     //            Statement stat = conn.createStatement();
+     //
+     //            // get song count from database
+     //            ResultSet countRS = stat.executeQuery("SELECT COUNT(*) AS total FROM Songs");
+     //            countRS.next(); // moves pointer to first element
+     //            mSongCount = countRS.getInt("total");
+     //            //System.out.println(songCount + " songs in library");
+     //            conn.close();
+     //        } catch (SQLException e) {
+     //            e.printStackTrace();
+     //        }
 
-        return mSongCount;
-    }
-    */
-    private void refreshData(){
+     return mSongCount;
+     }
+     */
+    private void refreshData() {
         mSongs.clear();
         getSongsFromDatabase();
     }
+
     /**
      * Gets the songs from library needed to populate table connect to DB and
      * retrieve songs, songs 2-D array will get populated here
@@ -117,14 +120,12 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
 
             // Copy data from COLUMN_HEADER into the Songs array
             //System.arraycopy(COLUMN_HEADER, 0, mSongs[0], 0, mColumnHeaderLength);
-
             //mSongs.add(COLUMN_HEADER);
 //             for (int column = 0; column < mColumnHeaderLength; column++) {
 //             mSongs[0][column] = COLUMN_HEADER[column];
 //             }
-             
             int row = 0; // counter to traverse trough 2D array
-            
+
             mSongCount = 0; // update count to reflect new data in database
             while (rs.next() /*&& row < mSongCount */) {
                 //int songCount = 1; // this will be the query that will get us the amount of row in the DB
@@ -192,7 +193,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             pstat.setString(7, songTags[6]); // value genre
             pstat.setString(8, songTags[7]); // value of track_num
             pstat.executeUpdate();
-            
+
             refreshData();
             mTableModel.fireTableDataChanged();
             //this.getSongsFromDatabase(); //update the JTable after a song insert is made
@@ -200,11 +201,10 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             System.out.println("Unable to insert song. Song may already exist");
             e.printStackTrace();
         }
-        
+
         // redraw table to update library table, but first update local 2-D array
         //this.getSongsFromDatabase();
         //this.createTable();
-        
         //System.out.println("Song : " + title + " by " + artist + " was added.");
     }
 
@@ -234,7 +234,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
      * Create GUI for table
      */
     public JPanel getTable() {
-        mTableModel = new DefaultTableModel(mSongs,COLUMN_HEADER);
+        mTableModel = new DefaultTableModel(mSongs, COLUMN_HEADER);
         mSongsTable = new JTable();
         mSongsTable.setModel(mTableModel);
         //mSongsTable.setPreferredScrollableViewportSize(new Dimension(1000, 100));
@@ -244,24 +244,24 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         mScrollPane = new JScrollPane(mSongsTable);
         JPanel panel = new JPanel();
         new DropTarget(panel, this);
-        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongs.size() + 10) * 10));
+        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1300, (mSongs.size() + 20) * 10));
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setAutoCreateRowSorter(true);
         mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(400);
+        mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(300);
         mSongsTable.getColumnModel().getColumn(1).setPreferredWidth(200);
         mSongsTable.getColumnModel().getColumn(2).setPreferredWidth(200);
-        mSongsTable.getColumnModel().getColumn(3).setPreferredWidth(200);
+        mSongsTable.getColumnModel().getColumn(3).setPreferredWidth(100);
         mSongsTable.getColumnModel().getColumn(4).setPreferredWidth(100);
         mSongsTable.getColumnModel().getColumn(5).setPreferredWidth(100);
         mSongsTable.getColumnModel().getColumn(6).setPreferredWidth(100);
         mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(200);
         mScrollPane = new JScrollPane(mSongsTable);
         panel.add(mScrollPane);
+        mSongsTable.setLayout(null);
         mSongsTable.setComponentPopupMenu(createPopupMenu()); //add a popup menu to the JTable
         return panel;
     }
-    
 
     private JPopupMenu createPopupMenu() {
         JPopupMenu popupMenu = new JPopupMenu();
@@ -290,15 +290,32 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
 
         if (mp3data != null) {
             ID3v1 id3v1Tags = mp3data.getId3v1Tag();
-
-            songTags[0] = pathToFile;
-            songTags[1] = id3v1Tags.getTitle();
-            songTags[2] = id3v1Tags.getArtist();
-            songTags[3] = id3v1Tags.getAlbum();
-            songTags[4] = id3v1Tags.getYear();
-            songTags[5] = id3v1Tags.getComment();
-            songTags[6] = id3v1Tags.getGenreDescription();
-            songTags[7] = id3v1Tags.getTrack();
+            ID3v2 id3v2Tags = mp3data.getId3v2Tag();
+            if (id3v2Tags.getTitle().equals(null)) {
+                songTags[0] = pathToFile;
+                songTags[1] = id3v1Tags.getTitle();
+                songTags[2] = id3v1Tags.getArtist();
+                songTags[3] = id3v1Tags.getAlbum();
+                songTags[4] = id3v1Tags.getYear();
+                songTags[5] = id3v1Tags.getComment();
+                songTags[6] = id3v1Tags.getGenreDescription();
+                songTags[7] = id3v1Tags.getTrack();
+            }
+            else{
+                songTags[0] = pathToFile;
+                songTags[1] = id3v2Tags.getTitle();
+                songTags[2] = id3v2Tags.getArtist();
+                songTags[3] = id3v2Tags.getAlbum();
+                songTags[4] = id3v2Tags.getYear();
+                songTags[5] = id3v2Tags.getComment();
+                songTags[6] = id3v2Tags.getGenreDescription();
+                songTags[7] = id3v2Tags.getTrack();
+                for( int i = 1; i < 8; i++){
+                    if(songTags[i].equals(null)){
+                        songTags[i] = " ";
+                    }
+                }
+            }
         }
         return songTags; //possibly returning null...need to double check
     }
@@ -312,7 +329,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         mSongsTable.setRowSelectionInterval(mCurrentSongSelectedIndex, mCurrentSongSelectedIndex);
         return currentSongRow;
     }
-    
+
     public Vector getCurrentSongSelected(int index) {
         //String[] currentSongRow = new String[8];
 //        for (int column = 0; column < mColumnHeaderLength; column++) {
@@ -322,12 +339,12 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         mSongsTable.setRowSelectionInterval(index, index);
         return currentSongRow;
     }
-    
+
     public int getCurrentSongSelectedIndex() {
         return mCurrentSongSelectedIndex;
     }
-    
-    public int getSongsCount() { 
+
+    public int getSongsCount() {
         return mSongCount;
     }
 
@@ -346,7 +363,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         return currentSongRow;
     }
 
-    public Vector  getPrevSong() {
+    public Vector getPrevSong() {
         System.out.println("Song index prev: " + mCurrentSongSelectedIndex);
         mCurrentSongSelectedIndex--;
         System.out.println("Index: " + mCurrentSongSelectedIndex);
@@ -366,7 +383,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
     // Data members
     private int mSongCount;
     //private String[] songTags;
-    private Vector<String> COLUMN_HEADER; 
+    private Vector<String> COLUMN_HEADER;
     //private final int mColumnHeaderLength = COLUMN_HEADER.size();
     private Vector<Vector> mSongs;
     private JTable mSongsTable;
@@ -397,12 +414,10 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             } else {
                 System.out.println("Open command cancelled by user.\n");
             }
-        } 
-        else if(e.getSource() == mMenuRemoveSong) {
+        } else if (e.getSource() == mMenuRemoveSong) {
             System.out.println("Remove song was clicked");
             this.deleteSong(mSongs.get(mCurrentSongSelectedIndex));
-        }
-        else if (e.getSource() == mSongsTable) {
+        } else if (e.getSource() == mSongsTable) {
             System.out.println("The Jtable was clicked");
             //JTable result = (JTable) e.getSource();
             //System.out.println(mSongsTable.getSelectedRow());

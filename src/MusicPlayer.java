@@ -61,7 +61,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mMenuBar.getAddSongItem().addActionListener(this);
         mMenuBar.getDeleteSongItem().addActionListener(this);
         frame.setJMenuBar(mMenuBar.getMenu());
-        frame.setMinimumSize(new Dimension(1050, 300));
+        frame.setMinimumSize(new Dimension(1400, 600));
 
         frame.add(mMainPanel);
         frame.pack();
