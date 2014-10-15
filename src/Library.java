@@ -1,4 +1,3 @@
-import com.mpatric.mp3agic.AbstractID3v2Tag;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.InvalidDataException;
@@ -290,32 +289,14 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
 
         if (mp3data != null) {
             ID3v1 id3v1Tags = mp3data.getId3v1Tag();
-            ID3v2 id3v2Tags = mp3data.getId3v2Tag();
-            if (id3v2Tags.getTitle().equals(null)) {
-                songTags[0] = pathToFile;
-                songTags[1] = id3v1Tags.getTitle();
-                songTags[2] = id3v1Tags.getArtist();
-                songTags[3] = id3v1Tags.getAlbum();
-                songTags[4] = id3v1Tags.getYear();
-                songTags[5] = id3v1Tags.getComment();
-                songTags[6] = id3v1Tags.getGenreDescription();
-                songTags[7] = id3v1Tags.getTrack();
-            }
-            else{
-                songTags[0] = pathToFile;
-                songTags[1] = id3v2Tags.getTitle();
-                songTags[2] = id3v2Tags.getArtist();
-                songTags[3] = id3v2Tags.getAlbum();
-                songTags[4] = id3v2Tags.getYear();
-                songTags[5] = id3v2Tags.getComment();
-                songTags[6] = id3v2Tags.getGenreDescription();
-                songTags[7] = id3v2Tags.getTrack();
-                for( int i = 1; i < 8; i++){
-                    if(songTags[i].equals(null)){
-                        songTags[i] = " ";
-                    }
-                }
-            }
+            songTags[0] = pathToFile;
+            songTags[1] = id3v1Tags.getTitle();
+            songTags[2] = id3v1Tags.getArtist();
+            songTags[3] = id3v1Tags.getAlbum();
+            songTags[4] = id3v1Tags.getYear();
+            songTags[5] = id3v1Tags.getComment();
+            songTags[6] = id3v1Tags.getGenreDescription();
+            songTags[7] = id3v1Tags.getTrack();
         }
         return songTags; //possibly returning null...need to double check
     }
