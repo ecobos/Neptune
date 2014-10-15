@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 import maryb.player.Player;
 import maryb.player.decoder.MP3Decoder;
@@ -50,6 +51,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mMainPanel.setLayout(new GridBagLayout());
         mBounds = new GridBagConstraints();
         mPlayer = new Player();
+        mSongs = new Library();
         createButtons();
         createSongsTable();
 
@@ -119,10 +121,8 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mMainPanel.add(mAddButton, mBounds);
     }
 
-    private void createSongsTable() {
-        mSongs = new Library();
-        //mSongs.readTags();
-        mTablePanel = mSongs.createTable();
+    private void createSongsTable() {     
+        mTablePanel = mSongs.getTable();
         mBounds.anchor = GridBagConstraints.PAGE_END;
         mBounds.gridx = 0;
         mBounds.gridy = 1;
@@ -179,7 +179,9 @@ public class MusicPlayer extends JPanel implements ActionListener {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 mSongs.addSongToDatabase(file.getAbsolutePath());
-                mSongs.createTable();
+                //mTablePanel = mSongs.getTable();
+                
+                
                 //System.out.println("Opening: " + file.getAbsolutePath() + ".\n");
             } else {
                 System.out.println("Open command cancelled by user.\n");
@@ -189,7 +191,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         }
         else if(e.getSource() == mMenuBar.getDeleteSongItem()) {
             mSongs.deleteSong(mSongs.getCurrentSongSelected());
-            mSongs.createTable();
+            mTablePanel = mSongs.getTable();
             //this.createSongsTable();
             System.out.println("Deleted song: " + mSongs.getCurrentSongSelected().get(2));
         }

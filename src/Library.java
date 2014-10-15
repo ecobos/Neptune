@@ -27,6 +27,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 
 /*
@@ -44,8 +45,6 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
 
     public Library() {
         mSongs = new Vector<Vector>();
-        //mSongs = new String[getSongCount()][mColumnHeaderLength];;
-        //mSongs = new String[getSongCount()][mColumnHeaderLength];
         COLUMN_HEADER = new Vector<String>();
         COLUMN_HEADER.addElement("Filepath");
         COLUMN_HEADER.addElement("Title");
@@ -56,8 +55,6 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         COLUMN_HEADER.addElement("Genre");
         COLUMN_HEADER.addElement("Comments");
         
-        //, "Title", "Artist", "Album",
-        //"Album Year", "Track #", "Genre", "Comments"};
         getSongsFromDatabase();
     }
 
@@ -83,24 +80,28 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
     }
 
     private int getSongCount() {
-        connectDB();
-
-        try {
-            Statement stat = conn.createStatement();
-
-            // get song count from database
-            ResultSet countRS = stat.executeQuery("SELECT COUNT(*) AS total FROM Songs");
-            countRS.next(); // moves pointer to first element
-            mSongCount = countRS.getInt("total");
-            //System.out.println(songCount + " songs in library");
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        connectDB();
+//
+//        try {
+//            Statement stat = conn.createStatement();
+//
+//            // get song count from database
+//            ResultSet countRS = stat.executeQuery("SELECT COUNT(*) AS total FROM Songs");
+//            countRS.next(); // moves pointer to first element
+//            mSongCount = countRS.getInt("total");
+//            //System.out.println(songCount + " songs in library");
+//            conn.close();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
         return mSongCount;
     }
-
+    
+    private void refreshData(){
+        mSongs.clear();
+        getSongsFromDatabase();
+    }
     /**
      * Gets the songs from library needed to populate table connect to DB and
      * retrieve songs, songs 2-D array will get populated here
@@ -188,7 +189,10 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             pstat.setString(7, songTags[6]); // value genre
             pstat.setString(8, songTags[7]); // value of track_num
             pstat.executeUpdate();
-            this.getSongsFromDatabase(); //update the JTable after a song insert is made
+            
+            refreshData();
+            mTableModel.fireTableDataChanged();
+            //this.getSongsFromDatabase(); //update the JTable after a song insert is made
         } catch (SQLException e) {
             System.out.println("Unable to insert song. Song may already exist");
             e.printStackTrace();
@@ -224,8 +228,10 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
     /**
      * Create GUI for table
      */
-    public JPanel createTable() {
-        mSongsTable = new JTable(mSongs, COLUMN_HEADER);
+    public JPanel getTable() {
+        mTableModel = new DefaultTableModel(mSongs,COLUMN_HEADER);
+        mSongsTable = new JTable();
+        mSongsTable.setModel(mTableModel);
         //mSongsTable.setPreferredScrollableViewportSize(new Dimension(1000, 100));
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.addMouseListener((MouseListener) this);
@@ -250,6 +256,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         mSongsTable.setComponentPopupMenu(createPopupMenu()); //add a popup menu to the JTable
         return panel;
     }
+    
 
     private JPopupMenu createPopupMenu() {
         JPopupMenu popupMenu = new JPopupMenu();
@@ -363,6 +370,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
     private int mCurrentSongSelectedIndex;
     private JMenuItem mMenuRemoveSong;
     private JMenuItem mMenuAddSong;
+    private DefaultTableModel mTableModel;
 
     @Override
     public void mouseClicked(MouseEvent e) {
