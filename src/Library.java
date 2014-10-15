@@ -79,7 +79,8 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         // connects to DB
     }
 
-    private int getSongCount() {
+    /* already exists below "getCurrentSongSelectedIndex" function
+    private int getSongsCount() {
 //        connectDB();
 //
 //        try {
@@ -97,7 +98,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
 
         return mSongCount;
     }
-    
+    */
     private void refreshData(){
         mSongs.clear();
         getSongsFromDatabase();
@@ -124,6 +125,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
              
             int row = 0; // counter to traverse trough 2D array
             
+            mSongCount = 0; // update count to reflect new data in database
             while (rs.next() /*&& row < mSongCount */) {
                 //int songCount = 1; // this will be the query that will get us the amount of row in the DB
                 Vector<String> vectorData = new Vector<String>();
@@ -137,6 +139,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
                 vectorData.addElement(checkForEmptyString(rs.getString("genre")));
                 vectorData.addElement(checkForEmptyString(rs.getString("track_num")));
                 mSongs.addElement(vectorData);
+                mSongCount++; // increment song count by 1 
                 //System.out.println(filepath + " " +  title + " " + artist + " " + album + " " + year +
                 //        " " + comment + " " + genre + " " + track_num);
                 /*for (int j = 0; j < mAttributesLength; j++) {
