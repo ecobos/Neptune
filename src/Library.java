@@ -221,7 +221,9 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             PreparedStatement pstat = conn.prepareStatement("DELETE FROM Songs WHERE filepath = ?");
             pstat.setString(1, filepath);
             pstat.executeUpdate();
-            this.getSongsFromDatabase(); //update the JTable after a song insert is made
+            refreshData();
+            mTableModel.fireTableDataChanged();
+            //this.getSongsFromDatabase(); //update the JTable after a song insert is made
         } catch (SQLException e) {
             System.out.println("Unable to delete song");
         }
@@ -263,7 +265,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
 
     private JPopupMenu createPopupMenu() {
         JPopupMenu popupMenu = new JPopupMenu();
-        mMenuAddSong = new JMenuItem("Add a song");
+        mMenuAddSong = new JMenuItem("Add a song"); //new ImageIcon("/resources/add.png"));
         mMenuAddSong.addMouseListener(this);
         mMenuRemoveSong = new JMenuItem("Remove selected song");
         mMenuRemoveSong.addMouseListener(this);
