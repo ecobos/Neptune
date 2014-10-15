@@ -21,7 +21,9 @@ import java.io.IOException;
 //import java.sql.DriverManager;
 //import java.sql.SQLException;
 import java.sql.*;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -41,7 +43,21 @@ import javax.swing.*;
 public class Library extends JPanel implements MouseListener, DropTargetListener {
 
     public Library() {
-        mSongs = new String[getSongCount()][mColumnHeaderLength];
+        mSongs = new Vector<Vector>();
+        //mSongs = new String[getSongCount()][mColumnHeaderLength];;
+        //mSongs = new String[getSongCount()][mColumnHeaderLength];
+        COLUMN_HEADER = new Vector<String>();
+        COLUMN_HEADER.addElement("Filepath");
+        COLUMN_HEADER.addElement("Title");
+        COLUMN_HEADER.addElement("Artist");
+        COLUMN_HEADER.addElement("Album");
+        COLUMN_HEADER.addElement("Album Year");
+        COLUMN_HEADER.addElement("Track #");
+        COLUMN_HEADER.addElement("Genre");
+        COLUMN_HEADER.addElement("Comments");
+        
+        //, "Title", "Artist", "Album",
+        //"Album Year", "Track #", "Genre", "Comments"};
         getSongsFromDatabase();
     }
 
@@ -98,28 +114,28 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             ResultSet rs = stat.executeQuery(query);
 
             // Copy data from COLUMN_HEADER into the Songs array
-            System.arraycopy(COLUMN_HEADER, 0, mSongs[0], 0, mColumnHeaderLength);
+            //System.arraycopy(COLUMN_HEADER, 0, mSongs[0], 0, mColumnHeaderLength);
 
-            /*
-             ^^^ the above does the same as below but the above is optimized ^^^
-             for (int column = 0; column < mColumnHeaderLength; column++) {
-             mSongs[0][column] = COLUMN_HEADER[column];
-             }
-             */
+            //mSongs.add(COLUMN_HEADER);
+//             for (int column = 0; column < mColumnHeaderLength; column++) {
+//             mSongs[0][column] = COLUMN_HEADER[column];
+//             }
+             
             int row = 0; // counter to traverse trough 2D array
-            while (rs.next() && row < mSongCount) {
+            
+            while (rs.next() /*&& row < mSongCount */) {
                 //int songCount = 1; // this will be the query that will get us the amount of row in the DB
-
+                Vector<String> vectorData = new Vector<String>();
                 //for (int i = 0; i < songCount; i++) {
-                mSongs[row][0] = rs.getString("filepath");
-                mSongs[row][1] = rs.getString("title");
-                mSongs[row][2] = rs.getString("artist");
-                mSongs[row][3] = checkForEmptyString(rs.getString("album"));
-                mSongs[row][4] = checkForEmptyString(rs.getString("year"));
-                mSongs[row][5] = checkForEmptyString(rs.getString("comment"));
-                mSongs[row][6] = checkForEmptyString(rs.getString("genre"));
-                mSongs[row][7] = checkForEmptyString(rs.getString("track_num"));
-
+                vectorData.addElement(rs.getString("filepath"));
+                vectorData.addElement(rs.getString("title"));
+                vectorData.addElement(rs.getString("artist"));
+                vectorData.addElement(checkForEmptyString(rs.getString("album")));
+                vectorData.addElement(checkForEmptyString(rs.getString("year")));
+                vectorData.addElement(checkForEmptyString(rs.getString("comment")));
+                vectorData.addElement(checkForEmptyString(rs.getString("genre")));
+                vectorData.addElement(checkForEmptyString(rs.getString("track_num")));
+                mSongs.addElement(vectorData);
                 //System.out.println(filepath + " " +  title + " " + artist + " " + album + " " + year +
                 //        " " + comment + " " + genre + " " + track_num);
                 /*for (int j = 0; j < mAttributesLength; j++) {
@@ -188,10 +204,12 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
     /**
      * Fetching songs and also TESTING INSERT AND DELETE FUNCTIONS
      *
+     * @param fileToDelete
      * @param filepath
      */
-    public void deleteSong(String filepath) {
+    public void deleteSong(Vector<String> fileToDelete) {
         connectDB();
+        String filepath = fileToDelete.get(0);
         try {
             PreparedStatement pstat = conn.prepareStatement("DELETE FROM Songs WHERE filepath = ?");
             pstat.setString(1, filepath);
@@ -215,7 +233,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         mScrollPane = new JScrollPane(mSongsTable);
         JPanel panel = new JPanel();
         new DropTarget(panel, this);
-        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongs.length + 10) * 10));
+        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongs.size() + 10) * 10));
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setAutoCreateRowSorter(true);
         mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -273,20 +291,22 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         return songTags; //possibly returning null...need to double check
     }
 
-    public String[] getCurrentSongSelected() {
-        String[] currentSongRow = new String[8];
-        for (int column = 0; column < mColumnHeaderLength; column++) {
-            currentSongRow[column] = mSongs[mCurrentSongSelectedIndex][column];
-        }
+    public Vector getCurrentSongSelected() {
+        //String[] currentSongRow = new String[8];
+//        for (int column = 0; column < mColumnHeaderLength; column++) {
+//            currentSongRow[column] = mSongs[mCurrentSongSelectedIndex][column];
+//        }
+        Vector currentSongRow = mSongs.get(mCurrentSongSelectedIndex);
         mSongsTable.setRowSelectionInterval(mCurrentSongSelectedIndex, mCurrentSongSelectedIndex);
         return currentSongRow;
     }
     
-    public String[] getCurrentSongSelected(int index) {
-        String[] currentSongRow = new String[8];
-        for (int column = 0; column < mColumnHeaderLength; column++) {
-            currentSongRow[column] = mSongs[index][column];
-        }
+    public Vector getCurrentSongSelected(int index) {
+        //String[] currentSongRow = new String[8];
+//        for (int column = 0; column < mColumnHeaderLength; column++) {
+//            currentSongRow[column] = mSongs[index][column];
+//        }
+        Vector currentSongRow = mSongs.get(index);
         mSongsTable.setRowSelectionInterval(index, index);
         return currentSongRow;
     }
@@ -299,31 +319,33 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         return mSongCount;
     }
 
-    public String[] getNextSong() {
+    public Vector getNextSong() {
         mCurrentSongSelectedIndex++;
-        String[] currentSongRow = new String[8];
+        //String[] currentSongRow = new String[8];
         if (mCurrentSongSelectedIndex >= mSongCount) {
             mCurrentSongSelectedIndex = 0;
         }
-        for (int column = 0; column < mColumnHeaderLength; column++) {
-            currentSongRow[column] = mSongs[mCurrentSongSelectedIndex][column];
-        }
+//        for (int column = 0; column < mColumnHeaderLength; column++) {
+//            currentSongRow[column] = mSongs[mCurrentSongSelectedIndex][column];
+//        }
+        Vector currentSongRow = mSongs.get(mCurrentSongSelectedIndex);
         System.out.println("Next song:" + mCurrentSongSelectedIndex + " song count = " + mSongCount);
         mSongsTable.setRowSelectionInterval(mCurrentSongSelectedIndex, mCurrentSongSelectedIndex);
         return currentSongRow;
     }
 
-    public String[] getPrevSong() {
+    public Vector  getPrevSong() {
         System.out.println("Song index prev: " + mCurrentSongSelectedIndex);
         mCurrentSongSelectedIndex--;
         System.out.println("Index: " + mCurrentSongSelectedIndex);
-        String[] currentSongRow = new String[8];
+        //String[] currentSongRow = new String[8];
         if (mCurrentSongSelectedIndex < 0) {
             mCurrentSongSelectedIndex = mSongCount - 1; //wrap around the index
         }
-        for (int column = 0; column < mColumnHeaderLength; column++) {
-            currentSongRow[column] = mSongs[mCurrentSongSelectedIndex][column];
-        }
+//        for (int column = 0; column < mColumnHeaderLength; column++) {
+//            currentSongRow[column] = mSongs[mCurrentSongSelectedIndex][column];
+//        }
+        Vector currentSongRow = mSongs.get(mCurrentSongSelectedIndex);
         mSongsTable.setRowSelectionInterval(mCurrentSongSelectedIndex, mCurrentSongSelectedIndex);
         return currentSongRow;
 
@@ -332,10 +354,9 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
     // Data members
     private int mSongCount;
     //private String[] songTags;
-    private static final String[] COLUMN_HEADER = {"Filepath", "Title", "Artist", "Album",
-        "Album Year", "Track #", "Genre", "Comments"};
-    private final int mColumnHeaderLength = COLUMN_HEADER.length;
-    private final String[][] mSongs;
+    private Vector<String> COLUMN_HEADER; 
+    //private final int mColumnHeaderLength = COLUMN_HEADER.size();
+    private Vector<Vector> mSongs;
     private JTable mSongsTable;
     private JScrollPane mScrollPane;
     private Connection conn;
@@ -366,7 +387,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         } 
         else if(e.getSource() == mMenuRemoveSong) {
             System.out.println("Remove song was clicked");
-            this.deleteSong(mSongs[mCurrentSongSelectedIndex][0]);
+            this.deleteSong(mSongs.get(mCurrentSongSelectedIndex));
         }
         else if (e.getSource() == mSongsTable) {
             System.out.println("The Jtable was clicked");

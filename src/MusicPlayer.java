@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -133,7 +134,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mMainPanel.setBackground(Color.DARK_GRAY);
     }
     
-    private void playSong(String [] songToPlay){
+    private void playSong(Vector<String> songToPlay){
 //        if(songToPlay.equals(mPlayer.getSourceLocation())){
 //            //do nothing
 //        }
@@ -144,10 +145,10 @@ public class MusicPlayer extends JPanel implements ActionListener {
         } 
         
         
-        mPlayer.setSourceLocation(songToPlay[0]);
-        mTextArea.setText("\n\n Current song playing:\n\tArtist: " + songToPlay[1] 
-                        + "\n\tSong: "+ songToPlay[2] + "\n\tAlbum: " 
-                        + songToPlay[3] + "\n\tSong " +  (mLastSongPlayedIndex + 1) + " of " + mSongs.getSongsCount());
+        mPlayer.setSourceLocation(songToPlay.get(0));
+        mTextArea.setText("\n\n Current song playing:\n\tArtist: " + songToPlay.get(1) 
+                        + "\n\tSong: "+ songToPlay.get(2) + "\n\tAlbum: " 
+                        + songToPlay.get(3) + "\n\tSong " +  (mLastSongPlayedIndex + 1) + " of " + mSongs.getSongsCount());
         
         // still need to check this
         // a while loop might be needed to keep on checking for isEndOfMediaReached()
@@ -187,16 +188,16 @@ public class MusicPlayer extends JPanel implements ActionListener {
             //Handle save button action.
         }
         else if(e.getSource() == mMenuBar.getDeleteSongItem()) {
-            mSongs.deleteSong(mSongs.getCurrentSongSelected()[0]);
+            mSongs.deleteSong(mSongs.getCurrentSongSelected());
             mSongs.createTable();
             //this.createSongsTable();
-            System.out.println("Deleted song: " + mSongs.getCurrentSongSelected()[2]);
+            System.out.println("Deleted song: " + mSongs.getCurrentSongSelected().get(2));
         }
         else if (e.getSource() == mPlayButton) {
             // Debugging playing
             mLastSongPlayedIndex = mSongs.getCurrentSongSelectedIndex(); // saves the last song played
             playSong(mSongs.getCurrentSongSelected());
-            System.out.println("Playing: " +  mSongs.getCurrentSongSelected()[1]);
+            System.out.println("Playing: " +  mSongs.getCurrentSongSelected().get(1));
             /*
             try {
                 

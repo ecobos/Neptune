@@ -97,7 +97,7 @@ public class Player extends JPanel implements ActionListener {
     private void createSongsTable() {
         mSongs = new Library();
         //mSongs.readTags();
-        mTablePanel = mSongs.createTable();
+        mTablePanel = mSongs;
         mBounds.anchor = GridBagConstraints.PAGE_END;
         mBounds.gridx = 0;
         mBounds.gridy = 1;
