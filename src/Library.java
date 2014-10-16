@@ -60,7 +60,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         COLUMN_HEADER.addElement("Track #");
         COLUMN_HEADER.addElement("Genre");
         COLUMN_HEADER.addElement("Comments");
-
+        localVectorData = new Vector<Vector>();
         getSongsFromDatabase();
     }
 
