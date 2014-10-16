@@ -6,6 +6,7 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -181,9 +182,11 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         }
         return stringToCheck;
     }
+
     /**
      * This function will add the song to the vector locally, but not update the
      * online database
+     *
      * @param filepath is the filepath of the song file
      */
     public void addSongToLocalTable(String filepath) {
@@ -201,7 +204,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         mSongs.addElement(vectorData);
         mSongCount++; // increment song count by 1 
     }
-    
+
     public void addSongToDatabase(String filepath) {
         connectDB(); // We should probably include this in the constructor to avoid calling it everytime we need to update database
         String[] songTags = getSongTags(filepath);
@@ -269,7 +272,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         mScrollPane.setWheelScrollingEnabled(true);
         mScrollPane.getBounds();
         JPanel panel = new JPanel();
-       // new DropTarget(panel, this);
+        // new DropTarget(panel, this);
         mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(300);
         mSongsTable.getColumnModel().getColumn(1).setPreferredWidth(200);
@@ -353,6 +356,10 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
     public int getSongsCount() {
         return mSongCount;
     }
+    
+    public boolean getDoubleClick() {
+        return mDoubleClick;
+    }
 
     public Vector getNextSong() {
         mCurrentSongSelectedIndex++;
@@ -388,6 +395,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
 
     // Data members
     private int mSongCount;
+    private boolean mDoubleClick;
     //private String[] songTags;
     private Vector<String> COLUMN_HEADER;
     //private final int mColumnHeaderLength = COLUMN_HEADER.size();
@@ -407,6 +415,8 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
 
     @Override
     public void mousePressed(MouseEvent e) {
+        //MusicPlayer player;// = new MusicPlayer();
+        mDoubleClick = false;
         if (e.getSource() == mMenuAddSong) {
             System.out.println("The menu shiet works");
             JFileChooser fc = new JFileChooser();
@@ -429,6 +439,14 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             //System.out.println(mSongsTable.getSelectedRow());
             mCurrentSongSelectedIndex = mSongsTable.getSelectedRow(); //changed by Edgar
             System.out.println(mCurrentSongSelectedIndex);
+            if (e.getClickCount() == 2) {
+                mDoubleClick = true;
+                System.out.println("double clicked");
+                //play
+                System.out.println("Playing: " +  getCurrentSongSelected().get(1));
+        
+            }
+        
         }
 
     }

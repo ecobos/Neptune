@@ -134,6 +134,9 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mMainPanel.add(mTablePanel, mBounds);
         mMainPanel.setBackground(Color.DARK_GRAY);
     }
+    public void playSong(){
+        playSong(mSongs.getCurrentSongSelected());
+    }
     
     private void playSong(Vector<String> songToPlay){
 //        if(songToPlay.equals(mPlayer.getSourceLocation())){
@@ -285,6 +288,12 @@ public class MusicPlayer extends JPanel implements ActionListener {
             }
             
         }
+        else if (e.getSource() == mMainPanel && mSongs.getDoubleClick()){
+            mLastSongPlayedIndex = mSongs.getCurrentSongSelectedIndex(); // saves the last song played
+            playSong(mSongs.getCurrentSongSelected());
+            System.out.println("Playing: " +  mSongs.getCurrentSongSelected().get(1));
+        }
+        
     }
 
 }
