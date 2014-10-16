@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -62,8 +63,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mMenuBar.getDeleteSongItem().addActionListener(this);
         mMenuBar.getPlaySongNotInLibrary().addActionListener(this);
         frame.setJMenuBar(mMenuBar.getMenu());
-        frame.setMinimumSize(new Dimension(1050, 300));
-
+        frame.setMinimumSize(new Dimension(1330, 660));
         frame.add(mMainPanel);
         frame.pack();
         frame.setVisible(true);
@@ -155,6 +155,10 @@ public class MusicPlayer extends JPanel implements ActionListener {
         // a while loop might be needed to keep on checking for isEndOfMediaReached()
         // might mean lots of overhead
         mPlayer.play();
+        
+        if(mPlayer.getState() == PlayerState.PAUSED_BUFFERING){
+            System.out.println("Song is buffering, please wait...");
+        }
 //        try {
 //            
 //        }
