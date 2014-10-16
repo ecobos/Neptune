@@ -139,9 +139,9 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
                 vectorData.addElement(rs.getString("artist"));
                 vectorData.addElement(checkForEmptyString(rs.getString("album")));
                 vectorData.addElement(checkForEmptyString(rs.getString("year")));
-                vectorData.addElement(checkForEmptyString(rs.getString("comment")));
-                vectorData.addElement(checkForEmptyString(rs.getString("genre")));
                 vectorData.addElement(checkForEmptyString(rs.getString("track_num")));
+                vectorData.addElement(checkForEmptyString(rs.getString("genre")));
+                vectorData.addElement(checkForEmptyString(rs.getString("comment")));
                 mSongs.addElement(vectorData);
                 mSongCount++; // increment song count by 1 
                 //System.out.println(filepath + " " +  title + " " + artist + " " + album + " " + year +
@@ -262,10 +262,8 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         mSongsTable.doLayout();
         //mScrollPane = new JScrollPane(mSongsTable);
         panel.add(mScrollPane);
-        //panel.setLayout(new BorderLayout());
         //mSongsTable.setAutoscrolls(true);
         mSongsTable.setComponentPopupMenu(createPopupMenu()); //add a popup menu to the JTable
-        //mSongsTable = autoResizeColWidth(mSongsTable, mTableModel);
         return panel;
     }
 
