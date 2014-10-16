@@ -191,17 +191,18 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
      */
     public void addSongToLocalTable(String filepath) {
         String[] songTags = getSongTags(filepath); // get song tags
-        Vector<String> localVectorData = new Vector<String>();
+        Vector<String> vectorData = new Vector<String>();
         //for (int i = 0; i < songCount; i++) {
-        localVectorData.addElement(songTags[0]);
-        localVectorData.addElement(songTags[0]);
-        localVectorData.addElement(songTags[0]);
-        localVectorData.addElement(songTags[0]);
-        localVectorData.addElement(songTags[0]);
-        localVectorData.addElement(songTags[0]);
-        localVectorData.addElement(songTags[0]);
-        localVectorData.addElement(songTags[0]);
-        mSongs.addElement(localVectorData);
+        vectorData.addElement(songTags[0]);
+        vectorData.addElement(songTags[1]);
+        vectorData.addElement(songTags[2]);
+        vectorData.addElement(songTags[3]);
+        vectorData.addElement(songTags[4]);
+        vectorData.addElement(songTags[5]);
+        vectorData.addElement(songTags[6]);
+        vectorData.addElement(songTags[7]);
+        mSongs.addElement(vectorData);
+        mTableModel.fireTableDataChanged();
         mSongCount++; // increment song count by 1 
     }
 
@@ -407,7 +408,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
     private JMenuItem mMenuRemoveSong;
     private JMenuItem mMenuAddSong;
     private DefaultTableModel mTableModel;
-
+    
     @Override
     public void mouseClicked(MouseEvent e) {
 
