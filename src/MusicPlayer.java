@@ -90,7 +90,8 @@ public class MusicPlayer extends JPanel implements ActionListener {
 
         mTextArea = new JTextArea(10, 45);
         mTextArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        mTextArea.setForeground(Color.ORANGE);
+        mTextArea.setForeground(Color.DARK_GRAY);
+        
         mTextArea.setEditable(false);
 
         mBounds.fill = GridBagConstraints.HORIZONTAL;
@@ -116,6 +117,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mBounds.gridy = 0;
         mBounds.insets = new Insets(10, 40, 10, 0);
         mMainPanel.add(mTextArea, mBounds);
+        
         mBounds.insets = new Insets(0, 100, 90, 0);
         mBounds.gridx = 6;
         mBounds.gridy = 0;

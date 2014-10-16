@@ -68,10 +68,12 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
      * Connects to database "nextunes" created on private server.
      */
     private void connectDB() {
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://mysql.karldotson.com:3306/nextunes", "cecs343keg", "chocotaco343");
+        
+        try {     
+                System.out.println("is null");
+                Class.forName("com.mysql.jdbc.Driver");
+                conn = DriverManager.getConnection("jdbc:mysql://mysql.karldotson.com:3306/nextunes", "cecs343keg", "chocotaco343");
+                 System.out.println("Connection successful");      
         } catch (SQLException e) {
             System.out.println("Connection to database failed.");
             e.printStackTrace();
@@ -81,7 +83,8 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             c.printStackTrace();
             return;
         }
-        System.out.println("Connection successful");
+        
+        
         // connects to DB
     }
 
@@ -118,9 +121,10 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
      * retrieve songs, songs 2-D array will get populated here
      */
     private void getSongsFromDatabase() {
-        connectDB(); // connects to DB
+        
 
         try {
+            connectDB(); // connects to DB 
             Statement stat = conn.createStatement();
             String query = "SELECT * FROM Songs";
             ResultSet rs = stat.executeQuery(query);
@@ -201,9 +205,13 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
     }
 
     public void addSongToDatabase(String filepath) {
-        connectDB(); // We should probably include this in the constructor to avoid calling it everytime we need to update database
+        
+         // We should probably include this in the constructor to avoid calling it everytime we need to update database
         String[] songTags = getSongTags(filepath);
         try {
+            if(conn.isClosed()){
+                connectDB();
+            }
             PreparedStatement pstat = conn.prepareStatement("INSERT INTO Songs(filepath, title, artist, album, year, comment, genre, track_num) VALUES(?,?,?,?,?,?,?,?)");
             pstat.setString(1, songTags[0]); // value of filepath
             pstat.setString(2, songTags[1]); // value of title
@@ -242,9 +250,12 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             //mTableModel.fireTableDataChanged();
             
         } else{
-        connectDB();
+        
         String filepath = fileToDelete.get(0);
         try {
+            if(conn.isClosed()){
+                connectDB();
+            }
             PreparedStatement pstat = conn.prepareStatement("DELETE FROM Songs WHERE filepath = ?");
             pstat.setString(1, filepath);
             pstat.executeUpdate();
@@ -276,7 +287,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         mScrollPane.setWheelScrollingEnabled(true);
         mScrollPane.getBounds();
         JPanel panel = new JPanel();
-        // new DropTarget(panel, this);
+        new DropTarget(panel, this);
         mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(300);
         mSongsTable.getColumnModel().getColumn(1).setPreferredWidth(200);
@@ -485,7 +496,8 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
 
     @Override
     public void dragOver(DropTargetDragEvent dragOver) {
-        mSongsTable.setBackground(Color.red);
+        //System.out.println("something was dragged here");
+        mSongsTable.setBackground(Color.GREEN);
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -513,6 +525,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
                     List<File> files = (List) transferable.getTransferData(type);
                     for (File file : files) {
                         System.out.println(file.getAbsolutePath());
+                        addSongToDatabase(file.getAbsolutePath());
                     }
                 }
             } catch (UnsupportedFlavorException ex) {
