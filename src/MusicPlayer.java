@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -61,8 +62,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mMenuBar.getAddSongItem().addActionListener(this);
         mMenuBar.getDeleteSongItem().addActionListener(this);
         frame.setJMenuBar(mMenuBar.getMenu());
-        frame.setMinimumSize(new Dimension(1400, 600));
-
+        frame.setMinimumSize(new Dimension(1330, 660));
         frame.add(mMainPanel);
         frame.pack();
         frame.setVisible(true);

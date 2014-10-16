@@ -3,8 +3,10 @@ import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -16,6 +18,8 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
 //import java.sql.Connection;
@@ -233,19 +237,19 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
      * Create GUI for table
      */
     public JPanel getTable() {
-        mTableModel = new DefaultTableModel(mSongs, COLUMN_HEADER);
         mSongsTable = new JTable();
-        mSongsTable.setModel(mTableModel);
-        //mSongsTable.setPreferredScrollableViewportSize(new Dimension(1000, 100));
-        mSongsTable.setFillsViewportHeight(true);
-        mSongsTable.addMouseListener((MouseListener) this);
-
-        mScrollPane = new JScrollPane(mSongsTable);
-        JPanel panel = new JPanel();
-        new DropTarget(panel, this);
         mSongsTable.setPreferredScrollableViewportSize(new Dimension(1300, (mSongs.size() + 20) * 10));
+        mTableModel = new DefaultTableModel(mSongs, COLUMN_HEADER);
+        mSongsTable.addMouseListener((MouseListener) this);
+        mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setAutoCreateRowSorter(true);
+        mSongsTable.setModel(mTableModel);
+        mScrollPane = new JScrollPane(mSongsTable);
+        mScrollPane.setWheelScrollingEnabled(true);
+        mScrollPane.getBounds();
+        JPanel panel = new JPanel();
+       // new DropTarget(panel, this);
         mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(300);
         mSongsTable.getColumnModel().getColumn(1).setPreferredWidth(200);
@@ -255,10 +259,13 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         mSongsTable.getColumnModel().getColumn(5).setPreferredWidth(100);
         mSongsTable.getColumnModel().getColumn(6).setPreferredWidth(100);
         mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(200);
-        mScrollPane = new JScrollPane(mSongsTable);
+        mSongsTable.doLayout();
+        //mScrollPane = new JScrollPane(mSongsTable);
         panel.add(mScrollPane);
-        mSongsTable.setLayout(null);
+        //panel.setLayout(new BorderLayout());
+        //mSongsTable.setAutoscrolls(true);
         mSongsTable.setComponentPopupMenu(createPopupMenu()); //add a popup menu to the JTable
+        //mSongsTable = autoResizeColWidth(mSongsTable, mTableModel);
         return panel;
     }
 
