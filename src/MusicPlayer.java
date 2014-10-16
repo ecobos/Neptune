@@ -20,6 +20,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import maryb.player.Player;
+import maryb.player.PlayerEventListener;
 import maryb.player.decoder.MP3Decoder;
 import maryb.player.PlayerState;
 //import javazoom.jl.decoder.JavaLayerException;
@@ -52,6 +53,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mMainPanel.setLayout(new GridBagLayout());
         mBounds = new GridBagConstraints();
         mPlayer = new Player();
+        mPlayer.setListener(new PlayerEvent());
         mSongs = new Library();
         createButtons();
         createSongsTable();
@@ -139,13 +141,13 @@ public class MusicPlayer extends JPanel implements ActionListener {
 //            //do nothing
 //        }
         
-        if(mPlayer.getState() == PlayerState.PLAYING){
-            System.out.println("Stopping player");
-            //mPlayer.stop();
-        } 
+//        if(mPlayer.getState() == PlayerState.PLAYING){
+//            System.out.println("Stopping player");
+//            mPlayer.stop();
+//        } 
         
         
-        mPlayer.setSourceLocation(songToPlay.get(0));
+        mPlayer.setSourceLocation(songToPlay.get(0)); //Get the filepath of the song to play
         mTextArea.setText("\n\n Current song playing:\n\tArtist: " + songToPlay.get(1) 
                         + "\n\tSong: "+ songToPlay.get(2) + "\n\tAlbum: " 
                         + songToPlay.get(3) + "\n\tSong " +  (mLastSongPlayedIndex + 1) + " of " + mSongs.getSongsCount());
@@ -153,7 +155,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         // still need to check this
         // a while loop might be needed to keep on checking for isEndOfMediaReached()
         // might mean lots of overhead
-        mPlayer.play();
+            mPlayer.play();
         
         if(mPlayer.getState() == PlayerState.PAUSED_BUFFERING){
             System.out.println("Song is buffering, please wait...");
@@ -267,4 +269,23 @@ public class MusicPlayer extends JPanel implements ActionListener {
         }
     }
 
+    
+    private class PlayerEvent implements PlayerEventListener{
+
+        @Override
+        public void endOfMedia() {
+            System.out.println("Song has reached the end");
+        }
+
+        @Override
+        public void stateChanged() {
+            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void buffer() {
+            System.out.println("Please wait while song buffers");
+        }
+        
+    }
 }
