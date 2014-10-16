@@ -191,17 +191,17 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
      */
     public void addSongToLocalTable(String filepath) {
         String[] songTags = getSongTags(filepath); // get song tags
-        Vector<String> vectorData = new Vector<String>();
+        Vector<String> localVectorData = new Vector<String>();
         //for (int i = 0; i < songCount; i++) {
-        vectorData.addElement(songTags[0]);
-        vectorData.addElement(songTags[0]);
-        vectorData.addElement(songTags[0]);
-        vectorData.addElement(songTags[0]);
-        vectorData.addElement(songTags[0]);
-        vectorData.addElement(songTags[0]);
-        vectorData.addElement(songTags[0]);
-        vectorData.addElement(songTags[0]);
-        mSongs.addElement(vectorData);
+        localVectorData.addElement(songTags[0]);
+        localVectorData.addElement(songTags[0]);
+        localVectorData.addElement(songTags[0]);
+        localVectorData.addElement(songTags[0]);
+        localVectorData.addElement(songTags[0]);
+        localVectorData.addElement(songTags[0]);
+        localVectorData.addElement(songTags[0]);
+        localVectorData.addElement(songTags[0]);
+        mSongs.addElement(localVectorData);
         mSongCount++; // increment song count by 1 
     }
 
