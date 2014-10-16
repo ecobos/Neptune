@@ -105,9 +105,12 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
      return mSongCount;
      }
      */
-    private void refreshData() {
+  private void refreshData() {
         mSongs.clear();
         getSongsFromDatabase();
+        if(!localVectorData.isEmpty()){
+            mSongs.addAll(localVectorData);
+        } 
     }
 
     /**
@@ -131,7 +134,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             int row = 0; // counter to traverse trough 2D array
 
             mSongCount = 0; // update count to reflect new data in database
-            while (rs.next() /*&& row < mSongCount */) {
+            while (rs.next()) {
                 //int songCount = 1; // this will be the query that will get us the amount of row in the DB
                 Vector<String> vectorData = new Vector<String>();
                 //for (int i = 0; i < songCount; i++) {
@@ -145,18 +148,6 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
                 vectorData.addElement(checkForEmptyString(rs.getString("comment")));
                 mSongs.addElement(vectorData);
                 mSongCount++; // increment song count by 1 
-                //System.out.println(filepath + " " +  title + " " + artist + " " + album + " " + year +
-                //        " " + comment + " " + genre + " " + track_num);
-                /*for (int j = 0; j < mAttributesLength; j++) {
-                 mSongs[ii][0] = filepath;
-                 mSongs[ii][1] = title;
-                 mSongs[ii][2] = artist;
-                 mSongs[ii][3] = album;
-                 mSongs[ii][4] = year;
-                 mSongs[ii][5] = track_num;
-                 mSongs[ii][6] = genre;
-                 mSongs[ii][7] = comment;
-                 } */
                 row++;
                 //}
             }
@@ -166,16 +157,16 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             System.out.println("Unable to get songs from database.");
 
         }
-
-        // debugging deleteSong function
-        //String song = "Red Rose"; // add whatever title you want 
-        //deleteSong(song);
-        // debugging insertSong function
-        // will only insert it once, change the path if you want to insert a different one
-        //insertSong("C:\\Music\\Spotiy", "Inserted Song", "Cold Playa", "XY",
-        //"2016", "Just inserted", "5", "20");
+        mSongCount = mSongCount+ localVectorData.size();
+        //mergeDBVectorWithLocal();
+        //mTableModel.fireTableDataChanged();
     }
 
+//    private void mergeDBVectorWithLocal(){
+//        if(!localVectorData.isEmpty()){
+//            mSongs.addAll(localVectorData);
+//        }  
+//    }
     private String checkForEmptyString(String stringToCheck) {
         if (stringToCheck.isEmpty()) {
             return "Unkown";
@@ -190,9 +181,9 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
      * @param filepath is the filepath of the song file
      */
     public void addSongToLocalTable(String filepath) {
-        String[] songTags = getSongTags(filepath); // get song tags
-        Vector<String> vectorData = new Vector<String>();
+        String[] songTags = getSongTags(filepath); // get song tags      
         //for (int i = 0; i < songCount; i++) {
+        Vector<String> vectorData = new Vector<String>();
         vectorData.addElement(songTags[0]);
         vectorData.addElement(songTags[1]);
         vectorData.addElement(songTags[2]);
@@ -201,9 +192,12 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         vectorData.addElement(songTags[5]);
         vectorData.addElement(songTags[6]);
         vectorData.addElement(songTags[7]);
-        mSongs.addElement(vectorData);
+        localVectorData.addElement(vectorData);
+        //mSongs.addElement(vectorData);
+        
+        //mSongCount++; // increment song count by 1 
+        refreshData();
         mTableModel.fireTableDataChanged();
-        mSongCount++; // increment song count by 1 
     }
 
     public void addSongToDatabase(String filepath) {
@@ -408,6 +402,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
     private JMenuItem mMenuRemoveSong;
     private JMenuItem mMenuAddSong;
     private DefaultTableModel mTableModel;
+    private Vector<Vector> localVectorData;
     
     @Override
     public void mouseClicked(MouseEvent e) {
