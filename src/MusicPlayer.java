@@ -154,6 +154,10 @@ public class MusicPlayer extends JPanel implements ActionListener {
         // a while loop might be needed to keep on checking for isEndOfMediaReached()
         // might mean lots of overhead
         mPlayer.play();
+        
+        if(mPlayer.getState() == PlayerState.PAUSED_BUFFERING){
+            System.out.println("Song is buffering, please wait...");
+        }
 //        try {
 //            
 //        }
