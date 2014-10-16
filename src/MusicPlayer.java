@@ -91,7 +91,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mTextArea = new JTextArea(10, 45);
         mTextArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         mTextArea.setForeground(Color.DARK_GRAY);
-        
+
         mTextArea.setEditable(false);
 
         mBounds.fill = GridBagConstraints.HORIZONTAL;
@@ -117,7 +117,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mBounds.gridy = 0;
         mBounds.insets = new Insets(10, 40, 10, 0);
         mMainPanel.add(mTextArea, mBounds);
-        
+
         mBounds.insets = new Insets(0, 100, 90, 0);
         mBounds.gridx = 6;
         mBounds.gridy = 0;
@@ -185,7 +185,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
             FileFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
             JFileChooser fc = new JFileChooser();
             fc.setFileFilter(filter);
-            
+
             int returnVal = fc.showOpenDialog(MusicPlayer.this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -202,7 +202,11 @@ public class MusicPlayer extends JPanel implements ActionListener {
         } //else if(e.getSource() == )
         else if (e.getSource() == mMenuBar.getDeleteSongItem()) {
             mSongs.deleteSong(mSongs.getCurrentSongSelected());
-            mTablePanel = mSongs.getTable();
+            mLastSongPlayedIndex = mLastSongPlayedIndex - 1;
+            if (mLastSongPlayedIndex < 0) {
+                mLastSongPlayedIndex = 0;
+            }
+            //mTablePanel = mSongs.getTable();
             //this.createSongsTable();
             System.out.println("Deleted song: " + mSongs.getCurrentSongSelected().get(2));
         } else if (e.getSource() == mMenuBar.getPlaySongNotInLibrary()) {
@@ -250,7 +254,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
 
                 System.out.println("Last song playing");
                 mLastSongPlayedIndex = 0; // update the last song index within the player class
-                playSong(mSongs.getCurrentSongSelected(mLastSongPlayedIndex++));
+                playSong(mSongs.getCurrentSongSelected(mLastSongPlayedIndex));
             } else if (mPlayer.getState() == PlayerState.PLAYING || mPlayer.getState() == PlayerState.PAUSED) {
                 mPlayer.stop();
                 System.out.println("mLastSongPlayedIndex: " + mLastSongPlayedIndex);
