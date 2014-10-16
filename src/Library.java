@@ -462,13 +462,14 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             //System.out.println(mSongsTable.getSelectedRow());
             mCurrentSongSelectedIndex = mSongsTable.getSelectedRow(); //changed by Edgar
             System.out.println(mCurrentSongSelectedIndex);
-            if (e.getClickCount() == 2) {
-                mDoubleClick = true;
-                System.out.println("double clicked");
-                //play
-                System.out.println("Playing: " +  getCurrentSongSelected().get(1));
-        
-            }
+            
+//            if (e.getClickCount() == 2) {
+//                mDoubleClick = true;
+//                System.out.println("double clicked");
+//                //play
+//                System.out.println("Playing: " +  getCurrentSongSelected().get(1));
+//        
+//            }
         
         }
 

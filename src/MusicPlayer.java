@@ -1,3 +1,4 @@
+import com.sun.j3d.utils.scenegraph.io.retained.Controller;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,12 +26,13 @@ import maryb.player.Player;
 import maryb.player.PlayerEventListener;
 import maryb.player.decoder.MP3Decoder;
 import maryb.player.PlayerState;
+
 //import javazoom.jl.decoder.JavaLayerException;
 //import javazoom.jl.decoder.Control;
 //import javazoom.jl.decoder.JavaLayerException;
 //import javazoom.jl.decoder;
 
-//import javazoom.jl.player.Player;
+ //import javazoom.jl.player.Player;
 /**
  *
  * @author ecobos
@@ -52,7 +54,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mMainPanel.setLayout(new GridBagLayout());
         mBounds = new GridBagConstraints();
         mPlayer = new Player();
-        mPlayer.setListener(new PlayerEvent());
+        //mPlayer.setListener(new PlayerEvent());
         mSongs = new Library();
         createButtons();
         createSongsTable();
@@ -138,14 +140,10 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mMainPanel.setBackground(Color.DARK_GRAY);
     }
 
-    public void playSong() {
-        playSong(mSongs.getCurrentSongSelected());
-    }
+
 
     private void playSong(Vector<String> songToPlay) {
-//        if(songToPlay.equals(mPlayer.getSourceLocation())){
-//            //do nothing
-//        }
+
 
 //        if(mPlayer.getState() == PlayerState.PLAYING){
 //            System.out.println("Stopping player");
@@ -160,10 +158,9 @@ public class MusicPlayer extends JPanel implements ActionListener {
         // a while loop might be needed to keep on checking for isEndOfMediaReached()
         // might mean lots of overhead
         mPlayer.play();
+       
 
-        if (mPlayer.getState() == PlayerState.PAUSED_BUFFERING) {
-            System.out.println("Song is buffering, please wait...");
-        }
+  
 //        try {
 //            
 //        }
@@ -226,22 +223,9 @@ public class MusicPlayer extends JPanel implements ActionListener {
         } else if (e.getSource() == mPlayButton) {
             // Debugging playing
             mLastSongPlayedIndex = mSongs.getCurrentSongSelectedIndex(); // saves the last song played
-            playSong(mSongs.getCurrentSongSelected());
+            playSong(mSongs.getCurrentSongSelected());    
             System.out.println("Playing: " + mSongs.getCurrentSongSelected().get(1));
-            /*
-             try {
-                
-             //FileInputStream songFile = new FileInputStream("C:\\Users\\Kelby\\Desktop\\song.mp3");
-             //Player p = new Player(songFile);
-             playSong(mSongs.getCurrentSongSelected());
-               
-                
-             } catch (Exception exc) {
-             exc.printStackTrace();
-             System.out.println("Unable to play song");
-             }
-             */
-            // debugging 
+ 
         } else if (e.getSource() == mStopButton) {
             mPlayer.stop();
         } else if (e.getSource() == mPauseButton) {
@@ -250,43 +234,51 @@ public class MusicPlayer extends JPanel implements ActionListener {
             // this ensures that if the mouse is clicked to a different row, we 
             // can still play the song that is currently next
             System.out.println("mLastSongPlayedIndex: " + mLastSongPlayedIndex + " song count: " + (mSongs.getSongsCount() - 1));
-            if (mLastSongPlayedIndex == mSongs.getSongsCount() - 1) {
+            mLastSongPlayedIndex++;
+            if (mLastSongPlayedIndex >= mSongs.getSongsCount()) {
 
                 System.out.println("Last song playing");
                 mLastSongPlayedIndex = 0; // update the last song index within the player class
                 playSong(mSongs.getCurrentSongSelected(mLastSongPlayedIndex));
-            } else if (mPlayer.getState() == PlayerState.PLAYING || mPlayer.getState() == PlayerState.PAUSED) {
-                mPlayer.stop();
+            } 
+            else if (mPlayer.getState() == PlayerState.PLAYING || mPlayer.getState() == PlayerState.PAUSED) {
+                //mPlayer.stop();
                 System.out.println("mLastSongPlayedIndex: " + mLastSongPlayedIndex);
-                playSong(mSongs.getCurrentSongSelected(++mLastSongPlayedIndex)); // updates first, then uses the value
-            } else { // already at the stopped state, so just play from here
+                //mLastSongPlayedIndex++;
+                playSong(mSongs.getCurrentSongSelected(mLastSongPlayedIndex)); // updates first, then uses the value
+            } 
+            else { // already at the stopped state, so just play from here
                 //playSong(mSongs.getNextSong();
+                //mLastSongPlayedIndex++;
                 playSong(mSongs.getCurrentSongSelected(mLastSongPlayedIndex));
             }
 
         } else if (e.getSource() == mPrevButton) {
             // this ensures that if the mouse is clicked to a different row, we 
             // can still play the song that is currently next
-            if (mLastSongPlayedIndex == 0) {
-                System.out.println("First song playing");
+            mLastSongPlayedIndex--;
+            if (mLastSongPlayedIndex < 0) {
+                //System.out.println("First song playing");
                 mLastSongPlayedIndex = mSongs.getSongsCount() - 1;
-                playSong(mSongs.getCurrentSongSelected(mLastSongPlayedIndex--));
-            } else if (mPlayer.getState() == PlayerState.PLAYING || mPlayer.getState() == PlayerState.PAUSED) {
+                playSong(mSongs.getCurrentSongSelected(mLastSongPlayedIndex));
+            } 
+            else if (mPlayer.getState() == PlayerState.PLAYING || mPlayer.getState() == PlayerState.PAUSED) {
                 mPlayer.stop();
                 System.out.println("mLastSongPlayedIndex: " + mLastSongPlayedIndex);
-                playSong(mSongs.getCurrentSongSelected(--mLastSongPlayedIndex)); // updates first, then uses the value
+                playSong(mSongs.getCurrentSongSelected(mLastSongPlayedIndex)); // updates first, then uses the value
             } else {
                 //playSong(mSongs.getPrevSong());
                 playSong(mSongs.getCurrentSongSelected(mLastSongPlayedIndex));
             }
 
-        } else if (e.getSource() == mSongs) {
-            if (mSongs.getDoubleClick()) {
-                mLastSongPlayedIndex = mSongs.getCurrentSongSelectedIndex(); // saves the last song played
-                playSong(mSongs.getCurrentSongSelected());
-                System.out.println("Playing: " + mSongs.getCurrentSongSelected().get(1));
-            }
-        }
+        } 
+//        else if (e.getSource() == mSongs) {
+//            if (mSongs.getDoubleClick()) {
+//                mLastSongPlayedIndex = mSongs.getCurrentSongSelectedIndex(); // saves the last song played
+//                playSong(mSongs.getCurrentSongSelected());
+//                System.out.println("Playing: " + mSongs.getCurrentSongSelected().get(1));
+//            }
+//        }
 
     }
 
