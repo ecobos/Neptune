@@ -60,6 +60,7 @@ public class MusicPlayer extends JPanel implements ActionListener {
         mMenuBar = new TheMenu();
         mMenuBar.getAddSongItem().addActionListener(this);
         mMenuBar.getDeleteSongItem().addActionListener(this);
+        mMenuBar.getPlaySongNotInLibrary().addActionListener(this);
         frame.setJMenuBar(mMenuBar.getMenu());
         frame.setMinimumSize(new Dimension(1050, 300));
 
@@ -189,12 +190,31 @@ public class MusicPlayer extends JPanel implements ActionListener {
 
             //Handle save button action.
         }
+        //else if(e.getSource() == )
+        
         else if(e.getSource() == mMenuBar.getDeleteSongItem()) {
             mSongs.deleteSong(mSongs.getCurrentSongSelected());
             mTablePanel = mSongs.getTable();
             //this.createSongsTable();
             System.out.println("Deleted song: " + mSongs.getCurrentSongSelected().get(2));
         }
+        else if(e.getSource() == mMenuBar.getPlaySongNotInLibrary()) {
+            JFileChooser fc = new JFileChooser();
+            int returnVal = fc.showOpenDialog(MusicPlayer.this);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                mSongs.addSongToLocalTable(file.getAbsolutePath());
+                System.out.println("Adding song with filepath: " + file.getAbsolutePath() + " to library.");
+                //mTablePanel = mSongs.getTable();
+                
+                
+                //System.out.println("Opening: " + file.getAbsolutePath() + ".\n");
+            } else {
+                System.out.println("Open command cancelled by user.\n");
+            }
+        }
+        
         else if (e.getSource() == mPlayButton) {
             // Debugging playing
             mLastSongPlayedIndex = mSongs.getCurrentSongSelectedIndex(); // saves the last song played

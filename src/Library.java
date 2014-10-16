@@ -177,7 +177,27 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         }
         return stringToCheck;
     }
-
+    /**
+     * This function will add the song to the vector locally, but not update the
+     * online database
+     * @param filepath is the filepath of the song file
+     */
+    public void addSongToLocalTable(String filepath) {
+        String[] songTags = getSongTags(filepath); // get song tags
+        Vector<String> vectorData = new Vector<String>();
+        //for (int i = 0; i < songCount; i++) {
+        vectorData.addElement(songTags[0]);
+        vectorData.addElement(songTags[0]);
+        vectorData.addElement(songTags[0]);
+        vectorData.addElement(songTags[0]);
+        vectorData.addElement(songTags[0]);
+        vectorData.addElement(songTags[0]);
+        vectorData.addElement(songTags[0]);
+        vectorData.addElement(songTags[0]);
+        mSongs.addElement(vectorData);
+        mSongCount++; // increment song count by 1 
+    }
+    
     public void addSongToDatabase(String filepath) {
         connectDB(); // We should probably include this in the constructor to avoid calling it everytime we need to update database
         String[] songTags = getSongTags(filepath);
