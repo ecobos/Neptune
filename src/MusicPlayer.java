@@ -17,6 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import maryb.player.Player;
@@ -178,7 +180,10 @@ public class MusicPlayer extends JPanel implements ActionListener {
 
         //Handle open button action.
         if (e.getSource() == mAddButton || e.getSource() == mMenuBar.getAddSongItem()) {
+            FileFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
             JFileChooser fc = new JFileChooser();
+            fc.setFileFilter(filter);
+            
             int returnVal = fc.showOpenDialog(MusicPlayer.this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {

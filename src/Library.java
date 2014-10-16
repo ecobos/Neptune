@@ -138,9 +138,9 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
                 //int songCount = 1; // this will be the query that will get us the amount of row in the DB
                 Vector<String> vectorData = new Vector<String>();
                 //for (int i = 0; i < songCount; i++) {
-                vectorData.addElement(rs.getString("filepath"));
-                vectorData.addElement(rs.getString("title"));
-                vectorData.addElement(rs.getString("artist"));
+                vectorData.addElement(checkForEmptyString(rs.getString("filepath")));
+                vectorData.addElement(checkForEmptyString(rs.getString("title")));
+                vectorData.addElement(checkForEmptyString(rs.getString("artist")));
                 vectorData.addElement(checkForEmptyString(rs.getString("album")));
                 vectorData.addElement(checkForEmptyString(rs.getString("year")));
                 vectorData.addElement(checkForEmptyString(rs.getString("track_num")));
@@ -236,19 +236,28 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
      * @param filepath
      */
     public void deleteSong(Vector<String> fileToDelete) {
+        if (localVectorData.contains(fileToDelete)){
+            localVectorData.removeElement(fileToDelete);
+            //refreshData();
+            //mTableModel.fireTableDataChanged();
+            
+        } else{
         connectDB();
         String filepath = fileToDelete.get(0);
         try {
             PreparedStatement pstat = conn.prepareStatement("DELETE FROM Songs WHERE filepath = ?");
             pstat.setString(1, filepath);
             pstat.executeUpdate();
-            refreshData();
-            mTableModel.fireTableDataChanged();
+            //refreshData();
+            //mTableModel.fireTableDataChanged();
             //this.getSongsFromDatabase(); //update the JTable after a song insert is made
         } catch (SQLException e) {
             System.out.println("Unable to delete song");
         }
-        System.out.println("Song with file path: " + filepath + " was deleted");
+        }
+            refreshData();
+            mTableModel.fireTableDataChanged();
+        System.out.println("Song with file path: " + fileToDelete + " was deleted");
     }
 
     /**
@@ -312,6 +321,10 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
 
         if (mp3data != null) {
             ID3v1 id3v1Tags = mp3data.getId3v1Tag();
+            if(id3v1Tags == null){
+               id3v1Tags = mp3data.getId3v2Tag();
+            }
+            
             songTags[0] = pathToFile;
             songTags[1] = id3v1Tags.getTitle();
             songTags[2] = id3v1Tags.getArtist();
@@ -427,8 +440,11 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
                 System.out.println("Open command cancelled by user.\n");
             }
         } else if (e.getSource() == mMenuRemoveSong) {
-            System.out.println("Remove song was clicked");
-            this.deleteSong(mSongs.get(mCurrentSongSelectedIndex));
+            if(mCurrentSongSelectedIndex >= 0 && mCurrentSongSelectedIndex < mSongCount){
+                System.out.println("Remove song was clicked");
+                this.deleteSong(mSongs.get(mCurrentSongSelectedIndex));
+            }
+            
         } else if (e.getSource() == mSongsTable) {
             System.out.println("The Jtable was clicked");
             //JTable result = (JTable) e.getSource();
