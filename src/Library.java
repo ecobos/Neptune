@@ -68,14 +68,14 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
      * Connects to database "nextunes" created on private server.
      */
     private void connectDB() {
-        
-        try {     
-                System.out.println("is null");
-                Class.forName("com.mysql.jdbc.Driver");
-                conn = DriverManager.getConnection("jdbc:mysql://mysql.karldotson.com:3306/nextunes", "cecs343keg", "chocotaco343");
-                 System.out.println("Connection successful");      
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://mysql.karldotson.com:3306/nextunes", "cecs343keg", "chocotaco343");
+            System.out.println("Connection successful");
         } catch (SQLException e) {
             System.out.println("Connection to database failed.");
+            JOptionPane.showMessageDialog(this, "Connection to database failed.");
             e.printStackTrace();
             return;
         } catch (ClassNotFoundException c) {
@@ -83,37 +83,17 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             c.printStackTrace();
             return;
         }
-        
-        
+
         // connects to DB
     }
 
-    /* already exists below "getCurrentSongSelectedIndex" function
-     private int getSongsCount() {
-     //        connectDB();
-     //
-     //        try {
-     //            Statement stat = conn.createStatement();
-     //
-     //            // get song count from database
-     //            ResultSet countRS = stat.executeQuery("SELECT COUNT(*) AS total FROM Songs");
-     //            countRS.next(); // moves pointer to first element
-     //            mSongCount = countRS.getInt("total");
-     //            //System.out.println(songCount + " songs in library");
-     //            conn.close();
-     //        } catch (SQLException e) {
-     //            e.printStackTrace();
-     //        }
 
-     return mSongCount;
-     }
-     */
-  private void refreshData() {
+    private void refreshData() {
         mSongs.clear();
         getSongsFromDatabase();
-        if(!localVectorData.isEmpty()){
+        if (!localVectorData.isEmpty()) {
             mSongs.addAll(localVectorData);
-        } 
+        }
     }
 
     /**
@@ -121,7 +101,6 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
      * retrieve songs, songs 2-D array will get populated here
      */
     private void getSongsFromDatabase() {
-        
 
         try {
             connectDB(); // connects to DB 
@@ -129,12 +108,6 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             String query = "SELECT * FROM Songs";
             ResultSet rs = stat.executeQuery(query);
 
-            // Copy data from COLUMN_HEADER into the Songs array
-            //System.arraycopy(COLUMN_HEADER, 0, mSongs[0], 0, mColumnHeaderLength);
-            //mSongs.add(COLUMN_HEADER);
-//             for (int column = 0; column < mColumnHeaderLength; column++) {
-//             mSongs[0][column] = COLUMN_HEADER[column];
-//             }
             int row = 0; // counter to traverse trough 2D array
 
             mSongCount = 0; // update count to reflect new data in database
@@ -161,16 +134,11 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
             System.out.println("Unable to get songs from database.");
 
         }
-        mSongCount = mSongCount+ localVectorData.size();
+        mSongCount = mSongCount + localVectorData.size();
         //mergeDBVectorWithLocal();
         //mTableModel.fireTableDataChanged();
     }
 
-//    private void mergeDBVectorWithLocal(){
-//        if(!localVectorData.isEmpty()){
-//            mSongs.addAll(localVectorData);
-//        }  
-//    }
     private String checkForEmptyString(String stringToCheck) {
         if (stringToCheck.isEmpty()) {
             return "Unkown";
@@ -198,18 +166,18 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
         vectorData.addElement(songTags[7]);
         localVectorData.addElement(vectorData);
         //mSongs.addElement(vectorData);
-        
+
         //mSongCount++; // increment song count by 1 
         refreshData();
         mTableModel.fireTableDataChanged();
     }
 
     public void addSongToDatabase(String filepath) {
-        
-         // We should probably include this in the constructor to avoid calling it everytime we need to update database
+
+        // We should probably include this in the constructor to avoid calling it everytime we need to update database
         String[] songTags = getSongTags(filepath);
         try {
-            if(conn.isClosed()){
+            if (conn.isClosed()) {
                 connectDB();
             }
             PreparedStatement pstat = conn.prepareStatement("INSERT INTO Songs(filepath, title, artist, album, year, comment, genre, track_num) VALUES(?,?,?,?,?,?,?,?)");
@@ -244,30 +212,30 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
      * @param filepath
      */
     public void deleteSong(Vector<String> fileToDelete) {
-        if (localVectorData.contains(fileToDelete)){
+        if (localVectorData.contains(fileToDelete)) {
             localVectorData.removeElement(fileToDelete);
             //refreshData();
             //mTableModel.fireTableDataChanged();
-            
-        } else{
-        
-        String filepath = fileToDelete.get(0);
-        try {
-            if(conn.isClosed()){
-                connectDB();
-            }
-            PreparedStatement pstat = conn.prepareStatement("DELETE FROM Songs WHERE filepath = ?");
-            pstat.setString(1, filepath);
-            pstat.executeUpdate();
+
+        } else {
+
+            String filepath = fileToDelete.get(0);
+            try {
+                if (conn.isClosed()) {
+                    connectDB();
+                }
+                PreparedStatement pstat = conn.prepareStatement("DELETE FROM Songs WHERE filepath = ?");
+                pstat.setString(1, filepath);
+                pstat.executeUpdate();
             //refreshData();
-            //mTableModel.fireTableDataChanged();
-            //this.getSongsFromDatabase(); //update the JTable after a song insert is made
-        } catch (SQLException e) {
-            System.out.println("Unable to delete song");
+                //mTableModel.fireTableDataChanged();
+                //this.getSongsFromDatabase(); //update the JTable after a song insert is made
+            } catch (SQLException e) {
+                System.out.println("Unable to delete song");
+            }
         }
-        }
-            refreshData();
-            mTableModel.fireTableDataChanged();
+        refreshData();
+        mTableModel.fireTableDataChanged();
         System.out.println("Song with file path: " + fileToDelete + " was deleted");
     }
 
@@ -332,10 +300,10 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
 
         if (mp3data != null) {
             ID3v1 id3v1Tags = mp3data.getId3v1Tag();
-            if(id3v1Tags == null){
-               id3v1Tags = mp3data.getId3v2Tag();
+            if (id3v1Tags == null) {
+                id3v1Tags = mp3data.getId3v2Tag();
             }
-            
+
             songTags[0] = pathToFile;
             songTags[1] = id3v1Tags.getTitle();
             songTags[2] = id3v1Tags.getArtist();
@@ -375,7 +343,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
     public int getSongsCount() {
         return mSongCount;
     }
-    
+
     public boolean getDoubleClick() {
         return mDoubleClick;
     }
@@ -427,7 +395,7 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
     private JMenuItem mMenuAddSong;
     private DefaultTableModel mTableModel;
     private Vector<Vector> localVectorData;
-    
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -451,18 +419,18 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
                 System.out.println("Open command cancelled by user.\n");
             }
         } else if (e.getSource() == mMenuRemoveSong) {
-            if(mCurrentSongSelectedIndex >= 0 && mCurrentSongSelectedIndex < mSongCount){
+            if (mCurrentSongSelectedIndex >= 0 && mCurrentSongSelectedIndex < mSongCount) {
                 System.out.println("Remove song was clicked");
                 this.deleteSong(mSongs.get(mCurrentSongSelectedIndex));
             }
-            
+
         } else if (e.getSource() == mSongsTable) {
             System.out.println("The Jtable was clicked");
             //JTable result = (JTable) e.getSource();
             //System.out.println(mSongsTable.getSelectedRow());
             mCurrentSongSelectedIndex = mSongsTable.getSelectedRow(); //changed by Edgar
             System.out.println(mCurrentSongSelectedIndex);
-            
+
 //            if (e.getClickCount() == 2) {
 //                mDoubleClick = true;
 //                System.out.println("double clicked");
@@ -470,7 +438,6 @@ public class Library extends JPanel implements MouseListener, DropTargetListener
 //                System.out.println("Playing: " +  getCurrentSongSelected().get(1));
 //        
 //            }
-        
         }
 
     }
