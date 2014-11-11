@@ -10,14 +10,17 @@ public class JTreeComponent implements Observer {
     private Vector<String> mPlaylistVector; // vector used to store retrieved playlist names
     private JTree mPlaylistTree; 
     private DefaultMutableTreeNode playlistRoot; // child nodes are added to this root
+    private DefaultMutableTreeNode playlist;
     private JPanel mTreePanel;
 // the root is added to the tree
     // tree --> root --> children
     public JTreeComponent(Vector<String> playlistFromDatabase) {
         // create root node that will get passed in to create the tree      
         // tree gets created using the playlistRoot node
-        playlistRoot = new DefaultMutableTreeNode("Playlists");
-        mTreePanel = new JPanel();
+        
+        playlistRoot = new DefaultMutableTreeNode("Root");
+        playlistRoot.add(new DefaultMutableTreeNode("Library"));
+        playlist = new DefaultMutableTreeNode("Playlists");
         
         // get the list of playlist from database
         mPlaylistVector = playlistFromDatabase; 
@@ -25,7 +28,12 @@ public class JTreeComponent implements Observer {
         for(int i=0; i<mPlaylistVector.size(); i++) {
             addNodeToTree(mPlaylistVector.get(i));
         }
+        
+        playlistRoot.add(playlist);
         mPlaylistTree= new JTree(playlistRoot);
+        mPlaylistTree.setRootVisible(false);
+        
+        mTreePanel = new JPanel();
         mTreePanel.add(mPlaylistTree);
     }
     
@@ -40,7 +48,7 @@ public class JTreeComponent implements Observer {
     public void addNodeToTree(String nodeToAdd) {
         // pass in string of node and create node with it
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(nodeToAdd); 
-        playlistRoot.add(node);
+        playlist.add(node);
     }
     
     // assume the node to be deleted already exist within playlist table

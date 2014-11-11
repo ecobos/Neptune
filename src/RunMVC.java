@@ -8,7 +8,8 @@ public class RunMVC {
         ButtonsComponent buttons = new ButtonsComponent();
         TextAreaComponent text = new TextAreaComponent();
         JTreeComponent tree = new JTreeComponent(database.getPlaylistsFromDatabase());
-        Neptune player = new Neptune(table, buttons, menu, text, tree);
+        JSliderComponent slider = new JSliderComponent();
+        Neptune player = new Neptune(table, buttons, menu, text, tree, slider);
         
         
 	//tell Model about View. 
@@ -22,13 +23,14 @@ public class RunMVC {
         controller.addMenuView(menu);
         controller.addTextView(text);
         controller.addTableModel(table);
-        
+        controller.addSlider(slider);
 
 	//tell View about Controller 
 	buttons.setController(controller);
         menu.setController(controller);
         table.addDropController(controller);
         table.addMouseController(controller);
+        slider.addMouseController(controller);
     }
     
     public static void main(String args[]) {

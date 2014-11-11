@@ -22,13 +22,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.PLAIN_MESSAGE;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javazoom.jlgui.basicplayer.BasicController;
 import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 
-public class NeptuneController implements ActionListener, MouseListener, DropTargetListener{
+public class NeptuneController implements ActionListener, MouseListener, DropTargetListener, ChangeListener{
     private Neptune neptune;
     private boolean isPaused;
     private BasicPlayer player;
@@ -38,6 +40,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     private MenuComponent mMenuBar;
     private TextAreaComponent mSongInfo;
     private SongsTableComponent mTable;
+    private JSliderComponent mSlider;
+    
     
     NeptuneController(){
         player = new BasicPlayer();
@@ -47,7 +51,9 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     public void addPlayerView(Neptune mp){
         this.neptune = mp;
     }
-    
+    public void addSlider(JSliderComponent slider) {
+        this.mSlider = slider;
+    }
     public void addDatabaseModel(Database conn){
         this.mDatabase = conn;
     }
@@ -296,5 +302,16 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
         }
         System.out.println("Something was dropped here...is it yours?");
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        System.out.println("Player control");
+        
+        try {
+            playerControl.setGain(mSlider.getValue());
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(NeptuneController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
