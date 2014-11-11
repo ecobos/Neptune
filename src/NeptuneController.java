@@ -227,6 +227,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             deleteSongSelected();
 
         } else if (e.getSource() == mTable.getTableObj()) {
+            isPaused = false;
             System.out.println("The Jtable was clicked");
             mTable.setSongSelected();
         }
