@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -11,12 +12,13 @@ import java.util.Observer;
 import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
 
 
 public class Neptune{
 
-    private JPanel mMainPanel;
+    private JPanel mMainPanel,mContentPanel, mTreePanel;
     private GridBagConstraints mBounds;
     private SongsTableComponent mTable;
     private ButtonsComponent mButtons;
@@ -25,8 +27,11 @@ public class Neptune{
     private JTreeComponent mTree;
  
     public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JTreeComponent tree) {
-        mMainPanel = new JPanel();
-        mMainPanel.setLayout(new GridBagLayout());
+        mMainPanel = new JPanel(new BorderLayout());
+        mContentPanel = new JPanel();
+        mContentPanel.setLayout(new GridBagLayout());
+        mTreePanel = new JPanel();
+        mTreePanel.setLayout(new BorderLayout());
         mBounds = new GridBagConstraints();
 
         mTable = table;
@@ -35,23 +40,20 @@ public class Neptune{
         mMenuBar = menu;
         mTree = tree;
         
-        mBounds.fill = GridBagConstraints.VERTICAL;
+        mTreePanel.add(mTree.getTreePanel());
         //mBounds.anchor = GridBagConstraints.WEST;
         //mBounds.gridheight = 1;
         mBounds.gridx = 0;
         mBounds.gridy = 0;
-        mMainPanel.add(mTree.getTreePanel(), mBounds);
-        
-        //mBounds.anchor = GridBagConstraints.NONE;
         mBounds.fill = GridBagConstraints.HORIZONTAL;
         mBounds.gridwidth = 1;
         mBounds.gridx = 1;
-        mMainPanel.add(mButtons.getButtonsPanel(), mBounds);
+        mContentPanel.add(mButtons.getButtonsPanel(), mBounds);
 
         mBounds.gridx = 5;
         mBounds.gridy = 0;
         mBounds.insets = new Insets(10, 40, 10, 0);
-        mMainPanel.add(mSongInfo.getTextArea(), mBounds);
+        mContentPanel.add(mSongInfo.getTextArea(), mBounds);
 
         mBounds.anchor = GridBagConstraints.PAGE_END;
         mBounds.gridx = 0;
@@ -59,21 +61,24 @@ public class Neptune{
         mBounds.ipady = 20;
         mBounds.gridwidth = GridBagConstraints.REMAINDER;
         mBounds.insets = new Insets(0, 0, 0, 0);;
-        mMainPanel.add(mTable.getTable(), mBounds);
+        mContentPanel.add(mTable.getTable(), mBounds);
 
-        mMainPanel.setBackground(Color.DARK_GRAY);
+        mContentPanel.setBackground(Color.DARK_GRAY);
 
+        JSplitPane split = new JSplitPane();
+        split.setLeftComponent(mTreePanel);
+        split.setRightComponent(mContentPanel);
         JFrame frame = new JFrame("Neptune");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setJMenuBar(mMenuBar.getMenu());
         frame.setMinimumSize(new Dimension(1330, 660));
-        frame.add(mMainPanel);
+        frame.add(split);
         frame.pack();
         frame.setVisible(true);
     }
     
     public JPanel getPanelObj(){
-        return mMainPanel;
+        return mContentPanel;
     }
 
     public void setText(String info){
