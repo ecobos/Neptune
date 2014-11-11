@@ -23,17 +23,21 @@ public class Neptune{
     private TextAreaComponent mSongInfo;
     private MenuComponent mMenuBar;
     private JTreeComponent mTree;
+    private JSliderComponent mSlider;
  
-    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JTreeComponent tree) {
+    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JTreeComponent tree, JSliderComponent slider) {
         mMainPanel = new JPanel();
         mMainPanel.setLayout(new GridBagLayout());
         mBounds = new GridBagConstraints();
-
+        
         mTable = table;
         mButtons = buttons;
         mSongInfo = text;
         mMenuBar = menu;
         mTree = tree;
+        mSlider = slider;
+        
+        mMainPanel.add(mSlider.getSliderPanel());
         
         mBounds.fill = GridBagConstraints.VERTICAL;
         //mBounds.anchor = GridBagConstraints.WEST;
@@ -83,6 +87,7 @@ public class Neptune{
     public void setController(ActionListener controller){
         mMenuBar.setController(controller);
         mButtons.setController(controller);
+        
     }
     
     public void setMouseListener(MouseListener controller){
