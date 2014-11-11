@@ -22,8 +22,9 @@ public class Neptune{
     private ButtonsComponent mButtons;
     private TextAreaComponent mSongInfo;
     private MenuComponent mMenuBar;
+    private JTreeComponent mTree;
  
-    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text) {
+    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JTreeComponent tree) {
         mMainPanel = new JPanel();
         mMainPanel.setLayout(new GridBagLayout());
         mBounds = new GridBagConstraints();
@@ -32,11 +33,19 @@ public class Neptune{
         mButtons = buttons;
         mSongInfo = text;
         mMenuBar = menu;
-
-        mBounds.fill = GridBagConstraints.HORIZONTAL;
-        mBounds.gridwidth = 1;
+        mTree = tree;
+        
+        mBounds.fill = GridBagConstraints.VERTICAL;
+        //mBounds.anchor = GridBagConstraints.WEST;
+        //mBounds.gridheight = 1;
         mBounds.gridx = 0;
         mBounds.gridy = 0;
+        mMainPanel.add(mTree.getTreePanel(), mBounds);
+        
+        //mBounds.anchor = GridBagConstraints.NONE;
+        mBounds.fill = GridBagConstraints.HORIZONTAL;
+        mBounds.gridwidth = 1;
+        mBounds.gridx = 1;
         mMainPanel.add(mButtons.getButtonsPanel(), mBounds);
 
         mBounds.gridx = 5;

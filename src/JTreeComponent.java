@@ -1,6 +1,7 @@
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
+import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -9,25 +10,32 @@ public class JTreeComponent implements Observer {
     private Vector<String> mPlaylistVector; // vector used to store retrieved playlist names
     private JTree mPlaylistTree; 
     private DefaultMutableTreeNode playlistRoot; // child nodes are added to this root
-    // the root is added to the tree
+    private JPanel mTreePanel;
+// the root is added to the tree
     // tree --> root --> children
     public JTreeComponent(Vector<String> playlistFromDatabase) {
-        // create root node that will get passed in to create the tree
-        playlistRoot = new DefaultMutableTreeNode("Playlists");
+        // create root node that will get passed in to create the tree      
         // tree gets created using the playlistRoot node
-        mPlaylistTree= new JTree(playlistRoot);
+        playlistRoot = new DefaultMutableTreeNode("Playlists");
+        mTreePanel = new JPanel();
+        
         // get the list of playlist from database
         mPlaylistVector = playlistFromDatabase; 
         // add the playlists in vector "mPlaylistVector" as children of the root "playlistRoot"
         for(int i=0; i<mPlaylistVector.size(); i++) {
             addNodeToTree(mPlaylistVector.get(i));
         }
+        mPlaylistTree= new JTree(playlistRoot);
+        mTreePanel.add(mPlaylistTree);
     }
     
     public JTree getJTreeObj() {
         return mPlaylistTree;
     }
     
+    public JPanel getTreePanel(){
+        return mTreePanel;
+    }
     // add child nodes to root -- nodeToAdd is the name of playlist added
     public void addNodeToTree(String nodeToAdd) {
         // pass in string of node and create node with it

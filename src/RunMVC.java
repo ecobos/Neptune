@@ -7,7 +7,8 @@ public class RunMVC {
         MenuComponent menu = new MenuComponent();
         ButtonsComponent buttons = new ButtonsComponent();
         TextAreaComponent text = new TextAreaComponent();
-        Neptune player = new Neptune(table, buttons, menu, text);
+        JTreeComponent tree = new JTreeComponent(database.getPlaylistsFromDatabase());
+        Neptune player = new Neptune(table, buttons, menu, text, tree);
         
         
 	//tell Model about View. 
