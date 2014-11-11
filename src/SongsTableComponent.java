@@ -168,19 +168,21 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.setRowSelectionInterval(mCurrentSongPlayingIndex, mCurrentSongPlayingIndex);
         return currentSongRow;
     }
-
+/**
+ * updated getPrevSong... works now as it should
+ * @return 
+ */
     public Vector getPrevSong() {
-        System.out.println("Song index prev: " + mSongSelectedIndex);
-        mSongSelectedIndex--;
-        System.out.println("Index: " + mSongSelectedIndex);
+        System.out.println("Song index prev: " + mCurrentSongPlayingIndex);
+        mCurrentSongPlayingIndex--;
+        System.out.println("Index: " + mCurrentSongPlayingIndex);
         //String[] currentSongRow = new String[8];
-        if (mSongSelectedIndex < 0) {
-            mSongSelectedIndex = getSongsCount() - 1; //wrap around the index
+        if (mCurrentSongPlayingIndex < 0) {
+            mCurrentSongPlayingIndex = getSongsCount() - 1; //wrap around the index
         }
-        Vector currentSongRow = mSongsVector.get(mSongSelectedIndex);
-        mSongsTable.setRowSelectionInterval(mSongSelectedIndex, mSongSelectedIndex);
+        Vector currentSongRow = mSongsVector.get(mCurrentSongPlayingIndex);
+        mSongsTable.setRowSelectionInterval(mCurrentSongPlayingIndex, mCurrentSongPlayingIndex);
         return currentSongRow;
-
     }
 
 

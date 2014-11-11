@@ -80,8 +80,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         } else {
             try {
                 playerControl.open(new File(songToPlay.get(0)));
-                mSongInfo.setText("\n\n Current song playing:\n\tArtist: " + songToPlay.get(1)
-                        + "\n\tSong: " + songToPlay.get(2) + "\n\tAlbum: "
+                mSongInfo.setText("\n\n Current song playing:\n\tArtist: " + songToPlay.get(2)
+                        + "\n\tSong: " + songToPlay.get(1) + "\n\tAlbum: "
                         + songToPlay.get(3) + "\n\tSong " + (mTable.getCurrentSongPlayingIndex() + 1) + " of " + mTable.getSongsCount());
                 playerControl.play();
 
