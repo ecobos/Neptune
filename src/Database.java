@@ -137,6 +137,70 @@ public class Database extends Observable {
         }
     }
     
+    public void addPlaylist(String playlistName) {
+        try {
+            if (conn.isClosed()) {
+                this.getDBConnection();
+            }
+            
+            PreparedStatement pstat = conn.prepareStatement("INSERT INTO Playlists(playlist_name) VALUES(?)");
+            pstat.setString(1, playlistName); // value of name of playlist
+            pstat.executeUpdate();
+            
+            // new playlist then gets added to JTree by controller class
+            /*
+            Vector<String> newData = new Vector<String>();
+            for(int i = 0; i < 8; i++){
+                newData.addElement(songTags[i]);
+            }
+            */
+            
+            //setChanged();
+            //notifyObservers(newData);
+            //updateSongsFromDatabase();
+            //notifyObservers();           
+        } 
+        catch (SQLException e) {
+            System.out.println("Unable to insert playlist. A playlist by the same name may already exist.");
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * adds songs to the association table song_playlist
+     * @param songID
+     * @param playListID 
+     */
+    public void addSongToPlaylist(int songID, int playlistID) {
+        try {
+            if (conn.isClosed()) {
+                this.getDBConnection();
+            }
+            
+            PreparedStatement pstat = conn.prepareStatement("INSERT INTO song_playlist(song_ID, playList_ID) VALUES(?,?)");
+            pstat.setInt(1, songID); // value of songID
+            pstat.setInt(2, playlistID);
+            pstat.executeUpdate();
+            
+            // new playlist gets added to table as it it called by controller class
+            /*
+            Vector<String> newData = new Vector<String>();
+            for(int i = 0; i < 8; i++){
+                newData.addElement(songTags[i]);
+            }
+            */
+            
+            //setChanged();
+            //notifyObservers(newData);
+            //updateSongsFromDatabase();
+            //notifyObservers();           
+        } 
+        catch (SQLException e) {
+            System.out.println("Unable to insert playlist. A playlist by the same name may already exist.");
+            e.printStackTrace();
+        }
+    }
+    
      public void deleteSong(Vector<String> fileToDelete) {
 
         String filepath = fileToDelete.get(0);
