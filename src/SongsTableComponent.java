@@ -80,6 +80,9 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     }
 
 
+    public JMenuItem getMenuAddObj(){
+        return mMenuAddSong;
+    }
     public JPanel getTable() {
         return mTablePanel;
     }
@@ -90,6 +93,10 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     
     public void setBackground(Color color){
         mSongsTable.setBackground(color);
+    }
+    
+    public JMenuItem getMenuRemoveObj(){
+        return mMenuRemoveSong;
     }
     
     private JPopupMenu getPopupMenu() {

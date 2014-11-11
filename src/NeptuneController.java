@@ -209,7 +209,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getSource() == mMenuBar.getAddSongObj()) {
+        if (e.getSource() == mMenuBar.getAddSongObj() || e.getSource() == mTable.getMenuAddObj()) {
             System.out.println("The menu shiet works");
             JFileChooser fc = new JFileChooser();
             int returnVal = fc.showOpenDialog(mMenuBar.getAddSongObj());
@@ -222,7 +222,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             } else {
                 System.out.println("Open command cancelled by user.\n");
             }
-        } else if (e.getSource() == mMenuBar.getDeleteSongObj()) {
+        } else if (e.getSource() == mMenuBar.getDeleteSongObj() || e.getSource() == mTable.getMenuRemoveObj()) {
             deleteSongSelected();
 
         } else if (e.getSource() == mTable.getTableObj()) {
