@@ -38,9 +38,9 @@ public class SongTags {
             songTags[2] = id3v1Tags.getArtist();
             songTags[3] = id3v1Tags.getAlbum();
             songTags[4] = id3v1Tags.getYear();
-            songTags[5] = id3v1Tags.getComment();
+            songTags[5] = id3v1Tags.getTrack();
             songTags[6] = id3v1Tags.getGenreDescription();
-            songTags[7] = id3v1Tags.getTrack();
+            songTags[7] = id3v1Tags.getComment();
         }
         return songTags;
     }

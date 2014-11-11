@@ -82,7 +82,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 playerControl.open(new File(songToPlay.get(0)));
                 mSongInfo.setText("\n\n Current song playing:\n\tArtist: " + songToPlay.get(1)
                         + "\n\tSong: " + songToPlay.get(2) + "\n\tAlbum: "
-                        + songToPlay.get(3) + "\n\tSong " + (mTable.getSongSelectedIndex() + 1) + " of " + mTable.getSongsCount());
+                        + songToPlay.get(3) + "\n\tSong " + (mTable.getCurrentSongPlayingIndex() + 1) + " of " + mTable.getSongsCount());
                 playerControl.play();
 
             } catch (BasicPlayerException ex) {
@@ -151,7 +151,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 System.out.println("Open command cancelled by user.\n");
             }
         } // PLAY BUTTON
-        else if (e.getSource() == mButtons.getPlayObj()) {           
+        else if (e.getSource() == mButtons.getPlayObj()) { 
+            mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
             playSong(mTable.getSongSelected());
             System.out.println("Playing: " + mTable.getSongSelected().get(1));
         } // STOP SONG BUTTON

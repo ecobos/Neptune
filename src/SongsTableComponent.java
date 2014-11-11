@@ -31,6 +31,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     private JTable mSongsTable;
     //private Database mDatabase;
     private int mSongSelectedIndex;
+    private int mCurrentSongPlayingIndex;
     private JMenuItem mMenuRemoveSong;
     private JMenuItem mMenuAddSong;
     private DefaultTableModel mTableModel;
@@ -51,6 +52,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         
         mSongsVector = songSetFromDatabase;
         mTableModel = new DefaultTableModel(mSongsVector, COLUMN_HEADER);
+        
         
         mSongsTable = new JTable();
         mSongsTable.setPreferredScrollableViewportSize(new Dimension(1300, (mSongsVector.size() + 20) * 10));      
@@ -75,8 +77,9 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         
         mTablePanel = new JPanel();
         mTablePanel.add(scrollPane);
-
+        
         mSongsTable.setComponentPopupMenu(getPopupMenu()); //add a popup menu to the JTable
+        mTableModel.addTableModelListener(mSongsTable);
     }
 
 
@@ -97,6 +100,14 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     
     public JMenuItem getMenuRemoveObj(){
         return mMenuRemoveSong;
+    }
+    
+    public void setCurrentSongPlayingIndex(int currentSong){
+        mCurrentSongPlayingIndex = currentSong;
+    }
+    
+    public int getCurrentSongPlayingIndex(){
+        return mCurrentSongPlayingIndex;
     }
     
     private JPopupMenu getPopupMenu() {
@@ -148,13 +159,13 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     }
 
     public Vector getNextSong() {
-        mSongSelectedIndex++;
-        if (mSongSelectedIndex >= getSongsCount()) {
-            mSongSelectedIndex = 0;
+        mCurrentSongPlayingIndex++;
+        if (mCurrentSongPlayingIndex >= getSongsCount()) {
+            mCurrentSongPlayingIndex = 0;
         }
-        Vector currentSongRow = mSongsVector.get(mSongSelectedIndex);
-        System.out.println("Next song:" + mSongSelectedIndex + " song count = " + getSongsCount());
-        mSongsTable.setRowSelectionInterval(mSongSelectedIndex, mSongSelectedIndex);
+        Vector currentSongRow = mSongsVector.get(mCurrentSongPlayingIndex);
+        System.out.println("Next song:" + mCurrentSongPlayingIndex + " song count = " + getSongsCount());
+        mSongsTable.setRowSelectionInterval(mCurrentSongPlayingIndex, mCurrentSongPlayingIndex);
         return currentSongRow;
     }
 
@@ -176,9 +187,17 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     @Override
     public void update(Observable o, Object arg) {
         //mSongsVector.clear();
-        mSongsVector = (Vector<Vector>)arg;
-
-        mTableModel.setDataVector(mSongsVector, COLUMN_HEADER);
+        //mSongsVector = (Vector<Vector>)arg;
+        if(arg != null){
+            mTableModel.addRow((Vector)arg);
+        }else{
+            mTableModel.removeRow(mSongSelectedIndex);
+        }
+        
+        
+        
+        //mTableModel.
+        //mTableModel.setDataVector(mSongsVector, COLUMN_HEADER);
         //mTableModel.fireTableDataChanged();
         
     }

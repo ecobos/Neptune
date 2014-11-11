@@ -85,7 +85,7 @@ public class Database extends Observable {
                 vectorData.addElement(sanitizeEmptyString(rs.getString("comment")));
                 songsVector.addElement(vectorData);
             }
-            notifyObservers(songsVector);
+            ///notifyObservers(songsVector);
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -108,20 +108,27 @@ public class Database extends Observable {
             if (conn.isClosed()) {
                 this.getDBConnection();
             }
+            
             PreparedStatement pstat = conn.prepareStatement("INSERT INTO Songs(filepath, title, artist, album, year, comment, genre, track_num) VALUES(?,?,?,?,?,?,?,?)");
             pstat.setString(1, songTags[0]); // value of filepath
             pstat.setString(2, songTags[1]); // value of title
             pstat.setString(3, songTags[2]); // value of artist
             pstat.setString(4, songTags[3]); // value of album
             pstat.setString(5, songTags[4]); // value year
-            pstat.setString(6, songTags[5]); // value of comment
+            pstat.setString(6, songTags[5]); // value of track_num
             pstat.setString(7, songTags[6]); // value genre
-            pstat.setString(8, songTags[7]); // value of track_num
+            pstat.setString(8, songTags[7]); // value of comments
             pstat.executeUpdate();
+            
+            Vector<String> newData = new Vector<String>();
+            for(int i = 0; i < 8; i++){
+                newData.addElement(songTags[i]);
+            }
             
             
             setChanged();
-            updateSongsFromDatabase();
+            notifyObservers(newData);
+            //updateSongsFromDatabase();
             //notifyObservers();           
         } 
         catch (SQLException e) {
@@ -142,7 +149,8 @@ public class Database extends Observable {
             pstat.executeUpdate();
             
             setChanged();
-            updateSongsFromDatabase();
+            notifyObservers(null);
+            //updateSongsFromDatabase();
             //notifyObservers(); 
         } catch (SQLException e) {
                 System.out.println("Unable to delete song");
