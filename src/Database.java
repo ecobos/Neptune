@@ -65,6 +65,33 @@ public class Database extends Observable {
         return songsVector;
     }
     
+    // should we also retrieve the playlist_ID here? If so, I can make a vector of vectors
+    // otherwise a string vector suffices since each playlist name should be unique
+    public Vector getPlaylistsFromDatabase(){
+        Vector<String> playlistsVector = new Vector<String>();
+        try {
+            this.getDBConnection();
+            Statement stat = conn.createStatement();
+            String query = "SELECT * FROM Playlists";
+            ResultSet rs = stat.executeQuery(query);
+          
+            while (rs.next()) {
+                playlistsVector.add(rs.getString("playlist_name"));
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Unable to get playlists from database.");
+
+        }
+        // debugging
+        for(int i=0; i<playlistsVector.size();i++) 
+        {
+            System.out.println(playlistsVector.get(i));
+        }
+        return playlistsVector;
+    }
+    
     private void updateSongsFromDatabase(){
         Vector<Vector> songsVector = new Vector<Vector>();
         try {

@@ -28,7 +28,7 @@ public class JTreeComponent implements Observer {
         return mPlaylistTree;
     }
     
-    // add child nodes to root
+    // add child nodes to root -- nodeToAdd is the name of playlist added
     public void addNodeToTree(String nodeToAdd) {
         // pass in string of node and create node with it
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(nodeToAdd); 

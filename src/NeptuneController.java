@@ -101,6 +101,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             mDatabase.addSong(file.getAbsolutePath());
+            // delete the line below
+            mDatabase.getPlaylistsFromDatabase();
         } else {
             System.out.println("Open command cancelled by user.\n");
         }
