@@ -70,7 +70,6 @@ public class Database extends Observable {
     public Vector getPlaylistsFromDatabase(){
         Vector<String> playlistsVector = new Vector<String>();
         try {
-            
             this.getDBConnection();
             Statement stat = conn.createStatement();
             String query = "SELECT * FROM Playlists";
