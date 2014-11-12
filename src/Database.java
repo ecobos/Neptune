@@ -92,6 +92,85 @@ public class Database extends Observable {
         return playlistsVector;
     }
     
+    public void deleteSongFromPlayList(int songID, int playlistID) {
+        try {
+            if (conn.isClosed()) {
+                this.getDBConnection();
+            }
+            
+            PreparedStatement pstat = conn.prepareStatement("DELETE FROM song_playlist WHERE song_ID = ? AND playlist_ID = ?");
+            pstat.setInt(1, songID); // value of songID
+            pstat.setInt(2, playlistID);
+            pstat.executeUpdate();
+            
+            setChanged();
+            //notifyObservers(null);
+            //updateSongsFromDatabase(); // will be updateSongsFromPlaylist
+            getPlaylistSongsFromDatabase(getPlaylistNameFromID(playlistID));
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Unable to get song ID from database.");
+        }
+    }
+    
+    public int getSongID(String filepath) {
+        int songID = 0;
+        try {
+            this.getDBConnection();
+            Statement stat = conn.createStatement();
+            String query = "SELECT * FROM Songs WHERE filepath = '" + filepath + "'";
+            ResultSet rs = stat.executeQuery(query);
+            
+            while (rs.next()) {
+                songID = rs.getInt("song_ID");
+            }
+            conn.close();
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Unable to get song ID from database.");
+        }
+        return songID;
+    }
+    
+    public int getPlaylistIDfromName(String playlistName) {
+        int playlistID = 0; 
+        try {
+            this.getDBConnection();
+            Statement stat = conn.createStatement();
+            String query = "SELECT playlist_ID FROM Playlists WHERE playlist_name = '" + playlistName + "'";
+            ResultSet rs = stat.executeQuery(query);
+            
+            while (rs.next()) {
+                playlistID = rs.getInt("playlist_ID");
+            }
+            
+            
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return playlistID; 
+    }
+    
+    public String getPlaylistNameFromID(int playlistID) {
+        String playlistName = ""; 
+        try {
+            this.getDBConnection();
+            Statement stat = conn.createStatement();
+            String query = "SELECT playlist_name FROM Playlists WHERE playlist_ID = '" + playlistID + "'";
+            ResultSet rs = stat.executeQuery(query);
+            while (rs.next()) {
+                playlistName = rs.getString("playlist_name");
+            }
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return playlistName; 
+    }
+    
     public Vector getPlaylistSongsFromDatabase(String playlistName){
         Vector<Vector> songsVector = new Vector<Vector>();
         try {
@@ -113,6 +192,7 @@ public class Database extends Observable {
                 vectorData.addElement(sanitizeEmptyString(rs.getString("comment")));
                 songsVector.addElement(vectorData);
             }
+            notifyObservers(songsVector);
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();

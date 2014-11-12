@@ -14,7 +14,7 @@ public class MenuComponent implements Observer{
     private JMenuItem mPlaySongNotInLibrary;
     private JMenuItem mDeleteSong;
     
-    public MenuComponent() {
+    public MenuComponent(boolean isPlaylist) {
         mMenuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
@@ -22,12 +22,20 @@ public class MenuComponent implements Observer{
         
         mPlaySongNotInLibrary = new JMenuItem("Play song not in library");
         mAddSong = new JMenuItem("Add song to library");
-        mDeleteSong = new JMenuItem("Delete selected song from library");
+              
         mQuit = new JMenuItem("Quit");
 
         fileMenu.setMnemonic(KeyEvent.VK_A);
         fileMenu.add(mPlaySongNotInLibrary);
         fileMenu.add(mAddSong);
+        
+        if(isPlaylist){
+            mDeleteSong = new JMenuItem("Delete song from playlist");
+        }
+        else{
+            mDeleteSong = new JMenuItem("Delete selected song from library");
+        }
+        
         fileMenu.add(mDeleteSong);
         fileMenu.add(mQuit);
 

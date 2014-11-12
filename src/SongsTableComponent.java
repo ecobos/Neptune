@@ -37,9 +37,11 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     private DefaultTableModel mTableModel;
     private JPanel mTablePanel;
     private JPopupMenu mPopupMenu;
+    private String mTableName;
     
-    public SongsTableComponent(Vector<Vector> songSetFromDatabase) {
-        mSongSelectedIndex = 0; 
+    public SongsTableComponent(String name, Vector<Vector> songSetFromDatabase) {
+        mSongSelectedIndex = 0;
+        mTableName = name;
         COLUMN_HEADER = new Vector<String>();
         COLUMN_HEADER.addElement("Filepath");
         COLUMN_HEADER.addElement("Title");
@@ -84,6 +86,9 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         //mTableModel.addTableModelListener(mSongsTable);
     }
 
+    public String getTableName(){
+        return mTableName;
+    }
 
     public JMenuItem getMenuAddObj(){
         return mMenuAddSong;
@@ -147,6 +152,11 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         Vector currentSongRow = mSongsVector.get(index);
         mSongsTable.setRowSelectionInterval(index, index);
         return currentSongRow;
+    }
+    
+    public String getSongSelectedFilepath(){
+        Vector currentSongRow = mSongsVector.get(mSongSelectedIndex);
+        return (String)currentSongRow.get(0);
     }
 
     public int getSongSelectedIndex() {

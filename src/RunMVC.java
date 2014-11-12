@@ -8,16 +8,16 @@ public class RunMVC {
         Neptune player = null;
 
 
-        MenuComponent menu = new MenuComponent();
+        MenuComponent menu = new MenuComponent(loadFromPlaylist);
         ButtonsComponent buttons = new ButtonsComponent();
         TextAreaComponent text = new TextAreaComponent();
         JSliderComponent slider = new JSliderComponent();
         
         if(loadFromPlaylist == true){
-            table = new SongsTableComponent(database.getPlaylistSongsFromDatabase(playlistName));
+            table = new SongsTableComponent(playlistName,database.getPlaylistSongsFromDatabase(playlistName));
             player = new Neptune(table, buttons, menu, text, slider);
         }else {
-            table = new SongsTableComponent(database.getSongsFromDatabase());
+            table = new SongsTableComponent("Library",database.getSongsFromDatabase());
             tree = new JTreeComponent(database.getPlaylistsFromDatabase());
             player = new Neptune(table, buttons, menu, text, tree, slider);
         }
