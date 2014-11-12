@@ -114,12 +114,34 @@ public class Database extends Observable {
         }
     }
     
+    public void deletePlaylistFromDatabase(String playlistName){
+        int playlistID = getPlaylistIDfromName(playlistName);
+        try {
+            if (conn.isClosed()) {
+                this.getDBConnection();
+            }
+            
+            PreparedStatement pstat = conn.prepareStatement("DELETE FROM song_playlist WHERE playlist_ID = ?");
+            pstat.setInt(1, playlistID); // value of songID
+            pstat.executeUpdate();
+            
+            pstat = conn.prepareStatement("DELETE FROM Playlists WHERE playlist_ID = ?");
+            pstat.setInt(1, playlistID); // value of songID
+            pstat.executeUpdate();
+            
+            conn.close();
+        }catch(SQLException e) {
+            e.printStackTrace();
+            System.out.println("Unable to get song ID from database.");
+        }
+    }
+    
     public int getSongID(String filepath) {
         int songID = 0;
         try {
             this.getDBConnection();
             Statement stat = conn.createStatement();
-            String query = "SELECT * FROM Songs WHERE filepath = '" + filepath + "'";
+            String query = "SELECT * FROM Songs WHERE filepath = \"" + filepath + "\"";
             ResultSet rs = stat.executeQuery(query);
             
             while (rs.next()) {
@@ -139,7 +161,7 @@ public class Database extends Observable {
         try {
             this.getDBConnection();
             Statement stat = conn.createStatement();
-            String query = "SELECT playlist_ID FROM Playlists WHERE playlist_name = '" + playlistName + "'";
+            String query = "SELECT playlist_ID FROM Playlists WHERE playlist_name = \"" + playlistName + "\"";
             ResultSet rs = stat.executeQuery(query);
             
             while (rs.next()) {

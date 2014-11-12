@@ -25,6 +25,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.tree.TreePath;
 import javazoom.jlgui.basicplayer.BasicController;
 import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
@@ -133,7 +134,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         // QUIT BUTTON
         if (e.getSource() == mMenuBar.getQuitObj()) {
             System.out.println("Quit was clicked.");
-            System.exit(0);
+            neptune.destroyFrame();
+            //System.exit(0);
         } // ABOUT BUTTON
         else if (e.getSource() == mMenuBar.getAboutObj()) {
             System.out.println("Clicked the about section");
@@ -148,7 +150,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             }
 
         } // DELETE SONG
-        else if (e.getSource() == mMenuBar.getDeleteSongObj()) {
+        else if (e.getSource() == mMenuBar.getDeleteSongObj() || e.getSource() == mMenuBar.getDeleteSongPlaylistObj()) {
             if (isPlaylistView) {
                 mDatabase.deleteSongFromPlayList(mDatabase.getSongID(mTable.getSongSelectedFilepath()), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
             } else {
@@ -227,6 +229,14 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 //                playSong(mTable.getSongSelected(mLastSongPlayedIndex));
 //            }
         }
+        else if(e.getSource() == mMenuBar.getPlaylistObj()){
+            System.out.println("Playlist clicked");
+            String playlistName = JOptionPane.showInputDialog(mMenuBar.getMenu(), "Enter a new playlist name");
+            if(playlistName.equals("")){playlistName = "playlist";} //check for empty string
+            mDatabase.addPlaylist(playlistName);
+            mTree.addNodeToTree(playlistName);
+            mTree.getJTreeObj().treeDidChange();
+        }
     }
 
     @Override
@@ -257,19 +267,47 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             isPaused = false;
             System.out.println("The Jtable was clicked");
             mTable.setSongSelected();
-        } else if (e.getSource() == mTree.getJTreeObj()) {
+        } else if(e.getSource() == mTree.getJTreeObj()){
+            String leafName = mTree.getSelectedLeafName();
+            if(leafName.equals("Library")){
+                isPlaylistView = false;
+                mTable.update(mDatabase, mDatabase.getSongsFromDatabase());
+                neptune.setPlaylistMenuBar(isPlaylistView);
+            }
+            else if(!leafName.equals("Playlists")){
+                isPlaylistView = true;
+                mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(leafName));
+                neptune.setPlaylistMenuBar(isPlaylistView);
+                mTable.setTableName(leafName);
+            }
+            
+        } 
+        else if (e.getSource() == mTree.getNewWindowObj()) { //formerly mTree.getTreeObj()
 
             int selRow = mTree.getJTreeObj().getRowForLocation(e.getX(), e.getY());
             //String name = mTree.getJTreeObj().getSelectionPath().getLastPathComponent().toString();
             String leafName = mTree.getSelectedLeafName();
             System.out.println("The tree was clicked.Selected row: " + selRow + " with name: " + leafName);
-
-            if (e.getClickCount() == 2) {
-                if (!leafName.equals("Playlists")) {
-                    System.out.println("I am broken");
-                    RunMVC playlist = new RunMVC(true, leafName);
-                }
-
+            RunMVC playlist = new RunMVC(true, leafName);
+            isPlaylistView = false;
+            mTable.update(mDatabase, mDatabase.getSongsFromDatabase());
+            neptune.setPlaylistMenuBar(isPlaylistView);
+//            if (e.getClickCount() == 2) {
+//                if (!leafName.equals("Playlists")) {
+//                    System.out.println("I am broken");
+//                    RunMVC playlist = new RunMVC(true, leafName);
+//                }
+//            }
+        } else if(e.getSource() == mTree.getDeletePlaylistObj()){
+            String leafName = mTree.getSelectedLeafName();
+            //TreePath path = mTree.getJTreeObj().set
+            int selRow = mTree.getJTreeObj().getRowForLocation(e.getX(), e.getY());
+            int dialogButton = JOptionPane.YES_NO_OPTION;
+            int dialogResult = JOptionPane.showConfirmDialog (null, "You are about to delete the "+leafName+" playlist.\nWant to continue with this?","Warning",dialogButton);
+            if(dialogResult == JOptionPane.YES_OPTION){
+                mDatabase.deletePlaylistFromDatabase(leafName);
+                mTree.deleteNode(selRow);
+                mTree.getJTreeObj().treeDidChange();        
             }
         }
     }
