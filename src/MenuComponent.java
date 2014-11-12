@@ -13,6 +13,8 @@ public class MenuComponent implements Observer{
     private JMenuItem mAddSong;
     private JMenuItem mPlaySongNotInLibrary;
     private JMenuItem mDeleteSong;
+    private JMenuItem mDeleteSongPlaylist;
+    private JMenuItem mPlaylist;
     
     public MenuComponent(boolean isPlaylist) {
         mMenuBar = new JMenuBar();
@@ -22,25 +24,41 @@ public class MenuComponent implements Observer{
         
         mPlaySongNotInLibrary = new JMenuItem("Play song not in library");
         mAddSong = new JMenuItem("Add song to library");
-              
+        mPlaylist = new JMenuItem("Create a new playlist");
+        mDeleteSongPlaylist = new JMenuItem("Delete selected song from playlist");
+        mDeleteSong = new JMenuItem("Delete selected song from library");
         mQuit = new JMenuItem("Quit");
 
         fileMenu.setMnemonic(KeyEvent.VK_A);
         fileMenu.add(mPlaySongNotInLibrary);
         fileMenu.add(mAddSong);
+        fileMenu.add(mPlaylist);
         
         if(isPlaylist){
-            mDeleteSong = new JMenuItem("Delete song from playlist");
+            mDeleteSong.setVisible(false);
         }
         else{
-            mDeleteSong = new JMenuItem("Delete selected song from library");
+            mDeleteSongPlaylist.setVisible(false);
         }
         
+        fileMenu.add(mDeleteSongPlaylist);
         fileMenu.add(mDeleteSong);
         fileMenu.add(mQuit);
 
         mMenuBar.add(fileMenu);
         mMenuBar.add(mAbout);
+    }
+    
+    public void setPlaylistMenu(boolean isPlaylist){
+        if(isPlaylist){
+            mDeleteSong.setVisible(!isPlaylist);
+            mDeleteSongPlaylist.setVisible(isPlaylist);
+        }
+        else{
+            mDeleteSongPlaylist.setVisible(isPlaylist);
+            mDeleteSong.setVisible(!isPlaylist);
+        }
+        mMenuBar.repaint();
     }
     
     //**********************
@@ -60,8 +78,14 @@ public class MenuComponent implements Observer{
     public JMenuItem getDeleteSongObj(){
         return mDeleteSong;
     }
+    public JMenuItem getDeleteSongPlaylistObj(){
+        return mDeleteSongPlaylist;
+    }
     public JMenuBar getMenu() {
         return mMenuBar;
+    }
+    public JMenuItem getPlaylistObj(){
+        return mPlaylist;
     }
      //**********************
 
@@ -71,6 +95,8 @@ public class MenuComponent implements Observer{
         mAddSong.addActionListener(controller);
         mDeleteSong.addActionListener(controller);
         mQuit.addActionListener(controller);
+        mPlaylist.addActionListener(controller);
+        mDeleteSongPlaylist.addActionListener(controller);
     }
 
     @Override

@@ -26,6 +26,7 @@ public class RunMVC {
         
 	//tell Model about View. 
         database.addObserver(table);
+        //database.addObserver();
 
 	//create Controller. tell it about Model and View, initialise model
 	NeptuneController controller = new NeptuneController(loadFromPlaylist);

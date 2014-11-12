@@ -89,6 +89,9 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     public String getTableName(){
         return mTableName;
     }
+    public void setTableName(String name){
+        mTableName = name;
+    }
 
     public JMenuItem getMenuAddObj(){
         return mMenuAddSong;
