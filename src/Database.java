@@ -92,6 +92,36 @@ public class Database extends Observable {
         return playlistsVector;
     }
     
+    public Vector getPlaylistSongsFromDatabase(String playlistName){
+        Vector<Vector> songsVector = new Vector<Vector>();
+        try {
+            this.getDBConnection();
+            Statement stat = conn.createStatement();
+            String query = "SELECT * FROM Songs NATURAL JOIN song_playlist NATURAL JOIN Playlists WHERE playlist_name = '" + playlistName + "'";
+            
+            ResultSet rs = stat.executeQuery(query);
+          
+            while (rs.next()) {
+                Vector<String> vectorData = new Vector<String>();
+                vectorData.addElement(sanitizeEmptyString(rs.getString("filepath")));
+                vectorData.addElement(sanitizeEmptyString(rs.getString("title")));
+                vectorData.addElement(sanitizeEmptyString(rs.getString("artist")));
+                vectorData.addElement(sanitizeEmptyString(rs.getString("album")));
+                vectorData.addElement(sanitizeEmptyString(rs.getString("year")));
+                vectorData.addElement(sanitizeEmptyString(rs.getString("track_num")));
+                vectorData.addElement(sanitizeEmptyString(rs.getString("genre")));
+                vectorData.addElement(sanitizeEmptyString(rs.getString("comment")));
+                songsVector.addElement(vectorData);
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Unable to get songs from database.");
+
+        }
+        return songsVector;
+    }
+    
     private void updateSongsFromDatabase(){
         Vector<Vector> songsVector = new Vector<Vector>();
         try {
@@ -112,7 +142,7 @@ public class Database extends Observable {
                 vectorData.addElement(sanitizeEmptyString(rs.getString("comment")));
                 songsVector.addElement(vectorData);
             }
-            ///notifyObservers(songsVector);
+            notifyObservers(songsVector);
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -154,8 +184,8 @@ public class Database extends Observable {
             
             
             setChanged();
-            notifyObservers(newData);
-            //updateSongsFromDatabase();
+            //notifyObservers(newData);
+            updateSongsFromDatabase();
             //notifyObservers();           
         } 
         catch (SQLException e) {
@@ -240,8 +270,8 @@ public class Database extends Observable {
             pstat.executeUpdate();
             
             setChanged();
-            notifyObservers(null);
-            //updateSongsFromDatabase();
+            //notifyObservers(null);
+            updateSongsFromDatabase();
             //notifyObservers(); 
         } catch (SQLException e) {
                 System.out.println("Unable to delete song");

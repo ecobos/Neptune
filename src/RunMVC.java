@@ -1,15 +1,27 @@
 
 public class RunMVC {
     
-    RunMVC(){
+    RunMVC(boolean loadFromPlaylist, String playlistName){
         Database database = new Database();
-        SongsTableComponent table = new SongsTableComponent(database.getSongsFromDatabase());
+        SongsTableComponent table;
+        JTreeComponent tree = null;
+        Neptune player = null;
+
+
         MenuComponent menu = new MenuComponent();
         ButtonsComponent buttons = new ButtonsComponent();
         TextAreaComponent text = new TextAreaComponent();
-        JTreeComponent tree = new JTreeComponent(database.getPlaylistsFromDatabase());
         JSliderComponent slider = new JSliderComponent();
-        Neptune player = new Neptune(table, buttons, menu, text, tree, slider);
+        
+        if(loadFromPlaylist == true){
+            table = new SongsTableComponent(database.getPlaylistSongsFromDatabase(playlistName));
+            player = new Neptune(table, buttons, menu, text, slider);
+        }else {
+            table = new SongsTableComponent(database.getSongsFromDatabase());
+            tree = new JTreeComponent(database.getPlaylistsFromDatabase());
+            player = new Neptune(table, buttons, menu, text, tree, slider);
+        }
+        
         
         
 	//tell Model about View. 
@@ -24,6 +36,10 @@ public class RunMVC {
         controller.addTextView(text);
         controller.addTableModel(table);
         controller.addSlider(slider);
+        if(tree != null){
+            controller.addTree(tree);
+        }
+        
 
 	//tell View about Controller 
 	buttons.setController(controller);
@@ -31,9 +47,13 @@ public class RunMVC {
         table.addDropController(controller);
         table.addMouseController(controller);
         slider.addMouseController(controller);
+        if(tree != null){
+            tree.setTreeMouseListener(controller);
+        }
+        
     }
     
     public static void main(String args[]) {
-        RunMVC spawn = new RunMVC();
+        RunMVC spawn = new RunMVC(false, "Pop");
     }
 }

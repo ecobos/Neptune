@@ -41,6 +41,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     private TextAreaComponent mSongInfo;
     private SongsTableComponent mTable;
     private JSliderComponent mSlider;
+    private JTreeComponent mTree;
     
     
     NeptuneController(){
@@ -56,6 +57,10 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     }
     public void addDatabaseModel(Database conn){
         this.mDatabase = conn;
+    }
+    
+    public void addTree(JTreeComponent tree){
+        this.mTree = tree;
     }
     
     public void addButtonsView(ButtonsComponent buttons){
@@ -238,6 +243,16 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             isPaused = false;
             System.out.println("The Jtable was clicked");
             mTable.setSongSelected();
+        } else if (e.getSource() == mTree.getJTreeObj()){
+            
+            int selRow = mTree.getJTreeObj().getRowForLocation(e.getX(), e.getY());
+            //String name = mTree.getJTreeObj().getSelectionPath().getLastPathComponent().toString();
+            String leafName = mTree.getSelectedLeafName();
+            System.out.println("The tree was clicked.Selected row: " + selRow + " with name: "+ leafName);
+            
+            if(e.getClickCount() == 2) {
+                 System.out.println("I am broken");
+             }
         }
     }
 

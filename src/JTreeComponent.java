@@ -1,9 +1,12 @@
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class JTreeComponent implements Observer {
@@ -41,6 +44,10 @@ public class JTreeComponent implements Observer {
         return mPlaylistTree;
     }
     
+    public String getSelectedLeafName(){
+        return mPlaylistTree.getSelectionPath().getLastPathComponent().toString();
+    }
+    
     public JPanel getTreePanel(){
         return mTreePanel;
     }
@@ -59,9 +66,16 @@ public class JTreeComponent implements Observer {
         playlistRoot.remove(node);
     }
     
+    public void setTreeCotroller(TreeSelectionEvent tse){
+        //mPlaylistTree.addMouseListener(tse);
+    }
+    
+    public void setTreeMouseListener(MouseListener me){
+        mPlaylistTree.addMouseListener(me);
+    }
+    
     @Override
     public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

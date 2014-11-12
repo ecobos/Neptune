@@ -27,7 +27,7 @@ public class Neptune{
     private JTreeComponent mTree;
     private JSliderComponent mSlider;
  
-    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JTreeComponent tree, JSliderComponent slider) {
+    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JSliderComponent slider) {
         mMainPanel = new JPanel(new BorderLayout());
         mContentPanel = new JPanel();
         mContentPanel.setLayout(new GridBagLayout());
@@ -39,12 +39,12 @@ public class Neptune{
         mButtons = buttons;
         mSongInfo = text;
         mMenuBar = menu;
-        mTree = tree;
+
         mSlider = slider;
         
         mContentPanel.add(mSlider.getSliderPanel());
         
-        mTreePanel.add(mTree.getTreePanel());
+
         //mBounds.anchor = GridBagConstraints.WEST;
         //mBounds.gridheight = 1;
         mBounds.gridx = 0;
@@ -79,6 +79,12 @@ public class Neptune{
         frame.add(split);
         frame.pack();
         frame.setVisible(true);
+    }
+    
+    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JTreeComponent tree, JSliderComponent slider){
+        this(table, buttons, menu, text, slider);
+        mTree = tree;
+        mTreePanel.add(mTree.getTreePanel());
     }
     
     public JPanel getPanelObj(){

@@ -60,6 +60,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setAutoCreateRowSorter(true);
         mSongsTable.setModel(mTableModel);      
+        
         mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(300);
         mSongsTable.getColumnModel().getColumn(1).setPreferredWidth(200);
@@ -79,7 +80,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mTablePanel.add(scrollPane);
         
         mSongsTable.setComponentPopupMenu(getPopupMenu()); //add a popup menu to the JTable
-        mTableModel.addTableModelListener(mSongsTable);
+        //mTableModel.addTableModelListener(mSongsTable);
     }
 
 
@@ -95,6 +96,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     }
     
     public void setBackground(Color color){
+        //setBackground(color);
         mSongsTable.setBackground(color);
     }
     
@@ -189,19 +191,29 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     @Override
     public void update(Observable o, Object arg) {
         //mSongsVector.clear();
-        //mSongsVector = (Vector<Vector>)arg;
+        mSongsVector = (Vector<Vector>)arg;
+        
+        /*
         if(arg != null){
             mTableModel.addRow((Vector)arg);
         }else{
             mTableModel.removeRow(mSongSelectedIndex);
         }
+        */
         
         
-        
-        //mTableModel.
-        //mTableModel.setDataVector(mSongsVector, COLUMN_HEADER);
+        mTableModel.setDataVector(mSongsVector, COLUMN_HEADER);
         //mTableModel.fireTableDataChanged();
-        
+        mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(300);
+        mSongsTable.getColumnModel().getColumn(1).setPreferredWidth(200);
+        mSongsTable.getColumnModel().getColumn(2).setPreferredWidth(200);
+        mSongsTable.getColumnModel().getColumn(3).setPreferredWidth(100);
+        mSongsTable.getColumnModel().getColumn(4).setPreferredWidth(100);
+        mSongsTable.getColumnModel().getColumn(5).setPreferredWidth(100);
+        mSongsTable.getColumnModel().getColumn(6).setPreferredWidth(100);
+        mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(200);
+        mSongsTable.doLayout();
     }
 
 }
