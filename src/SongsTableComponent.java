@@ -55,7 +55,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         
         
         mSongsTable = new JTable();
-        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongsVector.size() + 20) * 10));      
+        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongsVector.size() + 10) * 10));      
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setAutoCreateRowSorter(true);
