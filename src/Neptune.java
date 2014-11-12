@@ -42,7 +42,7 @@ public class Neptune{
         mTree = tree;
         mSlider = slider;
         
-        mMainPanel.add(mSlider.getSliderPanel());
+        mContentPanel.add(mSlider.getSliderPanel());
         
         mTreePanel.add(mTree.getTreePanel());
         //mBounds.anchor = GridBagConstraints.WEST;
