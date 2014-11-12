@@ -42,9 +42,6 @@ public class Neptune{
 
         mSlider = slider;
         
-        mContentPanel.add(mSlider.getSliderPanel());
-        
-
         //mBounds.anchor = GridBagConstraints.WEST;
         //mBounds.gridheight = 1;
         mBounds.gridx = 0;
@@ -58,6 +55,10 @@ public class Neptune{
         mBounds.gridy = 0;
         mBounds.insets = new Insets(10, 40, 10, 0);
         mContentPanel.add(mSongInfo.getTextArea(), mBounds);
+        
+        //mContentPanel.setBackground(Color.red);
+       // mContentPanel.setMinimumSize(new Dimension(300,100));
+        mContentPanel.add(mSlider.getSliderPanel());
 
         mBounds.anchor = GridBagConstraints.PAGE_END;
         mBounds.gridx = 0;
@@ -68,6 +69,7 @@ public class Neptune{
         mContentPanel.add(mTable.getTable(), mBounds);
 
         mContentPanel.setBackground(Color.DARK_GRAY);
+        
 
         JSplitPane split = new JSplitPane();
         
@@ -86,6 +88,7 @@ public class Neptune{
         this(table, buttons, menu, text, slider);
         
         mTree = tree;
+        mTreePanel.setMinimumSize(new Dimension(100,100));
         mTreePanel.add(mTree.getTreePanel());
     }
     

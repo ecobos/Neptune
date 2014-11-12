@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Observable;
@@ -35,8 +37,10 @@ public class JTreeComponent implements Observer {
         playlistRoot.add(playlist);
         mPlaylistTree= new JTree(playlistRoot);
         mPlaylistTree.setRootVisible(false);
-        
+        mPlaylistTree.setBackground(Color.DARK_GRAY);
+        mPlaylistTree.setForeground(Color.DARK_GRAY);
         mTreePanel = new JPanel();
+        mTreePanel.setBackground(Color.DARK_GRAY);
         mTreePanel.add(mPlaylistTree);
     }
     

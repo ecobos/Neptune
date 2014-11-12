@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
@@ -24,23 +25,24 @@ public class ButtonsComponent /*implements Observer*/{
 //        mButtonsPanel.setLayout(layout);
         
         mAddButton = new JButton(new ImageIcon(this.getClass().getResource("/resources/add.png")));
-        mAddButton.setPreferredSize(new Dimension(80, 80));
+        mAddButton.setPreferredSize(new Dimension(70, 70));
         
         mPlayButton = new JButton(new ImageIcon(this.getClass().getResource("/resources/play.png")));
-        mPlayButton.setPreferredSize(new Dimension(95, 95));
+        mPlayButton.setPreferredSize(new Dimension(85, 85));
         
         mPauseButton = new JButton(new ImageIcon(this.getClass().getResource("/resources/pause.png")));
-        mPauseButton.setPreferredSize(new Dimension(80, 80));
+        mPauseButton.setPreferredSize(new Dimension(70, 70));
         
         mPrevButton = new JButton(new ImageIcon(this.getClass().getResource("/resources/prev.png")));
-        mPrevButton.setPreferredSize(new Dimension(80, 80));
+        mPrevButton.setPreferredSize(new Dimension(70, 70));
         
         mStopButton = new JButton(new ImageIcon(this.getClass().getResource("/resources/stop.png")));
-        mStopButton.setPreferredSize(new Dimension(80, 80));
+        mStopButton.setPreferredSize(new Dimension(70, 70));
         
         mNextButton = new JButton(new ImageIcon(this.getClass().getResource("/resources/next.png")));
-        mNextButton.setPreferredSize(new Dimension(80, 80));
+        mNextButton.setPreferredSize(new Dimension(70, 70));
         
+        mButtonsPanel.setBackground(Color.DARK_GRAY);
         mButtonsPanel.add(mAddButton);
         mButtonsPanel.add(mPlayButton);
         mButtonsPanel.add(mPauseButton);
