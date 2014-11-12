@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Dimension;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JFrame;
@@ -13,14 +15,19 @@ public class JSliderComponent implements Observer{
     
     public JSliderComponent() {
         mSliderPanel = new JPanel();
+        mSliderPanel.setBackground(Color.DARK_GRAY);
+        mSliderPanel.setForeground(Color.DARK_GRAY);
         mSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 25);
         mSlider.setMinorTickSpacing(10);
         mSlider.setMajorTickSpacing(20);
         mSlider.setPaintTicks(true);
         mSlider.setPaintLabels(true);
+        mSlider.setBackground(Color.DARK_GRAY);
+        mSlider.setForeground(Color.WHITE);
         
         // sets standard numeric labels 
         mSlider.setLabelTable(mSlider.createStandardLabels(20));
+        mSliderPanel.setMinimumSize(new Dimension(305,100));
         mSliderPanel.add(mSlider);
     }
     

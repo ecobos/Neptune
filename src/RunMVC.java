@@ -54,6 +54,6 @@ public class RunMVC {
     }
     
     public static void main(String args[]) {
-        RunMVC spawn = new RunMVC(true, "Pop");
+        RunMVC spawn = new RunMVC(false, "Pop");
     }
 }

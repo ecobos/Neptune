@@ -55,7 +55,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         
         
         mSongsTable = new JTable();
-        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1300, (mSongsVector.size() + 20) * 10));      
+        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongsVector.size() + 20) * 10));      
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setAutoCreateRowSorter(true);
@@ -69,7 +69,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(4).setPreferredWidth(100);
         mSongsTable.getColumnModel().getColumn(5).setPreferredWidth(100);
         mSongsTable.getColumnModel().getColumn(6).setPreferredWidth(100);
-        mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(200);
+        mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(100);
         mSongsTable.doLayout();
         
         JScrollPane scrollPane = new JScrollPane(mSongsTable);
@@ -77,6 +77,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         scrollPane.getBounds();
         
         mTablePanel = new JPanel();
+        mTablePanel.setMinimumSize(new Dimension(1200,300));
         mTablePanel.add(scrollPane);
         
         mSongsTable.setComponentPopupMenu(getPopupMenu()); //add a popup menu to the JTable
