@@ -42,12 +42,14 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     private SongsTableComponent mTable;
     private JSliderComponent mSlider;
     private JTreeComponent mTree;
+    private boolean isPlaylistView;
     
     
-    NeptuneController(){
+    NeptuneController(boolean isPlaylistview){
         player = new BasicPlayer();
         playerControl = (BasicController) player;
         isPaused = false;
+        isPlaylistView = isPlaylistview;
     }
     public void addPlayerView(Neptune mp){
         this.neptune = mp;
@@ -137,10 +139,20 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             JOptionPane.showMessageDialog(mMenuBar.getMenu(), info, "About", PLAIN_MESSAGE, new ImageIcon(this.getClass().getResource("/resources/neptune.png")));
         } // ADD SONG BUTTON
         else if (e.getSource() == mMenuBar.getAddSongObj() || e.getSource() == mButtons.getAddSongObj()) {
-            this.addSong();
+            if(isPlaylistView){
+                //display songs int he database
+            }else {
+               this.addSong(); 
+            }
+            
         } // DELETE SONG
         else if (e.getSource() == mMenuBar.getDeleteSongObj()) {
-            this.deleteSongSelected();
+            if(isPlaylistView){
+                
+            } else{
+               this.deleteSongSelected(); 
+            }
+            
         } // PLAY SONG NOT IN LIBRARY
         else if (e.getSource() == mMenuBar.getSongNotInLibObj()) {
             FileFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
@@ -251,7 +263,11 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             System.out.println("The tree was clicked.Selected row: " + selRow + " with name: "+ leafName);
             
             if(e.getClickCount() == 2) {
-                 System.out.println("I am broken");
+                   if(!leafName.equals("Playlists")){
+                        System.out.println("I am broken");
+                        RunMVC playlist = new RunMVC(true, leafName);
+                   }
+                 
              }
         }
     }

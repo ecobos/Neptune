@@ -28,7 +28,7 @@ public class RunMVC {
         database.addObserver(table);
 
 	//create Controller. tell it about Model and View, initialise model
-	NeptuneController controller = new NeptuneController();
+	NeptuneController controller = new NeptuneController(loadFromPlaylist);
 	controller.addPlayerView(player);
         controller.addDatabaseModel(database);
         controller.addButtonsView(buttons);
@@ -54,6 +54,6 @@ public class RunMVC {
     }
     
     public static void main(String args[]) {
-        RunMVC spawn = new RunMVC(false, "Pop");
+        RunMVC spawn = new RunMVC(true, "Pop");
     }
 }

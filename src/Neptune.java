@@ -70,6 +70,7 @@ public class Neptune{
         mContentPanel.setBackground(Color.DARK_GRAY);
 
         JSplitPane split = new JSplitPane();
+        
         split.setLeftComponent(mTreePanel);
         split.setRightComponent(mContentPanel);
         JFrame frame = new JFrame("Neptune");
@@ -83,6 +84,7 @@ public class Neptune{
     
     public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JTreeComponent tree, JSliderComponent slider){
         this(table, buttons, menu, text, slider);
+        
         mTree = tree;
         mTreePanel.add(mTree.getTreePanel());
     }
