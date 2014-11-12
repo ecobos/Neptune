@@ -27,7 +27,7 @@ public class Neptune{
     private JTreeComponent mTree;
     private JSliderComponent mSlider;
  
-    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JTreeComponent tree) {
+    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JTreeComponent tree, JSliderComponent slider) {
         mMainPanel = new JPanel(new BorderLayout());
         mContentPanel = new JPanel();
         mContentPanel.setLayout(new GridBagLayout());
