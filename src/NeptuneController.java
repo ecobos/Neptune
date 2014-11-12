@@ -1,4 +1,3 @@
-
 import java.awt.Color;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -30,7 +29,8 @@ import javazoom.jlgui.basicplayer.BasicController;
 import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 
-public class NeptuneController implements ActionListener, MouseListener, DropTargetListener, ChangeListener{
+public class NeptuneController implements ActionListener, MouseListener, DropTargetListener, ChangeListener {
+
     private Neptune neptune;
     private boolean isPaused;
     private BasicPlayer player;
@@ -43,44 +43,46 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     private JSliderComponent mSlider;
     private JTreeComponent mTree;
     private boolean isPlaylistView;
-    
-    
-    NeptuneController(boolean isPlaylistview){
+
+    NeptuneController(boolean isPlaylistview) {
         player = new BasicPlayer();
         playerControl = (BasicController) player;
         isPaused = false;
         isPlaylistView = isPlaylistview;
     }
-    public void addPlayerView(Neptune mp){
+
+    public void addPlayerView(Neptune mp) {
         this.neptune = mp;
     }
+
     public void addSlider(JSliderComponent slider) {
         this.mSlider = slider;
     }
-    public void addDatabaseModel(Database conn){
+
+    public void addDatabaseModel(Database conn) {
         this.mDatabase = conn;
     }
-    
-    public void addTree(JTreeComponent tree){
+
+    public void addTree(JTreeComponent tree) {
         this.mTree = tree;
     }
-    
-    public void addButtonsView(ButtonsComponent buttons){
+
+    public void addButtonsView(ButtonsComponent buttons) {
         this.mButtons = buttons;
     }
-    
-    public void addMenuView(MenuComponent menu){
+
+    public void addMenuView(MenuComponent menu) {
         this.mMenuBar = menu;
     }
-    
-    public void addTextView(TextAreaComponent text){
+
+    public void addTextView(TextAreaComponent text) {
         this.mSongInfo = text;
     }
-    
-    public void addTableModel(SongsTableComponent table){
+
+    public void addTableModel(SongsTableComponent table) {
         this.mTable = table;
     }
-    
+
     private void playSong(Vector<String> songToPlay) {
 
         if (isPaused) {
@@ -123,7 +125,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     private void deleteSongSelected() {
         System.out.println("Deleted song: " + mTable.getSongSelected().get(2));
-        mDatabase.deleteSong(mTable.getSongSelected());     
+        mDatabase.deleteSong(mTable.getSongSelected());
     }
 
     @Override
@@ -139,20 +141,19 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             JOptionPane.showMessageDialog(mMenuBar.getMenu(), info, "About", PLAIN_MESSAGE, new ImageIcon(this.getClass().getResource("/resources/neptune.png")));
         } // ADD SONG BUTTON
         else if (e.getSource() == mMenuBar.getAddSongObj() || e.getSource() == mButtons.getAddSongObj()) {
-            if(isPlaylistView){
+            if (isPlaylistView) {
                 //display songs int he database
-            }else {
-               this.addSong(); 
+            } else {
+                this.addSong();
             }
-            
+
         } // DELETE SONG
         else if (e.getSource() == mMenuBar.getDeleteSongObj()) {
-            if(isPlaylistView){
-                
-            } else{
-               this.deleteSongSelected(); 
+            if (isPlaylistView) {
+                mDatabase.deleteSongFromPlayList(mDatabase.getSongID(mTable.getSongSelectedFilepath()), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
+            } else {
+                this.deleteSongSelected();
             }
-            
         } // PLAY SONG NOT IN LIBRARY
         else if (e.getSource() == mMenuBar.getSongNotInLibObj()) {
             FileFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
@@ -176,7 +177,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 System.out.println("Open command cancelled by user.\n");
             }
         } // PLAY BUTTON
-        else if (e.getSource() == mButtons.getPlayObj()) { 
+        else if (e.getSource() == mButtons.getPlayObj()) {
             mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
             playSong(mTable.getSongSelected());
             System.out.println("Playing: " + mTable.getSongSelected().get(1));
@@ -198,9 +199,9 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             }
         } // NEXT SONG BUTTON
         else if (e.getSource() == mButtons.getNextObj()) {
-            
+
             playSong(mTable.getNextSong());
-            
+
 //            System.out.println("mLastSongPlayedIndex: " + mLastSongPlayedIndex + " song count: " + (mTable.getSongsCount() - 1));
 //            mLastSongPlayedIndex++;
 //            if (mLastSongPlayedIndex >= mTable.getSongsCount()) {
@@ -216,7 +217,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             // this ensures that if the mouse is clicked to a different row, we 
             // can still play the song that is currently next
             playSong(mTable.getPrevSong());
-            
+
 //            mLastSongPlayedIndex--;
 //            if (mLastSongPlayedIndex < 0) {
 //                //System.out.println("First song playing");
@@ -230,7 +231,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        
+
     }
 
     @Override
@@ -249,48 +250,49 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 System.out.println("Open command cancelled by user.\n");
             }
         } else if (e.getSource() == mMenuBar.getDeleteSongObj() || e.getSource() == mTable.getMenuRemoveObj()) {
-            deleteSongSelected();
+            
 
+            //deleteSongSelected();
         } else if (e.getSource() == mTable.getTableObj()) {
             isPaused = false;
             System.out.println("The Jtable was clicked");
             mTable.setSongSelected();
-        } else if (e.getSource() == mTree.getJTreeObj()){
-            
+        } else if (e.getSource() == mTree.getJTreeObj()) {
+
             int selRow = mTree.getJTreeObj().getRowForLocation(e.getX(), e.getY());
             //String name = mTree.getJTreeObj().getSelectionPath().getLastPathComponent().toString();
             String leafName = mTree.getSelectedLeafName();
-            System.out.println("The tree was clicked.Selected row: " + selRow + " with name: "+ leafName);
-            
-            if(e.getClickCount() == 2) {
-                   if(!leafName.equals("Playlists")){
-                        System.out.println("I am broken");
-                        RunMVC playlist = new RunMVC(true, leafName);
-                   }
-                 
-             }
+            System.out.println("The tree was clicked.Selected row: " + selRow + " with name: " + leafName);
+
+            if (e.getClickCount() == 2) {
+                if (!leafName.equals("Playlists")) {
+                    System.out.println("I am broken");
+                    RunMVC playlist = new RunMVC(true, leafName);
+                }
+
+            }
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-         
+
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        
+
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-       
+
     }
 
     //*****************************************************************************
     @Override
     public void dragEnter(DropTargetDragEvent dtde) {
-        
+
     }
 
     @Override
@@ -338,7 +340,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     @Override
     public void stateChanged(ChangeEvent e) {
         System.out.println("Player control");
-        
+
         try {
             playerControl.setGain(mSlider.getValue());
         } catch (BasicPlayerException ex) {
