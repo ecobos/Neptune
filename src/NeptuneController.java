@@ -158,10 +158,12 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 this.addSong();
             }
 
-        } // DELETE SONG
+        } // DELETE SONG -- Fix deleting song from playlist, repaint playlist window
         else if (e.getSource() == mMenuBar.getDeleteSongObj() || e.getSource() == mMenuBar.getDeleteSongPlaylistObj()) {
             if (isPlaylistView) {
+                System.out.println("playlist delete");
                 mDatabase.deleteSongFromPlayList(mDatabase.getSongID(mTable.getSongSelectedFilepath()), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
+                mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(mTable.getTableName()));
             } else {
                 this.deleteSongSelected();
             }
@@ -271,14 +273,22 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         } else if (e.getSource() == mMenuBar.getDeleteSongObj() || e.getSource() == mTable.getMenuRemoveObj()) {
             System.out.println("Remove song from library.");
             String filePath = mTable.getSongSelectedFilepath();
-            if(filePath != null){
+            if (isPlaylistView) {
+                System.out.println("playlist delete");
+                mDatabase.deleteSongFromPlayList(mDatabase.getSongID(mTable.getSongSelectedFilepath()), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
+                mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(mTable.getTableName()));
+            }
+            else if (!isPlaylistView && filePath != null){
                 mDatabase.deleteSongFromLibrary(filePath);
+                mTable.update(mDatabase, mDatabase.getSongsFromDatabase()); // update table after deleting
                 System.out.println("Song deleted from library");
             } else {
                 System.out.println("Unable to delete song from library");
             }
             
-        } else if (e.getSource() == mMenuBar.getPlaylistObj() || e.getSource() == mTable.getMenuAddToPlaylistObj()) {            
+            
+        } 
+        else if (e.getSource() == mMenuBar.getPlaylistObj() || e.getSource() == mTable.getMenuAddToPlaylistObj()) {            
 
             
            JMenu menuItem = (JMenu) e.getComponent();
@@ -302,7 +312,10 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             System.out.println("The Jtable was clicked");
             mTable.setSongSelected();
             // upon clicking on table, update popup menu with playlists
-            mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase); 
+            if(!isPlaylistView) {
+               mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase); 
+            }
+             
         } else if(e.getSource() == mTree.getJTreeObj()){
             String leafName = mTree.getSelectedLeafName();
             if(leafName.equals("Library")){

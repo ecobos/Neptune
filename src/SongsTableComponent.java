@@ -60,10 +60,9 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         COLUMN_HEADER.addElement("Artist");
         COLUMN_HEADER.addElement("Album");
         COLUMN_HEADER.addElement("Album Year");
-        COLUMN_HEADER.addElement("Track #");
+        COLUMN_HEADER.addElement("Comments"); // swapped with track #
         COLUMN_HEADER.addElement("Genre");
-        COLUMN_HEADER.addElement("Comments");
-
+        COLUMN_HEADER.addElement("Track #");
         mSongsVector = songSetFromDatabase;
         mTableModel = new DefaultTableModel(mSongsVector, COLUMN_HEADER);
 
@@ -307,7 +306,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(4).setPreferredWidth(100);
         mSongsTable.getColumnModel().getColumn(5).setPreferredWidth(100);
         mSongsTable.getColumnModel().getColumn(6).setPreferredWidth(100);
-        mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(200);
+        mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(100);
         mSongsTable.doLayout();
     }
 
