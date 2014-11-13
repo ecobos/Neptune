@@ -145,10 +145,6 @@ public class Database extends Observable {
             statement.setString(1, filepath);
             ResultSet rs = statement.executeQuery();
             
-            //Statement stat = conn.createStatement();
-            //String query = "SELECT * FROM Songs WHERE filepath = '" + filepath + "'";
-            //ResultSet rs = stat.executeQuery(query);
-            
             while (rs.next()) {
                 songID = rs.getInt("song_ID");
                 System.out.println("songID: " + songID);

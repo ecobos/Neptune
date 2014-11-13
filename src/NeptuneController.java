@@ -380,9 +380,17 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             try {
                 if (type.isFlavorJavaFileListType()) {
                     List<File> files = (List) transferable.getTransferData(type);
+                    int playlistID = 0;
+                    if(isPlaylistView){
+                        playlistID = mDatabase.getPlaylistIDfromName(mTable.getTableName());
+                    }
                     for (File file : files) {
                         System.out.println(file.getAbsolutePath());
                         mDatabase.addSong(file.getAbsolutePath());
+                        if(isPlaylistView) {
+                            mDatabase.addSongToPlaylist(mDatabase.getSongID(file.getAbsolutePath()), playlistID);
+                            mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(mTable.getTableName()));
+                        }
                     }
                 }
             } catch (UnsupportedFlavorException ex) {
