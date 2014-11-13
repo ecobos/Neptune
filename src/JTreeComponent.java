@@ -99,12 +99,6 @@ public class JTreeComponent implements Observer {
         //playlist.add(node);
         playlistModel.insertNodeInto(node, playlist, treeIndex++);
     }
-    
-    public TreePath getNextPath(String prefix) {
-        TreePath path = mPlaylistTree.getNextMatch(prefix, 0, Position.Bias.Forward);
-        return path;
-    }
-    
     // assume the node to be deleted already exist within playlist table
     // I'm not sure if this will work since it might be making a new copy of a 
     // a child node since I make a child node with the string passed in
@@ -131,6 +125,4 @@ public class JTreeComponent implements Observer {
     public void update(Observable o, Object arg) {
         
     }
-
-    
 }

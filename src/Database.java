@@ -138,14 +138,20 @@ public class Database extends Observable {
     
     public int getSongID(String filepath) {
         int songID = 0;
+        System.out.println(filepath);
         try {
             this.getDBConnection();
-            Statement stat = conn.createStatement();
-            String query = "SELECT * FROM Songs WHERE filepath = \"" + filepath + "\"";
-            ResultSet rs = stat.executeQuery(query);
+            PreparedStatement statement = conn.prepareStatement("SELECT * from Songs WHERE filepath = ?");
+            statement.setString(1, filepath);
+            ResultSet rs = statement.executeQuery();
+            
+            //Statement stat = conn.createStatement();
+            //String query = "SELECT * FROM Songs WHERE filepath = '" + filepath + "'";
+            //ResultSet rs = stat.executeQuery(query);
             
             while (rs.next()) {
                 songID = rs.getInt("song_ID");
+                System.out.println("songID: " + songID);
             }
             conn.close();
             
@@ -166,6 +172,7 @@ public class Database extends Observable {
             
             while (rs.next()) {
                 playlistID = rs.getInt("playlist_ID");
+                System.out.println("playlist: " + playlistID);
             }
             
             
