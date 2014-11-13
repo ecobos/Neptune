@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Observable;
 import java.util.Observer;
@@ -41,10 +42,16 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     private JPanel mTablePanel;
     private JPopupMenu mPopupMenu;
     private String mTableName;
+    private ArrayList<JMenuItem> mSubMenu;
+    private JMenuItem item; //delete
+    private JMenuItem[] subMenuItems;
     
     public SongsTableComponent(String name, Vector<Vector> songSetFromDatabase, boolean isPlaylist) {
         mSongSelectedIndex = 0;
         mTableName = name;
+        mSubMenu = new ArrayList<JMenuItem>();
+        item = new JMenuItem("dummy");
+        subMenuItems = new JMenuItem[20];
         COLUMN_HEADER = new Vector<String>();
         COLUMN_HEADER.addElement("Filepath");
         COLUMN_HEADER.addElement("Title");
@@ -152,14 +159,20 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         Enumeration children = playlistName[1].children();
         mMenuAddToPlaylist.removeAll();
         String name = "";
+        int x = 0;
         while(children.hasMoreElements()){
             name = children.nextElement().toString();
-            mMenuAddToPlaylist.add(new JMenuItem(name));
+            subMenuItems[x] = new JMenuItem(name);
+            mSubMenu.add(item);
+            subMenuItems[x].setActionCommand(name);
+            mMenuAddToPlaylist.add(subMenuItems[x]);
+            x++;
         }
-        
-        
-        
-        //mMenuRemoveSong.getName();
+  //mMenuRemoveSong.getName();
+    }
+    
+    public ArrayList<JMenuItem> getSubMenuItems(){
+        return mSubMenu;
     }
     
     private JPopupMenu getPlaylistPopupMenu() {
@@ -174,9 +187,11 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     public void addMouseController(MouseListener controller){
         mSongsTable.addMouseListener(controller);
         mMenuAddSong.addMouseListener(controller);
-        mMenuAddToPlaylist.addMouseListener(controller);
+        //mMenuAddToPlaylist.addMouseListener(controller);
         mMenuRemoveSong.addMouseListener(controller);
         mPopupMenu.addMouseListener(controller);
+
+        //subMenuItems.addMouseListener(controller);
     }
 
     public void addDropController(DropTargetListener controller){

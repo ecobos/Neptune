@@ -1,4 +1,6 @@
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -13,18 +15,25 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.PLAIN_MESSAGE;
+import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javazoom.jlgui.basicplayer.BasicController;
 import javazoom.jlgui.basicplayer.BasicPlayer;
@@ -270,8 +279,12 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             }
             
         } else if (e.getSource() == mMenuBar.getPlaylistObj() || e.getSource() == mTable.getMenuAddToPlaylistObj()) {            
-            System.out.println("Add song to playlist.");
+            
+           JMenu menuItem = (JMenu) e.getComponent();
+           //System.out.println(menuItem.getName());
+           
             String playlistName = JOptionPane.showInputDialog(mMenuBar.getMenu(), "Enter playlist name");
+            
             int songID = mDatabase.getSongID(mTable.getSongSelectedFilepath());
             int playlistID = mDatabase.getPlaylistIDfromName(playlistName);
             System.out.println(songID + " " + playlistID);
@@ -332,6 +345,18 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 mTree.deleteNode(path);
                 mTree.getJTreeObj().treeDidChange();        
             }
+        } else{
+            ArrayList<JMenuItem> sub = mTable.getSubMenuItems();
+//            TreeNode[] playlistName = mTree.getLeafNodeNames();
+//            Enumeration children = playlistName[1].children();
+//            String name = "";
+            
+            for(JMenuItem item: sub){
+                if(e.getSource() == item){
+                    System.out.println(item.getName());
+                }
+            }
+
         }
     }
 
