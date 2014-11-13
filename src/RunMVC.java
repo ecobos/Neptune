@@ -14,10 +14,10 @@ public class RunMVC {
         JSliderComponent slider = new JSliderComponent();
         
         if(loadFromPlaylist == true){
-            table = new SongsTableComponent(playlistName,database.getPlaylistSongsFromDatabase(playlistName));
+            table = new SongsTableComponent(playlistName,database.getPlaylistSongsFromDatabase(playlistName), loadFromPlaylist);
             player = new Neptune(table, buttons, menu, text, slider);
         }else {
-            table = new SongsTableComponent("Library",database.getSongsFromDatabase());
+            table = new SongsTableComponent("Library",database.getSongsFromDatabase(), loadFromPlaylist);
             tree = new JTreeComponent(database.getPlaylistsFromDatabase());
             player = new Neptune(table, buttons, menu, text, tree, slider);
         }
