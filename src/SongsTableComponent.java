@@ -1,8 +1,9 @@
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -26,7 +27,8 @@ import javax.swing.tree.TreeNode;
  *
  * @author Kelby, Edgar, Gil
  */
-public class SongsTableComponent implements Observer /*, MouseListener, DropTargetListener */{
+public class SongsTableComponent implements Observer /*, MouseListener, DropTargetListener */ {
+
     //private int mSongCount;
     private boolean mDoubleClick;
     private Vector<String> COLUMN_HEADER;
@@ -45,13 +47,13 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     private ArrayList<JMenuItem> mSubMenu;
     private JMenuItem item; //delete
     private JMenuItem[] subMenuItems;
-    
+
     public SongsTableComponent(String name, Vector<Vector> songSetFromDatabase, boolean isPlaylist) {
         mSongSelectedIndex = 0;
         mTableName = name;
         mSubMenu = new ArrayList<JMenuItem>();
         item = new JMenuItem("dummy");
-        subMenuItems = new JMenuItem[20];
+        //subMenuItems = new JMenuItem[20];
         COLUMN_HEADER = new Vector<String>();
         COLUMN_HEADER.addElement("Filepath");
         COLUMN_HEADER.addElement("Title");
@@ -61,18 +63,17 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         COLUMN_HEADER.addElement("Track #");
         COLUMN_HEADER.addElement("Genre");
         COLUMN_HEADER.addElement("Comments");
-        
+
         mSongsVector = songSetFromDatabase;
         mTableModel = new DefaultTableModel(mSongsVector, COLUMN_HEADER);
-        
-        
+
         mSongsTable = new JTable();
-        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongsVector.size() + 10) * 10));      
+        mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongsVector.size() + 10) * 10));
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setAutoCreateRowSorter(true);
-        mSongsTable.setModel(mTableModel);      
-        
+        mSongsTable.setModel(mTableModel);
+
         mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(300);
         mSongsTable.getColumnModel().getColumn(1).setPreferredWidth(200);
@@ -83,70 +84,71 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(6).setPreferredWidth(100);
         mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(100);
         mSongsTable.doLayout();
-        
+
         JScrollPane scrollPane = new JScrollPane(mSongsTable);
         scrollPane.setWheelScrollingEnabled(true);
         scrollPane.getBounds();
-        
+
         mTablePanel = new JPanel();
-        mTablePanel.setMinimumSize(new Dimension(1200,300));
+        mTablePanel.setMinimumSize(new Dimension(1200, 300));
         mTablePanel.add(scrollPane);
-        
-        if(isPlaylist ){//&& !mSongsTable.equals("Library")){
+
+        if (isPlaylist) {//&& !mSongsTable.equals("Library")){
             mSongsTable.setComponentPopupMenu(getPlaylistPopupMenu());
         } else {
             mSongsTable.setComponentPopupMenu(getPopupMenu()); //add a popup menu to the JTable
         }
-        
+
         //mTableModel.addTableModelListener(mSongsTable);
     }
 
-    public String getTableName(){
+    public String getTableName() {
         return mTableName;
     }
-    public void setTableName(String name){
+
+    public void setTableName(String name) {
         mTableName = name;
     }
 
-    public JMenuItem getMenuAddObj(){
+    public JMenuItem getMenuAddObj() {
         return mMenuAddSong;
     }
-    
-    public JMenuItem getMenuAddToPlaylistObj(){
+
+    public JMenuItem getMenuAddToPlaylistObj() {
         return mMenuAddToPlaylist;
     }
-    
+
     public JPanel getTable() {
         return mTablePanel;
     }
-    
-    public JTable getTableObj(){
+
+    public JTable getTableObj() {
         return mSongsTable;
     }
-    
-    public void setBackground(Color color){
+
+    public void setBackground(Color color) {
         //setBackground(color);
         mSongsTable.setBackground(color);
     }
-    
-    public JMenuItem getMenuRemoveObj(){
+
+    public JMenuItem getMenuRemoveObj() {
         return mMenuRemoveSong;
     }
-    
-    public void setCurrentSongPlayingIndex(int currentSong){
+
+    public void setCurrentSongPlayingIndex(int currentSong) {
         mCurrentSongPlayingIndex = currentSong;
     }
-    
-    public int getCurrentSongPlayingIndex(){
+
+    public int getCurrentSongPlayingIndex() {
         return mCurrentSongPlayingIndex;
     }
-    
+
     private JPopupMenu getPopupMenu() {
         mPopupMenu = new JPopupMenu();
         mMenuAddSong = new JMenuItem("Add a song"); //new ImageIcon("/resources/add.png"));  
         mMenuAddToPlaylist = new JMenu("Add to playlist");
         //mMenuAddToPlaylist.add(new JMenuItem("This is some playlist"));
-        mMenuRemoveSong = new JMenuItem("Remove selected song");     
+        mMenuRemoveSong = new JMenuItem("Remove selected song");
         mPopupMenu.add(mMenuAddSong);
         mPopupMenu.add(mMenuAddToPlaylist);
         mPopupMenu.add(mMenuRemoveSong);
@@ -154,37 +156,57 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         //mMenuAddToPlaylist = new HorizontalMenu();
         return mPopupMenu;
     }
-    
-    public void updatePopupSubmenu(TreeNode[] playlistName){
+
+    public void updatePopupSubmenu(TreeNode[] playlistName, Database db) {
+        final Database database = db;
         Enumeration children = playlistName[1].children();
         mMenuAddToPlaylist.removeAll();
         String name = "";
         int x = 0;
-        while(children.hasMoreElements()){
+        while (children.hasMoreElements()) {
             name = children.nextElement().toString();
-            subMenuItems[x] = new JMenuItem(name);
-            mSubMenu.add(item);
-            subMenuItems[x].setActionCommand(name);
-            mMenuAddToPlaylist.add(subMenuItems[x]);
-            x++;
+            item = new JMenuItem(name);
+//            mSubMenu.add(item);
+//            subMenuItems[x].setActionCommand(name);
+            mMenuAddToPlaylist.add(item);
+//            x++;
+
+            item.addMouseListener(new MouseAdapter() {
+
+                @Override
+                public void mousePressed(MouseEvent evt) {
+
+                    JMenuItem source = (JMenuItem) evt.getSource();
+                    int songID = database.getSongID(getSongSelectedFilepath());
+                    int playlistID = database.getPlaylistIDfromName(source.getText());
+                    if (playlistID != 0 && songID != 0) {
+                        database.addSongToPlaylist(songID, playlistID);
+                        System.out.println("Song added to playlist");
+                    } else {
+                        System.out.println("Playlist doesn't exist");
+                    }
+                    System.out.println(source.getText());
+                }
+
+            });
         }
-  //mMenuRemoveSong.getName();
+        //mMenuRemoveSong.getName();
     }
-    
-    public ArrayList<JMenuItem> getSubMenuItems(){
+
+    public ArrayList<JMenuItem> getSubMenuItems() {
         return mSubMenu;
     }
-    
+
     private JPopupMenu getPlaylistPopupMenu() {
         mPopupMenu = new JPopupMenu();
         mMenuAddSong = new JMenuItem("Add a song to playlist"); //new ImageIcon("/resources/add.png"));   
-        mMenuRemoveSong = new JMenuItem("Remove selected song from playlist");     
+        mMenuRemoveSong = new JMenuItem("Remove selected song from playlist");
         mPopupMenu.add(mMenuAddSong);
         mPopupMenu.add(mMenuRemoveSong);
         return mPopupMenu;
     }
-    
-    public void addMouseController(MouseListener controller){
+
+    public void addMouseController(MouseListener controller) {
         mSongsTable.addMouseListener(controller);
         mMenuAddSong.addMouseListener(controller);
         //mMenuAddToPlaylist.addMouseListener(controller);
@@ -194,14 +216,14 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         //subMenuItems.addMouseListener(controller);
     }
 
-    public void addDropController(DropTargetListener controller){
+    public void addDropController(DropTargetListener controller) {
         new DropTarget(mTablePanel, controller);
     }
-  
-    public void setSongSelected(){
+
+    public void setSongSelected() {
         mSongSelectedIndex = mSongsTable.getSelectedRow();
     }
-    
+
     public Vector getSongSelected() {
         Vector currentSongRow = mSongsVector.get(mSongSelectedIndex);
         mSongsTable.setRowSelectionInterval(mSongSelectedIndex, mSongSelectedIndex);
@@ -213,10 +235,10 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.setRowSelectionInterval(index, index);
         return currentSongRow;
     }
-    
-    public String getSongSelectedFilepath(){
+
+    public String getSongSelectedFilepath() {
         Vector currentSongRow = mSongsVector.get(mSongSelectedIndex);
-        return (String)currentSongRow.get(0);
+        return (String) currentSongRow.get(0);
     }
 
     public int getSongSelectedIndex() {
@@ -241,10 +263,12 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.setRowSelectionInterval(mCurrentSongPlayingIndex, mCurrentSongPlayingIndex);
         return currentSongRow;
     }
-/**
- * updated getPrevSong... works now as it should
- * @return 
- */
+
+    /**
+     * updated getPrevSong... works now as it should
+     *
+     * @return
+     */
     public Vector getPrevSong() {
         System.out.println("Song index prev: " + mCurrentSongPlayingIndex);
         mCurrentSongPlayingIndex--;
@@ -258,21 +282,18 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         return currentSongRow;
     }
 
-
     @Override
     public void update(Observable o, Object arg) {
         //mSongsVector.clear();
-        mSongsVector = (Vector<Vector>)arg;
-        
+        mSongsVector = (Vector<Vector>) arg;
+
         /*
-        if(arg != null){
-            mTableModel.addRow((Vector)arg);
-        }else{
-            mTableModel.removeRow(mSongSelectedIndex);
-        }
-        */
-        
-        
+         if(arg != null){
+         mTableModel.addRow((Vector)arg);
+         }else{
+         mTableModel.removeRow(mSongSelectedIndex);
+         }
+         */
         mTableModel.setDataVector(mSongsVector, COLUMN_HEADER);
         //mTableModel.fireTableDataChanged();
         mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
