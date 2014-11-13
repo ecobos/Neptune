@@ -4,12 +4,14 @@ import java.awt.Dimension;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseListener;
+import java.util.Enumeration;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.tree.TreeNode;
 
 
 /*
@@ -135,7 +137,8 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     private JPopupMenu getPopupMenu() {
         mPopupMenu = new JPopupMenu();
         mMenuAddSong = new JMenuItem("Add a song"); //new ImageIcon("/resources/add.png"));  
-        mMenuAddToPlaylist = new JMenuItem("Add to playlist");
+        mMenuAddToPlaylist = new JMenu("Add to playlist");
+        //mMenuAddToPlaylist.add(new JMenuItem("This is some playlist"));
         mMenuRemoveSong = new JMenuItem("Remove selected song");     
         mPopupMenu.add(mMenuAddSong);
         mPopupMenu.add(mMenuAddToPlaylist);
@@ -143,6 +146,20 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         //JMenu subMenu = new JMenu();
         //mMenuAddToPlaylist = new HorizontalMenu();
         return mPopupMenu;
+    }
+    
+    public void updatePopupSubmenu(TreeNode[] playlistName){
+        Enumeration children = playlistName[1].children();
+        mMenuAddToPlaylist.removeAll();
+        String name = "";
+        while(children.hasMoreElements()){
+            name = children.nextElement().toString();
+            mMenuAddToPlaylist.add(new JMenuItem(name));
+        }
+        
+        
+        
+        //mMenuRemoveSong.getName();
     }
     
     private JPopupMenu getPlaylistPopupMenu() {

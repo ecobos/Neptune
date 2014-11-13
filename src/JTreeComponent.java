@@ -70,6 +70,10 @@ public class JTreeComponent implements Observer {
         return mNewWindow;
     } 
     
+    public TreeNode[] getLeafNodeNames(){        
+        return playlist.getPath();
+    }
+    
     public JMenuItem getDeletePlaylistObj(){
         return mDeletePlaylist;
     }

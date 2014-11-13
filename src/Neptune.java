@@ -93,6 +93,7 @@ public class Neptune{
         
         mTree = tree;
         mTreePanel.setMinimumSize(new Dimension(100,100));
+  
         mTreePanel.add(mTree.getTreePanel());
         mainFrame.remove(mContentPanel);
         JSplitPane split = new JSplitPane();
