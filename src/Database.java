@@ -378,6 +378,27 @@ public class Database extends Observable {
         } catch (SQLException e) {
                 System.out.println("Unable to delete song");
         }
+     }
+     
+        public void deleteSongFromLibrary(String filepath) {
+
+       // String filepath = fileToDelete.get(0);
+        try {
+            if (conn.isClosed()) {
+                this.getDBConnection();
+            }
+            PreparedStatement pstat = conn.prepareStatement("DELETE FROM Songs WHERE filepath = ?");
+            //String query = "SELECT * FROM Songs WHERE filepath = \"" + filepath + "\"";
+            pstat.setString(1, filepath);
+            pstat.executeUpdate();
+            
+            setChanged();
+            //notifyObservers(null);
+            updateSongsFromDatabase();
+            //notifyObservers(); 
+        } catch (SQLException e) {
+                System.out.println("Unable to delete song");
+        }
     }
 }
 
