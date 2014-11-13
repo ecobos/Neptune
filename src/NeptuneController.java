@@ -260,9 +260,28 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 System.out.println("Open command cancelled by user.\n");
             }
         } else if (e.getSource() == mMenuBar.getDeleteSongObj() || e.getSource() == mTable.getMenuRemoveObj()) {
+            System.out.println("Remove song from library.");
+            String filePath = mTable.getSongSelectedFilepath();
+            if(filePath != null){
+                mDatabase.deleteSongFromLibrary(filePath);
+                System.out.println("Song deleted from library");
+            } else {
+                System.out.println("Unable to delete song from library");
+            }
             
-
-            //deleteSongSelected();
+        } else if (e.getSource() == mMenuBar.getPlaylistObj() || e.getSource() == mTable.getMenuAddToPlaylistObj()) {            
+            System.out.println("Add song to playlist.");
+            String playlistName = JOptionPane.showInputDialog(mMenuBar.getMenu(), "Enter playlist name");
+            int songID = mDatabase.getSongID(mTable.getSongSelectedFilepath());
+            int playlistID = mDatabase.getPlaylistIDfromName(playlistName);
+            System.out.println(songID + " " + playlistID);
+            if(playlistID != 0 && songID != 0){
+                mDatabase.addSongToPlaylist( songID, playlistID);
+                System.out.println("Song added to playlist");
+            } else {
+                System.out.println("Playlist doesn't exist");
+            }
+           
         } else if (e.getSource() == mTable.getTableObj()) {
             isPaused = false;
             System.out.println("The Jtable was clicked");
