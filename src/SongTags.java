@@ -1,4 +1,3 @@
-
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;

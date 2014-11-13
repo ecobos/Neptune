@@ -320,12 +320,14 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         } else if(e.getSource() == mTree.getDeletePlaylistObj()){
             String leafName = mTree.getSelectedLeafName();
             //TreePath path = mTree.getJTreeObj().set
-            int selRow = mTree.getJTreeObj().getRowForLocation(e.getX(), e.getY());
+            //int selRow = mTree.getJTreeObj().getRowForLocation(e.getX(), e.getY());
+            TreePath path = mTree.getJTreeObj().getSelectionPath(); 
+            System.out.println("path: " + path);
             int dialogButton = JOptionPane.YES_NO_OPTION;
             int dialogResult = JOptionPane.showConfirmDialog (null, "You are about to delete the "+leafName+" playlist.\nWant to continue with this?","Warning",dialogButton);
             if(dialogResult == JOptionPane.YES_OPTION){
                 mDatabase.deletePlaylistFromDatabase(leafName);
-                mTree.deleteNode(selRow);
+                mTree.deleteNode(path);
                 mTree.getJTreeObj().treeDidChange();        
             }
         }

@@ -11,8 +11,11 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
+import javax.swing.text.Position;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
 
 public class JTreeComponent implements Observer {
     private Vector<String> mPlaylistVector; // vector used to store retrieved playlist names
@@ -93,12 +96,19 @@ public class JTreeComponent implements Observer {
         playlistModel.insertNodeInto(node, playlist, treeIndex++);
     }
     
+    public TreePath getNextPath(String prefix) {
+        TreePath path = mPlaylistTree.getNextMatch(prefix, 0, Position.Bias.Forward);
+        return path;
+    }
+    
     // assume the node to be deleted already exist within playlist table
     // I'm not sure if this will work since it might be making a new copy of a 
     // a child node since I make a child node with the string passed in
-    public void deleteNode(int nodeToDelete) {
+    //public void deleteNode(int nodeToDelete) {
+    public void deleteNode(TreePath path) {
         //DefaultMutableTreeNode node = new DefaultMutableTreeNode(nodeToDelete); 
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)playlistModel.getChild(playlist, nodeToDelete);
+        //DefaultMutableTreeNode node = (DefaultMutableTreeNode)playlistModel.getChild(playlist, nodeToDelete);
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
         playlistModel.removeNodeFromParent(node);
         --treeIndex;
     }
@@ -117,5 +127,6 @@ public class JTreeComponent implements Observer {
     public void update(Observable o, Object arg) {
         
     }
+
     
 }
