@@ -163,17 +163,49 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mMenuAddToPlaylist.removeAll();
         String name = "";
 <<<<<<< HEAD
+<<<<<<< HEAD
         
         while(children.hasMoreElements()){
 =======
         int x = 0;
         while (children.hasMoreElements()) {
 >>>>>>> origin/master
+=======
+        int x = 0;
+        while (children.hasMoreElements()) {
+>>>>>>> origin/master
             name = children.nextElement().toString();
+<<<<<<< HEAD
 <<<<<<< HEAD
             JMenuItem menuItem = new JMenuItem(name);
             menuItem.setActionCommand(name);
             mMenuAddToPlaylist.add(menuItem);
+=======
+            item = new JMenuItem(name);
+//            mSubMenu.add(item);
+//            subMenuItems[x].setActionCommand(name);
+            mMenuAddToPlaylist.add(item);
+//            x++;
+
+            item.addMouseListener(new MouseAdapter() {
+
+                @Override
+                public void mousePressed(MouseEvent evt) {
+
+                    JMenuItem source = (JMenuItem) evt.getSource();
+                    int songID = database.getSongID(getSongSelectedFilepath());
+                    int playlistID = database.getPlaylistIDfromName(source.getText());
+                    if (playlistID != 0 && songID != 0) {
+                        database.addSongToPlaylist(songID, playlistID);
+                        System.out.println("Song added to playlist");
+                    } else {
+                        System.out.println("Playlist doesn't exist");
+                    }
+                    System.out.println(source.getText());
+                }
+
+            });
+>>>>>>> origin/master
 =======
             item = new JMenuItem(name);
 //            mSubMenu.add(item);
