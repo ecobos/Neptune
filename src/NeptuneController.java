@@ -282,7 +282,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 System.out.println("Playlist doesn't exist");
             }
            
-        } else if (e.getSource() == mTable.getTableObj()) {
+        }
+        else if (e.getSource() == mTable.getTableObj()) {
             isPaused = false;
             System.out.println("The Jtable was clicked");
             mTable.setSongSelected();
@@ -290,6 +291,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             String leafName = mTree.getSelectedLeafName();
             if(leafName.equals("Library")){
                 isPlaylistView = false;
+                mTable.updatePopupSubmenu(mTree.getLeafNodeNames());
                 mTable.update(mDatabase, mDatabase.getSongsFromDatabase());
                 neptune.setPlaylistMenuBar(isPlaylistView);
             }
