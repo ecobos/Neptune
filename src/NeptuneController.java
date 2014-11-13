@@ -304,7 +304,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             String leafName = mTree.getSelectedLeafName();
             if(leafName.equals("Library")){
                 isPlaylistView = false;
-                mTable.updatePopupSubmenu(mTree.getLeafNodeNames());
+                mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase);
                 mTable.update(mDatabase, mDatabase.getSongsFromDatabase());
                 neptune.setPlaylistMenuBar(isPlaylistView);
             }
@@ -345,19 +345,20 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 mTree.deleteNode(path);
                 mTree.getJTreeObj().treeDidChange();        
             }
-        } else{
-            ArrayList<JMenuItem> sub = mTable.getSubMenuItems();
-//            TreeNode[] playlistName = mTree.getLeafNodeNames();
-//            Enumeration children = playlistName[1].children();
-//            String name = "";
-            
-            for(JMenuItem item: sub){
-                if(e.getSource() == item){
-                    System.out.println(item.getName());
-                }
-            }
-
-        }
+        } 
+//        else{
+//            ArrayList<JMenuItem> sub = mTable.getSubMenuItems();
+////            TreeNode[] playlistName = mTree.getLeafNodeNames();
+////            Enumeration children = playlistName[1].children();
+////            String name = "";
+//            
+//            for(JMenuItem item: sub){
+//                if(e.getSource() == item){
+//                    System.out.println(item.getName());
+//                }
+//            }
+//
+//        }
     }
 
     @Override
