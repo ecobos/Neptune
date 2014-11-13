@@ -148,7 +148,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         } // ABOUT BUTTON
         else if (e.getSource() == mMenuBar.getAboutObj()) {
             System.out.println("Clicked the about section");
-            String info = "Neptune Music Player\n\nDeveloped by:\n\t\tEdgar Cobos\n\t\tKelby Sapien\n\t\tGil Pena\n\nVersion: 1.0";
+            String info = "Neptune Music Player\n\nDeveloped by:\n\t\tEdgar Cobos\n\t\tKelby Sapien\n\t\tGil Pena\n\nVersion: 2.0";
             JOptionPane.showMessageDialog(mMenuBar.getMenu(), info, "About", PLAIN_MESSAGE, new ImageIcon(this.getClass().getResource("/resources/neptune.png")));
         } // ADD SONG BUTTON
         else if (e.getSource() == mMenuBar.getAddSongObj() || e.getSource() == mButtons.getAddSongObj()) {
@@ -301,6 +301,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             isPaused = false;
             System.out.println("The Jtable was clicked");
             mTable.setSongSelected();
+            // upon clicking on table, update popup menu with playlists
+            mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase); 
         } else if(e.getSource() == mTree.getJTreeObj()){
             String leafName = mTree.getSelectedLeafName();
             if(leafName.equals("Library")){
