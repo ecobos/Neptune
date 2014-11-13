@@ -162,25 +162,12 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         Enumeration children = playlistName[1].children();
         mMenuAddToPlaylist.removeAll();
         String name = "";
-<<<<<<< HEAD
-<<<<<<< HEAD
-        
-        while(children.hasMoreElements()){
-=======
         int x = 0;
         while (children.hasMoreElements()) {
->>>>>>> origin/master
-=======
-        int x = 0;
-        while (children.hasMoreElements()) {
->>>>>>> origin/master
             name = children.nextElement().toString();
-<<<<<<< HEAD
-<<<<<<< HEAD
             JMenuItem menuItem = new JMenuItem(name);
             menuItem.setActionCommand(name);
             mMenuAddToPlaylist.add(menuItem);
-=======
             item = new JMenuItem(name);
 //            mSubMenu.add(item);
 //            subMenuItems[x].setActionCommand(name);
@@ -205,8 +192,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
                 }
 
             });
->>>>>>> origin/master
-=======
+
             item = new JMenuItem(name);
 //            mSubMenu.add(item);
 //            subMenuItems[x].setActionCommand(name);
@@ -231,7 +217,6 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
                 }
 
             });
->>>>>>> origin/master
         }
         //mMenuRemoveSong.getName();
     }

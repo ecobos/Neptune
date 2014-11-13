@@ -279,13 +279,11 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             }
             
         } else if (e.getSource() == mMenuBar.getPlaylistObj() || e.getSource() == mTable.getMenuAddToPlaylistObj()) {            
-<<<<<<< HEAD
-=======
+
             
            JMenu menuItem = (JMenu) e.getComponent();
            //System.out.println(menuItem.getName());
-           
->>>>>>> origin/master
+
             String playlistName = JOptionPane.showInputDialog(mMenuBar.getMenu(), "Enter playlist name");
             
             int songID = mDatabase.getSongID(mTable.getSongSelectedFilepath());
