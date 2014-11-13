@@ -152,9 +152,12 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         Enumeration children = playlistName[1].children();
         mMenuAddToPlaylist.removeAll();
         String name = "";
+        
         while(children.hasMoreElements()){
             name = children.nextElement().toString();
-            mMenuAddToPlaylist.add(new JMenuItem(name));
+            JMenuItem menuItem = new JMenuItem(name);
+            menuItem.setActionCommand(name);
+            mMenuAddToPlaylist.add(menuItem);
         }
         
         
