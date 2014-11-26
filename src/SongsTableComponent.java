@@ -281,6 +281,11 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         return currentSongRow;
     }
 
+    public int getSongSelectedID(){
+        Vector currentSongRow = mSongsVector.get(mSongSelectedIndex);
+        return Integer.parseInt((String)currentSongRow.lastElement());
+    }
+    
     /**
      * Returns the currently selected song's filepath
      * 

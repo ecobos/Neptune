@@ -67,6 +67,7 @@ public class Database extends Observable {
                 vectorData.addElement(sanitizeEmptyString(rs.getString("track_num")));
                 vectorData.addElement(sanitizeEmptyString(rs.getString("genre")));
                 vectorData.addElement(sanitizeEmptyString(rs.getString("comment")));
+                vectorData.addElement(Integer.toString(rs.getInt("song_ID")));
                 songsVector.addElement(vectorData);
             }
             conn.close();
@@ -111,7 +112,7 @@ public class Database extends Observable {
      * @param songID The song's ID
      * @param playlistID The playlist's ID
      */
-    public void deleteSongFromPlayList(int songID, int playlistID) {
+    public void deleteSongFromPlaylist(int songID, int playlistID) {
         try {
             if (conn.isClosed()) {
                 this.getDBConnection();
@@ -260,6 +261,7 @@ public class Database extends Observable {
                 vectorData.addElement(sanitizeEmptyString(rs.getString("track_num")));
                 vectorData.addElement(sanitizeEmptyString(rs.getString("genre")));
                 vectorData.addElement(sanitizeEmptyString(rs.getString("comment")));
+                vectorData.addElement(Integer.toString(rs.getInt("song_ID")));
                 songsVector.addElement(vectorData);
             }
             notifyObservers(songsVector);
@@ -294,6 +296,7 @@ public class Database extends Observable {
                 vectorData.addElement(sanitizeEmptyString(rs.getString("track_num")));
                 vectorData.addElement(sanitizeEmptyString(rs.getString("genre")));
                 vectorData.addElement(sanitizeEmptyString(rs.getString("comment")));
+                vectorData.addElement(Integer.toString(rs.getInt("song_ID")));
                 songsVector.addElement(vectorData);
             }
             notifyObservers(songsVector);
