@@ -34,6 +34,8 @@ public class JSliderComponent implements Observer{
         mSliderPanel.add(mSlider);
     }
     
+    
+    
     public JSlider getSliderObj() {
         return mSlider;
     }

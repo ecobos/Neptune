@@ -15,6 +15,16 @@ public class MenuComponent implements Observer{
     private JMenuItem mDeleteSong;
     private JMenuItem mDeleteSongPlaylist;
     private JMenuItem mPlaylist;
+    private JMenu mControls;
+    private JMenuItem mPlay;
+    private JMenuItem mNext; 
+    private JMenuItem mPrev;
+    private JMenuItem mPlayRecent;
+    private JMenuItem mGotoCurrentSong;
+    private JMenuItem mIncVol;
+    private JMenuItem mDecVol;
+    private JMenuItem mShuffle;
+    private JMenuItem mRepeat;
     
     /**
      * Class constructor. 
@@ -25,7 +35,8 @@ public class MenuComponent implements Observer{
         mMenuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
-        mAbout = new JMenuItem("About");
+        mControls = new JMenu("Controls");
+        mAbout = new JMenuItem("About"); // why JMenuItem and JMenu
         
         mPlaySongNotInLibrary = new JMenuItem("Play song not in library");
         mAddSong = new JMenuItem("Add song to library");
@@ -33,6 +44,27 @@ public class MenuComponent implements Observer{
         mDeleteSongPlaylist = new JMenuItem("Delete selected song from playlist");
         mDeleteSong = new JMenuItem("Delete selected song from library");
         mQuit = new JMenuItem("Quit");
+        
+        // Controls JMenuItems
+        mPlay = new JMenuItem("Play (Space)");
+        mNext = new JMenuItem("Next (Ctrl+Right Arrow)");
+        mPrev = new JMenuItem("Previous (Ctrl+Left Arrow)");
+        mPlayRecent = new JMenuItem("Play Recent");
+        mGotoCurrentSong = new JMenuItem("Go to Current Song");
+        mIncVol = new JMenuItem("Increase Volume (Ctrl+I)");
+        mDecVol = new JMenuItem("Decrease Volume (Ctrl+D)");
+        mShuffle = new JMenuItem("Shuffle");
+        mRepeat = new JMenuItem("Repeat");
+        
+        mControls.add(mPlay);
+        mControls.add(mNext);
+        mControls.add(mPrev);
+        mControls.add(mPlayRecent);
+        mControls.add(mGotoCurrentSong);
+        mControls.add(mIncVol);
+        mControls.add(mDecVol);
+        mControls.add(mShuffle);
+        mControls.add(mRepeat);
 
         fileMenu.setMnemonic(KeyEvent.VK_A);
         fileMenu.add(mPlaySongNotInLibrary);
@@ -51,7 +83,9 @@ public class MenuComponent implements Observer{
         fileMenu.add(mQuit);
 
         mMenuBar.add(fileMenu);
+        mMenuBar.add(mControls);
         mMenuBar.add(mAbout);
+        
     }
     
     /**
@@ -97,6 +131,32 @@ public class MenuComponent implements Observer{
     public JMenuItem getPlaylistObj(){
         return mPlaylist;
     }
+    public JMenuItem getPlayControlObj(){
+        return mPlay;
+    }
+    public JMenuItem getPrevControlObj(){
+        return mPrev;
+    }
+    public JMenuItem getPlayRecentControlObj(){
+        return mPlayRecent;
+    }
+    public JMenuItem getIncVolControlObj(){
+        return mIncVol;
+    }
+    public JMenuItem getDecVolControlObj(){
+        return mDecVol;
+    }
+    public JMenuItem getShuffleControlObj(){
+        return mShuffle;
+    }
+    public JMenuItem getRepeatControlObj(){
+        return mRepeat;
+    }
+    
+    public JMenuItem getGoToCurrentControlObj(){
+        return mGotoCurrentSong;
+    }
+ 
      //**********************
 
     public void setController(ActionListener controller){
@@ -107,6 +167,19 @@ public class MenuComponent implements Observer{
         mQuit.addActionListener(controller);
         mPlaylist.addActionListener(controller);
         mDeleteSongPlaylist.addActionListener(controller);
+        
+        // controls listeners
+        mPlay.addActionListener(controller);
+        mNext.addActionListener(controller);
+        mPrev.addActionListener(controller);
+        mPlayRecent.addActionListener(controller);
+        mGotoCurrentSong.addActionListener(controller);
+        mIncVol.addActionListener(controller);
+        mDecVol.addActionListener(controller);
+        mShuffle.addActionListener(controller);
+        mRepeat.addActionListener(controller);
+        
+        
     }
 
     @Override
