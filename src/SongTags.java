@@ -9,10 +9,19 @@ import java.util.logging.Logger;
 
 public class SongTags {
     
-    SongTags(){
+    /**
+     * Class constructor
+     */
+    public SongTags(){
       // I'm feeling empty inside  
     }
     
+    /**
+     * Gets the song tags from a specific mp3 song file
+     * 
+     * @param pathToFile path to the target mp3 file
+     * @return An array with all the relevant song tags
+     */
     public String[] extractSongTags(String pathToFile){
         Mp3File mp3data = null;
         String[] songTags = new String[8];

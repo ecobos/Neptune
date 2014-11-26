@@ -1,6 +1,4 @@
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -15,25 +13,19 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.PLAIN_MESSAGE;
-import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javazoom.jlgui.basicplayer.BasicController;
 import javazoom.jlgui.basicplayer.BasicPlayer;
@@ -54,6 +46,11 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     private JTreeComponent mTree;
     private boolean isPlaylistView;
 
+    /**
+     * Class constructor.
+     *
+     * @param isPlaylistview True means that its a playlist view
+     */
     NeptuneController(boolean isPlaylistview) {
         player = new BasicPlayer();
         playerControl = (BasicController) player;
@@ -93,6 +90,11 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         this.mTable = table;
     }
 
+    /**
+     * Play the specified song.
+     *
+     * @param songToPlay The song to be played
+     */
     private void playSong(Vector<String> songToPlay) {
 
         if (isPaused) {
@@ -116,6 +118,9 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         }
     }
 
+    /**
+     * Adds a song to the database
+     */
     private void addSong() {
         FileFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
         JFileChooser fc = new JFileChooser();
@@ -133,6 +138,9 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         }
     }
 
+    /**
+     * Deletes the selected song from the database
+     */
     private void deleteSongSelected() {
         System.out.println("Deleted song: " + mTable.getSongSelected().get(2));
         mDatabase.deleteSong(mTable.getSongSelected());
@@ -140,35 +148,33 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
         // QUIT BUTTON
-        if (e.getSource() == mMenuBar.getQuitObj()) {
+        if (source == mMenuBar.getQuitObj()) {
             System.out.println("Quit was clicked.");
             neptune.destroyFrame();
             //System.exit(0);
-        } // ABOUT BUTTON
-        else if (e.getSource() == mMenuBar.getAboutObj()) {
+        } // ABOUT BUTTON        
+        else if (source == mMenuBar.getAboutObj()) {
             System.out.println("Clicked the about section");
             String info = "Neptune Music Player\n\nDeveloped by:\n\t\tEdgar Cobos\n\t\tKelby Sapien\n\t\tGil Pena\n\nVersion: 2.0";
             JOptionPane.showMessageDialog(mMenuBar.getMenu(), info, "About", PLAIN_MESSAGE, new ImageIcon(this.getClass().getResource("/resources/neptune.png")));
         } // ADD SONG BUTTON
-        else if (e.getSource() == mMenuBar.getAddSongObj() || e.getSource() == mButtons.getAddSongObj()) {
+        else if (source == mMenuBar.getAddSongObj() || source == mButtons.getAddSongObj()) {
             if (isPlaylistView) {
-                //display songs int he database
             } else {
                 this.addSong();
             }
-
         } // DELETE SONG -- Fix deleting song from playlist, repaint playlist window
-        else if (e.getSource() == mMenuBar.getDeleteSongObj() || e.getSource() == mMenuBar.getDeleteSongPlaylistObj()) {
-            if (isPlaylistView) {
-                System.out.println("playlist delete");
-                mDatabase.deleteSongFromPlayList(mDatabase.getSongID(mTable.getSongSelectedFilepath()), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
-                mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(mTable.getTableName()));
-            } else {
-                this.deleteSongSelected();
-            }
+        else if (source == mMenuBar.getDeleteSongObj()) {
+            this.deleteSongSelected();
+
+        } else if (source == mMenuBar.getDeleteSongPlaylistObj()) {
+            System.out.println("playlist delete");
+            mDatabase.deleteSongFromPlayList(mDatabase.getSongID(mTable.getSongSelectedFilepath()), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
+            mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(mTable.getTableName()));
         } // PLAY SONG NOT IN LIBRARY
-        else if (e.getSource() == mMenuBar.getSongNotInLibObj()) {
+        else if (source == mMenuBar.getSongNotInLibObj()) {
             FileFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
             JFileChooser fc = new JFileChooser();
             fc.setFileFilter(filter);
@@ -190,12 +196,12 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 System.out.println("Open command cancelled by user.\n");
             }
         } // PLAY BUTTON
-        else if (e.getSource() == mButtons.getPlayObj()) {
+        else if (source == mButtons.getPlayObj()) {
             mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
             playSong(mTable.getSongSelected());
             System.out.println("Playing: " + mTable.getSongSelected().get(1));
         } // STOP SONG BUTTON
-        else if (e.getSource() == mButtons.getStopObj()) {
+        else if (source == mButtons.getStopObj()) {
             try {
                 playerControl.stop();
                 isPaused = false;
@@ -203,7 +209,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 Logger.getLogger(Neptune.class.getName()).log(Level.SEVERE, null, ex);
             }
         } // PAUSE SONG BUTTON
-        else if (e.getSource() == mButtons.getPauseObj()) {
+        else if (source == mButtons.getPauseObj()) {
             try {
                 playerControl.pause();
                 isPaused = true;
@@ -211,39 +217,20 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 Logger.getLogger(Neptune.class.getName()).log(Level.SEVERE, null, ex);
             }
         } // NEXT SONG BUTTON
-        else if (e.getSource() == mButtons.getNextObj()) {
-
+        else if (source == mButtons.getNextObj()) {
             playSong(mTable.getNextSong());
-
-//            System.out.println("mLastSongPlayedIndex: " + mLastSongPlayedIndex + " song count: " + (mTable.getSongsCount() - 1));
-//            mLastSongPlayedIndex++;
-//            if (mLastSongPlayedIndex >= mTable.getSongsCount()) {
-//
-//                System.out.println("Last song playing");
-//                mLastSongPlayedIndex = 0; // update the last song index within the player class
-//                playSong(mTable.getSongSelected(mLastSongPlayedIndex));
-//            } else {
-//                playSong(mTable.getSongSelected(mLastSongPlayedIndex));
-//            }
         } // PREVIOUS SONG BUTTON
-        else if (e.getSource() == mButtons.getPrevObj()) {
+        else if (source == mButtons.getPrevObj()) {
             // this ensures that if the mouse is clicked to a different row, we 
             // can still play the song that is currently next
             playSong(mTable.getPrevSong());
-
-//            mLastSongPlayedIndex--;
-//            if (mLastSongPlayedIndex < 0) {
-//                //System.out.println("First song playing");
-//                mLastSongPlayedIndex = mTable.getSongsCount() - 1;
-//                playSong(mTable.getSongSelected(mLastSongPlayedIndex));
-//            } else {
-//                playSong(mTable.getSongSelected(mLastSongPlayedIndex));
-//            }
-        }
-        else if(e.getSource() == mMenuBar.getPlaylistObj()){
+        } // PLAYLIST
+        else if (source == mMenuBar.getPlaylistObj()) {
             System.out.println("Playlist clicked");
             String playlistName = JOptionPane.showInputDialog(mMenuBar.getMenu(), "Enter a new playlist name");
-            if(playlistName.equals("")){playlistName = "playlist";} //check for empty string
+            if (playlistName.equals("")) {
+                playlistName = "playlist";
+            } //check for empty string
             mDatabase.addPlaylist(playlistName);
             mTree.addNodeToTree(playlistName);
             mTree.getJTreeObj().treeDidChange();
@@ -257,7 +244,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getSource() == mMenuBar.getAddSongObj() || e.getSource() == mTable.getMenuAddObj()) {
+        Object source = e.getSource();
+        if (source == mMenuBar.getAddSongObj() || source == mTable.getMenuAddObj()) {
             System.out.println("The menu shiet works");
             JFileChooser fc = new JFileChooser();
             int returnVal = fc.showOpenDialog(mMenuBar.getAddSongObj());
@@ -270,69 +258,60 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             } else {
                 System.out.println("Open command cancelled by user.\n");
             }
-        } else if (e.getSource() == mMenuBar.getDeleteSongObj() || e.getSource() == mTable.getMenuRemoveObj()) {
+        } else if (source == mMenuBar.getDeleteSongObj() || source == mTable.getMenuRemoveObj()) {
             System.out.println("Remove song from library.");
             String filePath = mTable.getSongSelectedFilepath();
             if (isPlaylistView) {
                 System.out.println("playlist delete");
                 mDatabase.deleteSongFromPlayList(mDatabase.getSongID(mTable.getSongSelectedFilepath()), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
                 mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(mTable.getTableName()));
-            }
-            else if (!isPlaylistView && filePath != null){
+            } else if (!isPlaylistView && filePath != null) {
                 mDatabase.deleteSongFromLibrary(filePath);
                 mTable.update(mDatabase, mDatabase.getSongsFromDatabase()); // update table after deleting
                 System.out.println("Song deleted from library");
             } else {
                 System.out.println("Unable to delete song from library");
             }
-            
-            
-        } 
-        else if (e.getSource() == mMenuBar.getPlaylistObj() || e.getSource() == mTable.getMenuAddToPlaylistObj()) {            
-
-            
-           JMenu menuItem = (JMenu) e.getComponent();
-           //System.out.println(menuItem.getName());
+        } //
+        else if (source == mMenuBar.getPlaylistObj() || source == mTable.getMenuAddToPlaylistObj()) {
+            JMenu menuItem = (JMenu) e.getComponent();
+            //System.out.println(menuItem.getName());
 
             String playlistName = JOptionPane.showInputDialog(mMenuBar.getMenu(), "Enter playlist name");
-            
+
             int songID = mDatabase.getSongID(mTable.getSongSelectedFilepath());
             int playlistID = mDatabase.getPlaylistIDfromName(playlistName);
             System.out.println(songID + " " + playlistID);
-            if(playlistID != 0 && songID != 0){
-                mDatabase.addSongToPlaylist( songID, playlistID);
+            if (playlistID != 0 && songID != 0) {
+                mDatabase.addSongToPlaylist(songID, playlistID);
                 System.out.println("Song added to playlist");
             } else {
                 System.out.println("Playlist doesn't exist");
             }
-           
-        }
-        else if (e.getSource() == mTable.getTableObj()) {
+        } else if (source == mTable.getTableObj()) {
             isPaused = false;
             System.out.println("The Jtable was clicked");
             mTable.setSongSelected();
             // upon clicking on table, update popup menu with playlists
-            if(!isPlaylistView) {
-               mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase); 
+            if (!isPlaylistView) {
+                mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase);
             }
-             
-        } else if(e.getSource() == mTree.getJTreeObj()){
+
+        } else if (source == mTree.getJTreeObj()) {
             String leafName = mTree.getSelectedLeafName();
-            if(leafName.equals("Library")){
+            if (leafName.equals("Library")) {
                 isPlaylistView = false;
                 mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase);
                 mTable.update(mDatabase, mDatabase.getSongsFromDatabase());
                 neptune.setPlaylistMenuBar(isPlaylistView);
-            }
-            else if(!leafName.equals("Playlists")){
+            } else if (!leafName.equals("Playlists")) {
                 isPlaylistView = true;
                 mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(leafName));
                 neptune.setPlaylistMenuBar(isPlaylistView);
                 mTable.setTableName(leafName);
             }
-            
-        } 
-        else if (e.getSource() == mTree.getNewWindowObj()) { //formerly mTree.getTreeObj()
+
+        } else if (source == mTree.getNewWindowObj()) { //formerly mTree.getTreeObj()
 
             int selRow = mTree.getJTreeObj().getRowForLocation(e.getX(), e.getY());
             //String name = mTree.getJTreeObj().getSelectionPath().getLastPathComponent().toString();
@@ -348,33 +327,20 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 //                    RunMVC playlist = new RunMVC(true, leafName);
 //                }
 //            }
-        } else if(e.getSource() == mTree.getDeletePlaylistObj()){
+        } else if (source == mTree.getDeletePlaylistObj()) {
             String leafName = mTree.getSelectedLeafName();
             //TreePath path = mTree.getJTreeObj().set
             //int selRow = mTree.getJTreeObj().getRowForLocation(e.getX(), e.getY());
-            TreePath path = mTree.getJTreeObj().getSelectionPath(); 
+            TreePath path = mTree.getJTreeObj().getSelectionPath();
             System.out.println("path: " + path);
             int dialogButton = JOptionPane.YES_NO_OPTION;
-            int dialogResult = JOptionPane.showConfirmDialog (null, "You are about to delete the "+leafName+" playlist.\nWant to continue with this?","Warning",dialogButton);
-            if(dialogResult == JOptionPane.YES_OPTION){
+            int dialogResult = JOptionPane.showConfirmDialog(null, "You are about to delete the " + leafName + " playlist.\nWant to continue with this?", "Warning", dialogButton);
+            if (dialogResult == JOptionPane.YES_OPTION) {
                 mDatabase.deletePlaylistFromDatabase(leafName);
                 mTree.deleteNode(path);
-                mTree.getJTreeObj().treeDidChange();        
+                mTree.getJTreeObj().treeDidChange();
             }
-        } 
-//        else{
-//            ArrayList<JMenuItem> sub = mTable.getSubMenuItems();
-////            TreeNode[] playlistName = mTree.getLeafNodeNames();
-////            Enumeration children = playlistName[1].children();
-////            String name = "";
-//            
-//            for(JMenuItem item: sub){
-//                if(e.getSource() == item){
-//                    System.out.println(item.getName());
-//                }
-//            }
-//
-//        }
+        }
     }
 
     @Override
@@ -425,13 +391,13 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 if (type.isFlavorJavaFileListType()) {
                     List<File> files = (List) transferable.getTransferData(type);
                     int playlistID = 0;
-                    if(isPlaylistView){
+                    if (isPlaylistView) {
                         playlistID = mDatabase.getPlaylistIDfromName(mTable.getTableName());
                     }
                     for (File file : files) {
                         System.out.println(file.getAbsolutePath());
                         mDatabase.addSong(file.getAbsolutePath());
-                        if(isPlaylistView) {
+                        if (isPlaylistView) {
                             mDatabase.addSongToPlaylist(mDatabase.getSongID(file.getAbsolutePath()), playlistID);
                             mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(mTable.getTableName()));
                         }

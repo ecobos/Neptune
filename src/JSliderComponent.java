@@ -13,6 +13,9 @@ public class JSliderComponent implements Observer{
     private JSlider mSlider; 
     static final double volumeRate = 100;
     
+    /**
+     * Class constructor. 
+     */
     public JSliderComponent() {
         mSliderPanel = new JPanel();
         mSliderPanel.setBackground(Color.DARK_GRAY);
