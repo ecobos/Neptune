@@ -171,7 +171,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
         } else if (source == mMenuBar.getDeleteSongPlaylistObj()) {
             System.out.println("playlist delete");
-            mDatabase.deleteSongFromPlayList(mDatabase.getSongID(mTable.getSongSelectedFilepath()), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
+            mDatabase.deleteSongFromPlaylist(mTable.getSongSelectedID(), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
             mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(mTable.getTableName()));
         } // PLAY SONG NOT IN LIBRARY
         else if (source == mMenuBar.getSongNotInLibObj()) {
@@ -263,7 +263,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             String filePath = mTable.getSongSelectedFilepath();
             if (isPlaylistView) {
                 System.out.println("playlist delete");
-                mDatabase.deleteSongFromPlayList(mDatabase.getSongID(mTable.getSongSelectedFilepath()), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
+                mDatabase.deleteSongFromPlaylist(mDatabase.getSongID(mTable.getSongSelectedFilepath()), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
                 mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(mTable.getTableName()));
             } else if (!isPlaylistView && filePath != null) {
                 mDatabase.deleteSongFromLibrary(filePath);
