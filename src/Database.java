@@ -23,7 +23,6 @@ public class Database extends Observable {
      *
      * @return A connection to the database
      */
-    
     private Connection getDBConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
