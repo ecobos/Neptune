@@ -1,6 +1,12 @@
 
 public class RunMVC {
     
+    /**
+     * Class constructor
+     * 
+     * @param loadFromPlaylist True means that its a playlist view
+     * @param playlistName Only used if first parameter is true
+     */
     RunMVC(boolean loadFromPlaylist, String playlistName){
         Database database = new Database();
         SongsTableComponent table;
@@ -54,6 +60,11 @@ public class RunMVC {
         
     }
     
+    /**
+     * Main class. Just runs the program
+     * 
+     * @param args none
+     */
     public static void main(String args[]) {
         RunMVC spawn = new RunMVC(false, "Pop");
     }

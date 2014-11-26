@@ -1,6 +1,4 @@
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Observable;
 import java.util.Observer;
@@ -9,9 +7,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
-import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
-import javax.swing.text.Position;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -27,8 +23,13 @@ public class JTreeComponent implements Observer {
     private int treeIndex;
     private JMenuItem mNewWindow;
     private JMenuItem mDeletePlaylist;
-// the root is added to the tree
-    // tree --> root --> children
+
+    /**
+     * Class constructor. Creates a tree based on the vector containing the playlists
+     * currently in the database
+     * 
+     * @param playlistFromDatabase Vector with playlist names
+     */
     public JTreeComponent(Vector<String> playlistFromDatabase) {
         // create root node that will get passed in to create the tree      
         // tree gets created using the playlistRoot node
@@ -57,6 +58,12 @@ public class JTreeComponent implements Observer {
         mTreePanel.setBackground(Color.DARK_GRAY);
         mTreePanel.add(mPlaylistTree);
     }
+    
+    /**
+     * Creates a popup menu.
+     * 
+     * @return The constructed pop up menu
+     */
     private JPopupMenu getPopupMenu() {
         JPopupMenu mPopupMenu = new JPopupMenu();
         mNewWindow = new JMenuItem("Open in new window");
@@ -65,11 +72,21 @@ public class JTreeComponent implements Observer {
         mPopupMenu.add(mDeletePlaylist);
         return mPopupMenu;
     }
-     
+    
+    /**
+     * Get the target for the create new window functionality
+     * 
+     * @return The target object 
+     */
     public JMenuItem getNewWindowObj(){
         return mNewWindow;
     } 
     
+    /**
+     * Gets the leaf node names
+     * 
+     * @return A treenode containing leaf data
+     */
     public TreeNode[] getLeafNodeNames(){        
         return playlist.getPath();
     }
@@ -85,6 +102,11 @@ public class JTreeComponent implements Observer {
         return playlistModel;
     }
     
+    /**
+     * Gets the name of the selected leaf node
+     * 
+     * @return The name of the selected leaf node
+     */
     public String getSelectedLeafName(){
         return mPlaylistTree.getSelectionPath().getLastPathComponent().toString();
     }
@@ -92,17 +114,29 @@ public class JTreeComponent implements Observer {
     public JPanel getTreePanel(){
         return mTreePanel;
     }
-    // add child nodes to root -- nodeToAdd is the name of playlist added
+    
+    /**
+     * Creates and adds a new node to the tree
+     * 
+     * @param nodeToAdd The name of the new node to be added
+     */
     public void addNodeToTree(String nodeToAdd) {
         // pass in string of node and create node with it
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(nodeToAdd); 
         //playlist.add(node);
         playlistModel.insertNodeInto(node, playlist, treeIndex++);
     }
+    
     // assume the node to be deleted already exist within playlist table
     // I'm not sure if this will work since it might be making a new copy of a 
     // a child node since I make a child node with the string passed in
     //public void deleteNode(int nodeToDelete) {
+    
+    /**
+     * Delete a node from the tree structure.
+     * 
+     * @param path Path to the node to be deleted
+     */
     public void deleteNode(TreePath path) {
         //DefaultMutableTreeNode node = new DefaultMutableTreeNode(nodeToDelete); 
         //DefaultMutableTreeNode node = (DefaultMutableTreeNode)playlistModel.getChild(playlist, nodeToDelete);

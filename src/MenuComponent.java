@@ -16,6 +16,11 @@ public class MenuComponent implements Observer{
     private JMenuItem mDeleteSongPlaylist;
     private JMenuItem mPlaylist;
     
+    /**
+     * Class constructor. 
+     * 
+     * @param isPlaylist True means that its a playlist view. 
+     */
     public MenuComponent(boolean isPlaylist) {
         mMenuBar = new JMenuBar();
 
@@ -49,6 +54,11 @@ public class MenuComponent implements Observer{
         mMenuBar.add(mAbout);
     }
     
+    /**
+     * Sets the menu for specific type of view 
+     * 
+     * @param isPlaylist True means that its a playlist view
+     */
     public void setPlaylistMenu(boolean isPlaylist){
         if(isPlaylist){
             mDeleteSong.setVisible(!isPlaylist);

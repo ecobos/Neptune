@@ -13,11 +13,14 @@ public class JSliderComponent implements Observer{
     private JSlider mSlider; 
     static final double volumeRate = 100;
     
+    /**
+     * Class constructor. 
+     */
     public JSliderComponent() {
         mSliderPanel = new JPanel();
         mSliderPanel.setBackground(Color.DARK_GRAY);
         mSliderPanel.setForeground(Color.DARK_GRAY);
-        mSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 100);
+        mSlider = new JSlider(JSlider.HORIZONTAL, 5, 100, 100);
         mSlider.setMinorTickSpacing(10);
         mSlider.setMajorTickSpacing(20);
         mSlider.setPaintTicks(true);

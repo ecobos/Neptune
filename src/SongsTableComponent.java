@@ -11,7 +11,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.TreeNode;
 
@@ -48,6 +47,13 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     private JMenuItem item; //delete
     private JMenuItem[] subMenuItems;
 
+    /**
+     * Class constructor.
+     *
+     * @param name The table's name
+     * @param songSetFromDatabase Vector containing all the songs for this table
+     * @param isPlaylist True means that its a playlist view
+     */
     public SongsTableComponent(String name, Vector<Vector> songSetFromDatabase, boolean isPlaylist) {
         mSongSelectedIndex = 0;
         mTableName = name;
@@ -62,8 +68,8 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         COLUMN_HEADER.addElement("Album Year");
         COLUMN_HEADER.addElement("Track #");
         COLUMN_HEADER.addElement("Genre");
-        COLUMN_HEADER.addElement("Comments");
 
+        COLUMN_HEADER.addElement("Comments"); // swapped with track #
         mSongsVector = songSetFromDatabase;
         mTableModel = new DefaultTableModel(mSongsVector, COLUMN_HEADER);
 
@@ -135,14 +141,30 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         return mMenuRemoveSong;
     }
 
+    /**
+     * Sets the song at the specified index as the current song
+     *
+     * @param currentSong Currently selected (clicked on) song
+     */
     public void setCurrentSongPlayingIndex(int currentSong) {
         mCurrentSongPlayingIndex = currentSong;
     }
 
+    /**
+     * Returns the index of the currently selected (clicked on) song
+     *
+     * @return index of clicked on song
+     */
     public int getCurrentSongPlayingIndex() {
         return mCurrentSongPlayingIndex;
     }
 
+    /**
+     * Creates a popup menu and its related internal structure for the songs
+     * table
+     *
+     * @return A constructed popup menu
+     */
     private JPopupMenu getPopupMenu() {
         mPopupMenu = new JPopupMenu();
         mMenuAddSong = new JMenuItem("Add a song"); //new ImageIcon("/resources/add.png"));  
@@ -157,6 +179,12 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         return mPopupMenu;
     }
 
+    /**
+     * Updates the popup menu's playlist data
+     *
+     * @param playlistName playlists' root name
+     * @param db A database reference to be able to retrieve current data
+     */
     public void updatePopupSubmenu(TreeNode[] playlistName, Database db) {
         final Database database = db;
         Enumeration children = playlistName[1].children();
@@ -223,31 +251,64 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         new DropTarget(mTablePanel, controller);
     }
 
+    /**
+     * Set the currently selected (clicked on) song
+     */
     public void setSongSelected() {
         mSongSelectedIndex = mSongsTable.getSelectedRow();
     }
 
+    /**
+     * Gets all the data for the selected(clicked on) song
+     * 
+     * @return Vector containing selected songs data
+     */
     public Vector getSongSelected() {
         Vector currentSongRow = mSongsVector.get(mSongSelectedIndex);
         mSongsTable.setRowSelectionInterval(mSongSelectedIndex, mSongSelectedIndex);
         return currentSongRow;
     }
 
+    /**
+     * Returns the data the specified song's table index
+     * 
+     * @param index target song's index
+     * @return Vector containing the song's data
+     */
     public Vector getSongSelected(int index) {
         Vector currentSongRow = mSongsVector.get(index);
         mSongsTable.setRowSelectionInterval(index, index);
         return currentSongRow;
     }
 
+    public int getSongSelectedID(){
+        Vector currentSongRow = mSongsVector.get(mSongSelectedIndex);
+        return Integer.parseInt((String)currentSongRow.lastElement());
+    }
+    
+    /**
+     * Returns the currently selected song's filepath
+     * 
+     * @return Filepath to currently selected song
+     */
     public String getSongSelectedFilepath() {
         Vector currentSongRow = mSongsVector.get(mSongSelectedIndex);
         return (String) currentSongRow.get(0);
     }
 
+    /**
+     * Returns the currently selected (clicked on) song's index
+     * @return index of clicked on song 
+     */
     public int getSongSelectedIndex() {
         return mSongSelectedIndex;
     }
 
+    /**
+     * The number of song currently contained by the table
+     * 
+     * @return number of songs
+     */
     public int getSongsCount() {
         return mSongsVector.size();
     }
@@ -256,6 +317,12 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         return mDoubleClick;
     }
 
+    /**
+     * Gets the next song after the current song in the table. Wraps around the 
+     * table if necessary
+     * 
+     * @return Vector containing all data of the next song
+     */
     public Vector getNextSong() {
         mCurrentSongPlayingIndex++;
         if (mCurrentSongPlayingIndex >= getSongsCount()) {
@@ -268,9 +335,10 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     }
 
     /**
-     * updated getPrevSong... works now as it should
+     * Gets the previous song before the current song in the table. Wraps around
+     * the table if neccessary
      *
-     * @return
+     * @return Vector containing all data of the previous song
      */
     public Vector getPrevSong() {
         System.out.println("Song index prev: " + mCurrentSongPlayingIndex);
@@ -307,7 +375,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(4).setPreferredWidth(100);
         mSongsTable.getColumnModel().getColumn(5).setPreferredWidth(100);
         mSongsTable.getColumnModel().getColumn(6).setPreferredWidth(100);
-        mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(200);
+        mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(100);
         mSongsTable.doLayout();
     }
 
