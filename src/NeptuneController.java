@@ -234,6 +234,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             mDatabase.addPlaylist(playlistName);
             mTree.addNodeToTree(playlistName);
             mTree.getJTreeObj().treeDidChange();
+            mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(playlistName)); // updates library table with empty playlist set
         }
     }
 
@@ -339,6 +340,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 mDatabase.deletePlaylistFromDatabase(leafName);
                 mTree.deleteNode(path);
                 mTree.getJTreeObj().treeDidChange();
+                mTable.update(mDatabase, mDatabase.getSongsFromDatabase()); // update jtable with library songs after deleting any playlist
             }
         }
     }
