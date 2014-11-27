@@ -11,6 +11,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 import javax.swing.*;
+import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.TreeNode;
 
@@ -46,6 +47,10 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     private ArrayList<JMenuItem> mSubMenu;
     private JMenuItem item; //delete
     private JMenuItem[] subMenuItems;
+    
+    // made this two private so that scrollbar changes goes up or down when go to current song selected is clicked
+    private JScrollPane mScrollPane;
+    private JScrollBar mScrollBar;
 
     /**
      * Class constructor.
@@ -91,13 +96,15 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(100);
         mSongsTable.doLayout();
 
-        JScrollPane scrollPane = new JScrollPane(mSongsTable);
-        scrollPane.setWheelScrollingEnabled(true);
-        scrollPane.getBounds();
+        mScrollPane = new JScrollPane(mSongsTable);
+        mScrollPane.setWheelScrollingEnabled(true);
+        mScrollPane.getBounds();
+        mScrollBar = mScrollPane.getVerticalScrollBar();
+        //vertical.setValue( vertical.getMaximum() );
 
         mTablePanel = new JPanel();
         mTablePanel.setMinimumSize(new Dimension(1200, 300));
-        mTablePanel.add(scrollPane);
+        mTablePanel.add(mScrollPane);
 
         if (isPlaylist) {//&& !mSongsTable.equals("Library")){
             mSongsTable.setComponentPopupMenu(getPlaylistPopupMenu());
@@ -114,6 +121,14 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
 
     public void setTableName(String name) {
         mTableName = name;
+    }
+    /**
+     * Scroll bar moves to this location when Goto current song selected is called
+     * @param songIndex 
+     */
+    // NOT WORKING
+    public void setScrollBarPosition(int songIndex) {
+        mScrollBar.setValue(songIndex);
     }
 
     public JMenuItem getMenuAddObj() {
@@ -157,6 +172,15 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
      */
     public int getCurrentSongPlayingIndex() {
         return mCurrentSongPlayingIndex;
+    }
+    
+    /**
+     * Highlights selected row (song) that is playing
+     * @param row is the row of the current song playing
+     */
+    public void setSelectionInterval(int row) {
+        mSongsTable.setRowSelectionInterval(row, row);
+        mSongsTable.scrollRectToVisible(null);
     }
 
     /**

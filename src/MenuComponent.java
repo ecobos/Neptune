@@ -2,6 +2,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -15,11 +16,11 @@ public class MenuComponent implements Observer{
     private JMenuItem mDeleteSong;
     private JMenuItem mDeleteSongPlaylist;
     private JMenuItem mPlaylist;
-    private JMenu mControls;
+    private JMenu mControls; // Controls Menu
     private JMenuItem mPlay;
     private JMenuItem mNext; 
     private JMenuItem mPrev;
-    private JMenuItem mPlayRecent;
+    private JMenu mPlayRecent;
     private JMenuItem mGotoCurrentSong;
     private JMenuItem mIncVol;
     private JMenuItem mDecVol;
@@ -36,7 +37,7 @@ public class MenuComponent implements Observer{
 
         JMenu fileMenu = new JMenu("File");
         mControls = new JMenu("Controls");
-        mAbout = new JMenuItem("About"); // why JMenuItem and JMenu
+        mAbout = new JMenuItem("About"); // why JMenuItem and not simply JMenu
         
         mPlaySongNotInLibrary = new JMenuItem("Play song not in library");
         mAddSong = new JMenuItem("Add song to library");
@@ -49,12 +50,12 @@ public class MenuComponent implements Observer{
         mPlay = new JMenuItem("Play (Space)");
         mNext = new JMenuItem("Next (Ctrl+Right Arrow)");
         mPrev = new JMenuItem("Previous (Ctrl+Left Arrow)");
-        mPlayRecent = new JMenuItem("Play Recent");
+        mPlayRecent = new JMenu("Play Recent");
         mGotoCurrentSong = new JMenuItem("Go to Current Song");
         mIncVol = new JMenuItem("Increase Volume (Ctrl+I)");
         mDecVol = new JMenuItem("Decrease Volume (Ctrl+D)");
-        mShuffle = new JMenuItem("Shuffle");
-        mRepeat = new JMenuItem("Repeat");
+        mShuffle = new JCheckBoxMenuItem("Shuffle");
+        mRepeat = new JCheckBoxMenuItem("Repeat");
         
         mControls.add(mPlay);
         mControls.add(mNext);
@@ -136,6 +137,9 @@ public class MenuComponent implements Observer{
     }
     public JMenuItem getPrevControlObj(){
         return mPrev;
+    }
+    public JMenuItem getNextControlObj() {
+        return mNext;
     }
     public JMenuItem getPlayRecentControlObj(){
         return mPlayRecent;

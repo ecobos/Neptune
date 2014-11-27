@@ -157,7 +157,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         } // ABOUT BUTTON        
         else if (source == mMenuBar.getAboutObj()) {
             System.out.println("Clicked the about section");
-            String info = "Neptune Music Player\n\nDeveloped by:\n\t\tEdgar Cobos\n\t\tKelby Sapien\n\t\tGil Pena\n\nVersion: 2.0";
+            String info = "Neptune Music Player\n\nDeveloped by:\n\t\tEdgar Cobos\n\t\tKelby Sapien\n\t\tGil Pena\n\nVersion: 3.0";
             JOptionPane.showMessageDialog(mMenuBar.getMenu(), info, "About", PLAIN_MESSAGE, new ImageIcon(this.getClass().getResource("/resources/neptune.png")));
         } // ADD SONG BUTTON
         else if (source == mMenuBar.getAddSongObj() || source == mButtons.getAddSongObj()) {
@@ -165,7 +165,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             } else {
                 this.addSong();
             }
-        } // DELETE SONG -- Fix deleting song from playlist, repaint playlist window
+        } // DELETE SONG -- Fix deleting song from playlist, repaint playlist window --- That has been done!
         else if (source == mMenuBar.getDeleteSongObj()) {
             this.deleteSongSelected();
 
@@ -224,7 +224,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             // this ensures that if the mouse is clicked to a different row, we 
             // can still play the song that is currently next
             playSong(mTable.getPrevSong());
-        } // PLAYLIST
+        } // CREATING PLAYLIST
         else if (source == mMenuBar.getPlaylistObj()) {
             System.out.println("Playlist clicked");
             String playlistName = JOptionPane.showInputDialog(mMenuBar.getMenu(), "Enter a new playlist name");
@@ -235,6 +235,31 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             mTree.addNodeToTree(playlistName);
             mTree.getJTreeObj().treeDidChange();
             mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(playlistName)); // updates library table with empty playlist set
+        }
+        // CONTROLS - GO TO CURRENT SONG
+        else if (source == mMenuBar.getGoToCurrentControlObj()) {
+            mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
+            mTable.setScrollBarPosition(mTable.getCurrentSongPlayingIndex()); // NOT WORKING
+            //mTable.update(mDatabase, source);
+        }
+        // CONTROLS - PLAY SONG
+        else if (source == mMenuBar.getPlayControlObj()) {
+            if(mTable.getSongSelected() == null) {
+                playSong(mTable.getSongSelected(0));
+            }
+            else {
+                mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
+                playSong(mTable.getSongSelected());
+            }
+            //mTable.update(mDatabase, source);
+        }
+        // CONTROLS - GO TO NEXT SONG
+        else if (source == mMenuBar.getNextControlObj()) {
+            playSong(mTable.getNextSong());
+        }
+        // CONTROLS - GO TO PREV SONG
+        else if (source == mMenuBar.getPrevControlObj()) {
+            playSong(mTable.getPrevSong());
         }
     }
 
