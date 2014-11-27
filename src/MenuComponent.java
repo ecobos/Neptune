@@ -2,6 +2,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -19,7 +20,7 @@ public class MenuComponent implements Observer{
     private JMenuItem mPlay;
     private JMenuItem mNext; 
     private JMenuItem mPrev;
-    private JMenuItem mPlayRecent;
+    private JMenu mPlayRecent;
     private JMenuItem mGotoCurrentSong;
     private JMenuItem mIncVol;
     private JMenuItem mDecVol;
@@ -49,12 +50,12 @@ public class MenuComponent implements Observer{
         mPlay = new JMenuItem("Play (Space)");
         mNext = new JMenuItem("Next (Ctrl+Right Arrow)");
         mPrev = new JMenuItem("Previous (Ctrl+Left Arrow)");
-        mPlayRecent = new JMenuItem("Play Recent");
+        mPlayRecent = new JMenu("Play Recent");
         mGotoCurrentSong = new JMenuItem("Go to Current Song");
         mIncVol = new JMenuItem("Increase Volume (Ctrl+I)");
         mDecVol = new JMenuItem("Decrease Volume (Ctrl+D)");
-        mShuffle = new JMenuItem("Shuffle");
-        mRepeat = new JMenuItem("Repeat");
+        mShuffle = new JCheckBoxMenuItem("Shuffle");
+        mRepeat = new JCheckBoxMenuItem("Repeat");
         
         mControls.add(mPlay);
         mControls.add(mNext);

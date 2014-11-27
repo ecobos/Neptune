@@ -72,7 +72,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         COLUMN_HEADER.addElement("Comments"); // swapped with track #
         mSongsVector = songSetFromDatabase;
         mTableModel = new DefaultTableModel(mSongsVector, COLUMN_HEADER);
-
+        mTableModel.addTableModelListener(mSongsTable);
         mSongsTable = new JTable();
         mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongsVector.size() + 10) * 10));
         mSongsTable.setFillsViewportHeight(true);
@@ -226,6 +226,15 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
 
     public ArrayList<JMenuItem> getSubMenuItems() {
         return mSubMenu;
+    }
+    
+    private JPopupMenu getTableHeaderPopupMenu() {
+        mPopupMenu = new JPopupMenu();
+        mMenuAddSong = new JMenuItem("Add a song to playlist"); //new ImageIcon("/resources/add.png"));   
+        mMenuRemoveSong = new JMenuItem("Remove selected song from playlist");
+        mPopupMenu.add(mMenuAddSong);
+        mPopupMenu.add(mMenuRemoveSong);
+        return mPopupMenu;
     }
 
     private JPopupMenu getPlaylistPopupMenu() {
