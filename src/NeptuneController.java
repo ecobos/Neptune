@@ -236,6 +236,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             } //check for empty string
             mDatabase.addPlaylist(playlistName);
             mTree.addNodeToTree(playlistName);
+            mTree.setNewBranchAsSelected();
             mTree.getJTreeObj().treeDidChange();
             mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(playlistName)); // updates library table with empty playlist set
         }
