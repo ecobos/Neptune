@@ -4,7 +4,6 @@ import java.awt.event.KeyEvent;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JCheckBox;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -58,6 +57,7 @@ public class MenuComponent implements Observer{
         mGotoCurrentSong = new JMenuItem("Go to Current Song");
         mIncVol = new JMenuItem("Increase Volume (Ctrl+I)");
         mDecVol = new JMenuItem("Decrease Volume (Ctrl+D)");
+
         mShuffle = new JCheckBox("Shuffle", false);
         mRepeat = new JCheckBox("Repeat", false);
         //mShuffleItemListen = new ItemListener;
@@ -157,6 +157,7 @@ public class MenuComponent implements Observer{
     public JMenuItem getDecVolControlObj(){
         return mDecVol;
     }
+
     public JCheckBox getShuffleControlObj(){
         return mShuffle;
     }
@@ -173,6 +174,9 @@ public class MenuComponent implements Observer{
     public ItemListener getRepeatListenerObj(){
         return mRepeatListener;
     }    
+
+ 
+
      //**********************
 
     public void setController(ActionListener controller){

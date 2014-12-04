@@ -128,7 +128,6 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mTablePanel = new JPanel();
         mTablePanel.setMinimumSize(new Dimension(1200, 300));
         mTablePanel.add(mScrollPane);
-        mSongsTable.getTableHeader().setComponentPopupMenu(getColumnPopupMenu());
         if (isPlaylist) {//&& !mSongsTable.equals("Library")){
             mSongsTable.setComponentPopupMenu(getPlaylistPopupMenu());
         } else {
@@ -442,6 +441,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
          */
         mTableModel.setDataVector(mSongsVector, COLUMN_HEADER);
         //mTableModel.fireTableDataChanged();
+        mSongsTable.getTableHeader().setComponentPopupMenu(getColumnPopupMenu());
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
        
@@ -460,8 +460,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
         mSongsTable.getColumnModel().getColumn(7).setMinWidth(100);
         mSongsTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
-        
-        mSongsTable.doLayout();
     }
 
 }
+        

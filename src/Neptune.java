@@ -159,5 +159,4 @@ public class Neptune {
     public void setDropController(DropTargetListener controller) {
         mTable.addDropController(controller);
     }
-
 }
