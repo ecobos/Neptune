@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -79,7 +80,11 @@ public class Neptune {
         //split.setLeftComponent(mTreePanel);
         //split.setRightComponent(mContentPanel);
         mainFrame = new JFrame(mTable.getTableName());
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //Closes program only when Library window is closed
+        if(mTable.getTableName().matches("Library")){
+            mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        }
+        
         //mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
         mainFrame.setJMenuBar(mMenuBar.getMenu());
         mainFrame.setMinimumSize(new Dimension(1330, 660));
