@@ -148,7 +148,7 @@ public class JTreeComponent implements Observer {
     public void setTreeCotroller(TreeSelectionEvent tse){
         //mPlaylistTree.addMouseListener(tse);
     }
-    
+    //
     public void setTreeMouseListener(MouseListener ml){
         mNewWindow.addMouseListener(ml);
         mPlaylistTree.addMouseListener(ml);
