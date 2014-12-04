@@ -180,6 +180,7 @@ public class MenuComponent implements Observer{
      //**********************
 
     public void setController(ActionListener controller){
+        
         mAbout.addActionListener(controller);
         mPlaySongNotInLibrary.addActionListener(controller);
         mAddSong.addActionListener(controller);
