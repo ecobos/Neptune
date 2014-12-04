@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -12,6 +13,7 @@ import java.util.Observer;
 import java.util.Vector;
 import javax.swing.*;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.TreeNode;
 
@@ -43,6 +45,12 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     private DefaultTableModel mTableModel;
     private JPanel mTablePanel;
     private JPopupMenu mPopupMenu;
+    private JPopupMenu mColumnPopupMenu;
+    private JCheckBox mAlbumColumn;
+    private JCheckBox mArtistColumn;
+    private JCheckBox mYearColumn;
+    private JCheckBox mGenreColumn;
+    private JCheckBox mCommentColumn;
     private String mTableName;
     private ArrayList<JMenuItem> mSubMenu;
     private JMenuItem item; //delete
@@ -73,27 +81,42 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         COLUMN_HEADER.addElement("Album Year");
         COLUMN_HEADER.addElement("Track #");
         COLUMN_HEADER.addElement("Genre");
-
         COLUMN_HEADER.addElement("Comments"); // swapped with track #
+        
         mSongsVector = songSetFromDatabase;
         mTableModel = new DefaultTableModel(mSongsVector, COLUMN_HEADER);
-
-        mSongsTable = new JTable();
+        
+        mSongsTable = new JTable() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 2 || column==3 || column==4 || column == 6 || column == 7 ? true : false;
+            }
+        };
         mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongsVector.size() + 10) * 10));
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setAutoCreateRowSorter(true);
         mSongsTable.setModel(mTableModel);
 
-        mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(300);
-        mSongsTable.getColumnModel().getColumn(1).setPreferredWidth(200);
-        mSongsTable.getColumnModel().getColumn(2).setPreferredWidth(200);
-        mSongsTable.getColumnModel().getColumn(3).setPreferredWidth(100);
-        mSongsTable.getColumnModel().getColumn(4).setPreferredWidth(100);
-        mSongsTable.getColumnModel().getColumn(5).setPreferredWidth(100);
-        mSongsTable.getColumnModel().getColumn(6).setPreferredWidth(100);
-        mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(100);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+       
+        mSongsTable.getColumnModel().getColumn(0).setMinWidth(0);
+        mSongsTable.getColumnModel().getColumn(0).setMaxWidth(0);
+        mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(0);
+        mSongsTable.getColumnModel().getColumn(1).setMinWidth(200);
+        mSongsTable.getColumnModel().getColumn(2).setMinWidth(200);
+        mSongsTable.getColumnModel().getColumn(3).setMinWidth(100);
+        mSongsTable.getColumnModel().getColumn(4).setMinWidth(100);
+        mSongsTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        mSongsTable.getColumnModel().getColumn(5).setMinWidth(0);
+        mSongsTable.getColumnModel().getColumn(5).setMaxWidth(0);
+        mSongsTable.getColumnModel().getColumn(5).setPreferredWidth(0);
+        mSongsTable.getColumnModel().getColumn(6).setMinWidth(100);
+        mSongsTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
+        mSongsTable.getColumnModel().getColumn(7).setMinWidth(100);
+        mSongsTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+        
         mSongsTable.doLayout();
 
         mScrollPane = new JScrollPane(mSongsTable);
@@ -105,13 +128,13 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mTablePanel = new JPanel();
         mTablePanel.setMinimumSize(new Dimension(1200, 300));
         mTablePanel.add(mScrollPane);
-
+        mSongsTable.getTableHeader().setComponentPopupMenu(getColumnPopupMenu());
         if (isPlaylist) {//&& !mSongsTable.equals("Library")){
             mSongsTable.setComponentPopupMenu(getPlaylistPopupMenu());
         } else {
             mSongsTable.setComponentPopupMenu(getPopupMenu()); //add a popup menu to the JTable
         }
-
+        
         //mTableModel.addTableModelListener(mSongsTable);
     }
 
@@ -261,7 +284,63 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         return mPopupMenu;
     }
 
+    private JPopupMenu getColumnPopupMenu() {
+        mColumnPopupMenu = new JPopupMenu();
+        mArtistColumn = new JCheckBox("Artist");
+        //mArtistColumn.setHorizontalAlignment(SwingConstants.LEFT);
+        mAlbumColumn = new JCheckBox("Album");
+        //mAlbumColumn.setHorizontalAlignment(SwingConstants.LEFT);
+        mYearColumn = new JCheckBox("Album Year");
+        //mYearColumn.setHorizontalAlignment(SwingConstants.RIGHT);
+        mGenreColumn = new JCheckBox("Genre");
+        //mGenreColumn.setHorizontalAlignment(SwingConstants.RIGHT);
+        mCommentColumn = new JCheckBox("Comment");
+        //mCommentColumn.setHorizontalAlignment(SwingConstants.RIGHT);
+        mColumnPopupMenu.add(mArtistColumn);
+        mColumnPopupMenu.add(mAlbumColumn);
+        mColumnPopupMenu.add(mYearColumn);
+        mColumnPopupMenu.add(mGenreColumn);
+        mColumnPopupMenu.add(mCommentColumn);
+        return mColumnPopupMenu;
+    }
+    
+    public JCheckBox getArtistColumnObj(){
+        return mArtistColumn;
+    }
+    
+    public JCheckBox getAlbumColumnObj(){
+        return mAlbumColumn;
+    }
+    
+    public JCheckBox getYearColumnObj(){
+        return mYearColumn;
+    }
+    
+    public JCheckBox getGenreColumnObj(){
+        return mGenreColumn;
+    }
+    
+    public JCheckBox getCommentColumnObj(){
+        return mCommentColumn;
+    }
+    
+    public void setController(ActionListener controller){
+        mArtistColumn.addActionListener(controller);
+        mAlbumColumn.addActionListener(controller);
+        mYearColumn.addActionListener(controller);
+        mGenreColumn.addActionListener(controller);
+        mCommentColumn.addActionListener(controller);
+    }	
+	
     public void addMouseController(MouseListener controller) {
+        mSongsTable.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int col = mSongsTable.columnAtPoint(e.getPoint());
+                String name = mSongsTable.getColumnName(col);
+                System.out.println("Column index selected " + col + " " + name);
+            }
+        });
         mSongsTable.addMouseListener(controller);
         mMenuAddSong.addMouseListener(controller);
         //mMenuAddToPlaylist.addMouseListener(controller);
@@ -391,15 +470,25 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
          */
         mTableModel.setDataVector(mSongsVector, COLUMN_HEADER);
         //mTableModel.fireTableDataChanged();
-        mSongsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(300);
-        mSongsTable.getColumnModel().getColumn(1).setPreferredWidth(200);
-        mSongsTable.getColumnModel().getColumn(2).setPreferredWidth(200);
-        mSongsTable.getColumnModel().getColumn(3).setPreferredWidth(100);
-        mSongsTable.getColumnModel().getColumn(4).setPreferredWidth(100);
-        mSongsTable.getColumnModel().getColumn(5).setPreferredWidth(100);
-        mSongsTable.getColumnModel().getColumn(6).setPreferredWidth(100);
-        mSongsTable.getColumnModel().getColumn(7).setPreferredWidth(100);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+       
+        mSongsTable.getColumnModel().getColumn(0).setMinWidth(0);
+        mSongsTable.getColumnModel().getColumn(0).setMaxWidth(0);
+        mSongsTable.getColumnModel().getColumn(0).setPreferredWidth(0);
+        mSongsTable.getColumnModel().getColumn(1).setMinWidth(200);
+        mSongsTable.getColumnModel().getColumn(2).setMinWidth(200);
+        mSongsTable.getColumnModel().getColumn(3).setMinWidth(100);
+        mSongsTable.getColumnModel().getColumn(4).setMinWidth(100);
+        mSongsTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        mSongsTable.getColumnModel().getColumn(5).setMinWidth(0);
+        mSongsTable.getColumnModel().getColumn(5).setMaxWidth(0);
+        mSongsTable.getColumnModel().getColumn(5).setPreferredWidth(0);
+        mSongsTable.getColumnModel().getColumn(6).setMinWidth(100);
+        mSongsTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
+        mSongsTable.getColumnModel().getColumn(7).setMinWidth(100);
+        mSongsTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+        
         mSongsTable.doLayout();
     }
 

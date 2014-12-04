@@ -1,8 +1,9 @@
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JCheckBox;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -24,8 +25,10 @@ public class MenuComponent implements Observer{
     private JMenuItem mGotoCurrentSong;
     private JMenuItem mIncVol;
     private JMenuItem mDecVol;
-    private JMenuItem mShuffle;
-    private JMenuItem mRepeat;
+    private JCheckBox mShuffle;
+    private JCheckBox mRepeat;
+    private ItemListener mShuffleListener;
+    private ItemListener mRepeatListener;
     
     /**
      * Class constructor. 
@@ -54,8 +57,12 @@ public class MenuComponent implements Observer{
         mGotoCurrentSong = new JMenuItem("Go to Current Song");
         mIncVol = new JMenuItem("Increase Volume (Ctrl+I)");
         mDecVol = new JMenuItem("Decrease Volume (Ctrl+D)");
-        mShuffle = new JCheckBoxMenuItem("Shuffle");
-        mRepeat = new JCheckBoxMenuItem("Repeat");
+
+        mShuffle = new JCheckBox("Shuffle", false);
+        mRepeat = new JCheckBox("Repeat", false);
+        //mShuffleItemListen = new ItemListener;
+        mShuffle.addItemListener(mShuffleListener);
+        mRepeat.addItemListener(mRepeatListener);
         
         mControls.add(mPlay);
         mControls.add(mNext);
@@ -150,20 +157,30 @@ public class MenuComponent implements Observer{
     public JMenuItem getDecVolControlObj(){
         return mDecVol;
     }
-    public JMenuItem getShuffleControlObj(){
+
+    public JCheckBox getShuffleControlObj(){
         return mShuffle;
     }
-    public JMenuItem getRepeatControlObj(){
+    public JCheckBox getRepeatControlObj(){
         return mRepeat;
     }
     
     public JMenuItem getGoToCurrentControlObj(){
         return mGotoCurrentSong;
     }
+    public ItemListener getShuffleListenerObj(){
+        return mShuffleListener;
+    }
+    public ItemListener getRepeatListenerObj(){
+        return mRepeatListener;
+    }    
+
  
+
      //**********************
 
     public void setController(ActionListener controller){
+        
         mAbout.addActionListener(controller);
         mPlaySongNotInLibrary.addActionListener(controller);
         mAddSong.addActionListener(controller);

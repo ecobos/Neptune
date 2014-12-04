@@ -14,6 +14,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -149,6 +150,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
+        Random rand = new Random();
+        int randomNum = rand.nextInt(mTable.getSongsCount());
         // QUIT BUTTON
         if (source == mMenuBar.getQuitObj()) {
             System.out.println("Quit was clicked.");
@@ -244,13 +247,21 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         }
         // CONTROLS - PLAY SONG
         else if (source == mMenuBar.getPlayControlObj()) {
-            if(mTable.getSongSelected() == null) {
+            if(mMenuBar.getShuffleControlObj().isSelected()){
+                System.out.println("Shuffle songs on " + player.getStatus());
+                if(player.getStatus() == -1 || player.getStatus() == 2){
+                    playSong(mTable.getSongSelected(randomNum));
+                }
+            }
+            else{
+                if(mTable.getSongSelected() == null) {
                 playSong(mTable.getSongSelected(0));
-            }
-            else {
-                mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
-                playSong(mTable.getSongSelected());
-            }
+                }
+                else {
+                    mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
+                    playSong(mTable.getSongSelected());
+                }
+            }            
             //mTable.update(mDatabase, source);
         }
         // CONTROLS - GO TO NEXT SONG
@@ -260,6 +271,41 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         // CONTROLS - GO TO PREV SONG
         else if (source == mMenuBar.getPrevControlObj()) {
             playSong(mTable.getPrevSong());
+        }
+        // CONTROLS - GO TO SHUFFLE
+        else if (source == mMenuBar.getShuffleControlObj()){
+            //player.getStatus() = 2 if no song was stopped
+            //player.getStatus() = 0 when playing song
+            //player.getStatus() = -1 initial value
+            randomNum = rand.nextInt(mTable.getSongsCount());
+            if(mMenuBar.getShuffleControlObj().isSelected()){
+                System.out.println("Shuffle songs on " + player.getStatus());
+                if(player.getStatus() == -1 || player.getStatus() == 2){
+                    playSong(mTable.getSongSelected(randomNum));
+                }
+            }
+            else {
+                System.out.println("Shuffle songs off " + player.getStatus());
+            }/*
+            if(mTable.getSongSelected() == null) {
+                    playSong(mTable.getSongSelected(randomNum));
+            }
+            else {
+                mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
+                playSong(mTable.getSongSelected());
+            }
+            playSong(mTable.getSongSelected(randomNum));*/
+        }
+        // CONTROLS - GO TO REPEAT
+        else if (source == mMenuBar.getRepeatControlObj()){
+            mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());                
+            if(mMenuBar.getRepeatControlObj().isSelected()){
+                System.out.println("Repeat song on");
+                //playSong(mTable.getSongSelected());
+            }
+            else {
+                System.out.println("Repeat song off");
+            }
         }
     }
 
