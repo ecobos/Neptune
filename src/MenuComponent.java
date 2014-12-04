@@ -199,8 +199,6 @@ public class MenuComponent implements Observer{
         mDecVol.addActionListener(controller);
         mShuffle.addActionListener(controller);
         mRepeat.addActionListener(controller);
-        
-        
     }
 
     @Override

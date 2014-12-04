@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -55,6 +56,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     private ArrayList<JMenuItem> mSubMenu;
     private JMenuItem item; //delete
     private JMenuItem[] subMenuItems;
+    private final TableColumnHider mColumnHider;
     
     // made this two private so that scrollbar changes goes up or down when go to current song selected is clicked
     private JScrollPane mScrollPane;
@@ -135,6 +137,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
             mSongsTable.setComponentPopupMenu(getPopupMenu()); //add a popup menu to the JTable
         }
         
+        mColumnHider = new TableColumnHider(mSongsTable);
         //mTableModel.addTableModelListener(mSongsTable);
     }
 
@@ -286,21 +289,27 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
 
     private JPopupMenu getColumnPopupMenu() {
         mColumnPopupMenu = new JPopupMenu();
-        mArtistColumn = new JCheckBox("Artist");
-        //mArtistColumn.setHorizontalAlignment(SwingConstants.LEFT);
-        mAlbumColumn = new JCheckBox("Album");
-        //mAlbumColumn.setHorizontalAlignment(SwingConstants.LEFT);
-        mYearColumn = new JCheckBox("Album Year");
-        //mYearColumn.setHorizontalAlignment(SwingConstants.RIGHT);
-        mGenreColumn = new JCheckBox("Genre");
-        //mGenreColumn.setHorizontalAlignment(SwingConstants.RIGHT);
-        mCommentColumn = new JCheckBox("Comment");
-        //mCommentColumn.setHorizontalAlignment(SwingConstants.RIGHT);
-        mColumnPopupMenu.add(mArtistColumn);
-        mColumnPopupMenu.add(mAlbumColumn);
-        mColumnPopupMenu.add(mYearColumn);
-        mColumnPopupMenu.add(mGenreColumn);
-        mColumnPopupMenu.add(mCommentColumn);
+        String[] columnNames = {"Artist", "Album", "Album Year", "Genre", "Comments"};
+        
+        for (int i = 0; i < columnNames.length; i++) {
+            JCheckBox checkBox = new JCheckBox(columnNames[i]);
+            checkBox.setSelected(true);
+            checkBox.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    JCheckBox cb = (JCheckBox) evt.getSource();
+                    String columnName = cb.getText();
+                    System.out.println(columnName);
+                    if (cb.isSelected()) {
+                        mColumnHider.show(columnName);
+                    } else {
+                        mColumnHider.hide(columnName);
+                    }
+                }
+            });
+            mColumnPopupMenu.add(checkBox);
+        }
         return mColumnPopupMenu;
     }
     
@@ -331,6 +340,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mGenreColumn.addActionListener(controller);
         mCommentColumn.addActionListener(controller);
     }	
+    
 	
     public void addMouseController(MouseListener controller) {
         mSongsTable.getTableHeader().addMouseListener(new MouseAdapter() {
