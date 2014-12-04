@@ -20,16 +20,17 @@ public class JSliderComponent implements Observer{
         mSliderPanel = new JPanel();
         mSliderPanel.setBackground(Color.DARK_GRAY);
         mSliderPanel.setForeground(Color.DARK_GRAY);
-        mSlider = new JSlider(JSlider.HORIZONTAL, 5, 100, 100);
-        mSlider.setMinorTickSpacing(10);
-        mSlider.setMajorTickSpacing(20);
+        mSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        mSlider.setMinorTickSpacing(5);
+        mSlider.setMajorTickSpacing(25);
         mSlider.setPaintTicks(true);
         mSlider.setPaintLabels(true);
         mSlider.setBackground(Color.DARK_GRAY);
         mSlider.setForeground(Color.WHITE);
+        mSlider.setSnapToTicks(true);
         
         // sets standard numeric labels 
-        mSlider.setLabelTable(mSlider.createStandardLabels(20));
+        mSlider.setLabelTable(mSlider.createStandardLabels(25));
         mSliderPanel.setMinimumSize(new Dimension(300,100));
         mSliderPanel.add(mSlider);
     }

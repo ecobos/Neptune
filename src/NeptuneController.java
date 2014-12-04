@@ -490,7 +490,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        System.out.println("Player control");
+        //System.out.println("Player control");
 
         try {
             playerControl.setGain(mSlider.getValue());
