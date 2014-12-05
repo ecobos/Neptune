@@ -14,7 +14,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -47,6 +52,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     private JSliderComponent mSlider;
     private JTreeComponent mTree;
     private boolean isPlaylistView;
+    private LinkedHashMap<Integer, String> mRecentHashMap;
+    private int mRecentCount;
 
     /**
      * Class constructor.
@@ -58,6 +65,13 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         playerControl = (BasicController) player;
         isPaused = false;
         isPlaylistView = isPlaylistview;
+        mRecentHashMap = new LinkedHashMap<Integer, String>()
+        {
+           protected boolean removeEldestEntry(Map.Entry<Integer, String> eldest)
+           {
+              return this.size() > 10;   
+           }
+        };
     }
 
     public void addPlayerView(Neptune mp) {
@@ -108,7 +122,9 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             isPaused = false;
         } else {
             try {
-                playerControl.open(new File(songToPlay.get(0)));
+                File filepath = new File(songToPlay.get(0));
+                mRecentHashMap.put(mRecentCount++, filepath.toString());
+                playerControl.open(filepath);
                 mSongInfo.setText("\n\n Current song playing:\n\tArtist: " + songToPlay.get(2)
                         + "\n\tSong: " + songToPlay.get(1) + "\n\tAlbum: "
                         + songToPlay.get(3) + "\n\tSong " + (mTable.getCurrentSongPlayingIndex() + 1) + " of " + mTable.getSongsCount());
