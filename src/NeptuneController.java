@@ -151,6 +151,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         Random rand = new Random();
+        String filepath = mTable.getSongSelectedFilepath();
         int randomNum = rand.nextInt(mTable.getSongsCount());
         // QUIT BUTTON
         if (source == mMenuBar.getQuitObj()) {
@@ -201,8 +202,9 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         } // PLAY BUTTON
         else if (source == mButtons.getPlayObj()) {
             mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
-            playSong(mTable.getSongSelected());
-            System.out.println("Playing: " + mTable.getSongSelected().get(1));
+            playSong(mTable.getSongSelected(filepath));
+            System.out.println("Song playing filepath: " + filepath);
+            System.out.println("Playing: " + mTable.getSongSelected(filepath).get(1));
         } // STOP SONG BUTTON
         else if (source == mButtons.getStopObj()) {
             try {
@@ -260,7 +262,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 }
                 else {
                     mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
-                    playSong(mTable.getSongSelected());
+                    playSong(mTable.getSongSelected(filepath));
+                    System.out.println("Playing: " + mTable.getSongSelected(filepath).get(1));
                 }
             }            
             //mTable.update(mDatabase, source);
@@ -299,7 +302,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         }
         // CONTROLS - GO TO REPEAT
         else if (source == mMenuBar.getRepeatControlObj()){
-            mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());                
+            //mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());                
             if(mMenuBar.getRepeatControlObj().isSelected()){
                 System.out.println("Repeat song on");
                 //playSong(mTable.getSongSelected());

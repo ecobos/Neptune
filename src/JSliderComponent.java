@@ -20,7 +20,7 @@ public class JSliderComponent implements Observer{
         mSliderPanel = new JPanel();
         mSliderPanel.setBackground(Color.DARK_GRAY);
         mSliderPanel.setForeground(Color.DARK_GRAY);
-        mSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        mSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 100);
         mSlider.setMinorTickSpacing(5);
         mSlider.setMajorTickSpacing(25);
         mSlider.setPaintTicks(true);
