@@ -76,9 +76,10 @@ public class MenuComponent implements Observer{
         mDecVol.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK));
 
         mShuffle = new JCheckBox("Shuffle", false);
-        mShuffle.setActionCommand("shuffle");
+        mShuffle.setActionCommand("Shuffle");
         
         mRepeat = new JCheckBox("Repeat", false);
+        mRepeat.setActionCommand("Repeat");
         //mShuffleItemListen = new ItemListener;
        
         
@@ -135,6 +136,10 @@ public class MenuComponent implements Observer{
     public boolean isShuffleEnabled(){
         return mShuffle.isSelected();
     }
+    
+    public boolean isRepeatEnabled(){
+        return mRepeat.isSelected();
+    }
     //**********************
     //Needed for the action listerns 
     public JMenuItem getAboutObj(){
@@ -180,10 +185,6 @@ public class MenuComponent implements Observer{
 //        return mDecVol;
 //    }
 
-
-    public JCheckBox getRepeatControlObj(){
-        return mRepeat;
-    }
     
     public JMenuItem getGoToCurrentControlObj(){
         return mGotoCurrentSong;

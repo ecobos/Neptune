@@ -271,7 +271,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         else if (source == mMenuBar.getPrevControlObj() || e.getActionCommand().equals("LeftArrow")) {
             playSong(mTable.getPrevSong());
         } // CONTROLS - GO TO SHUFFLE
-        else if (e.getActionCommand().equals("shuffle")) {
+        else if (e.getActionCommand().equals("Shuffle")) {
             //player.getStatus() = 2 if no song was stopped
             //player.getStatus() = 0 song currently playing
             //player.getStatus() = -1 initial value. Nothing is playing
@@ -296,9 +296,9 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
              playSong(mTable.getSongSelected(randomNum));*/
 
         } // CONTROLS - GO TO REPEAT
-        else if (source == mMenuBar.getRepeatControlObj()) {
+        else if (e.getActionCommand().equals("Repeat")) {
             //mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());                
-            if (mMenuBar.getRepeatControlObj().isSelected()) {
+            if (mMenuBar.isRepeatEnabled()) {
                 System.out.println("Repeat song on");
                 //playSong(mTable.getSongSelected());
             } else {
