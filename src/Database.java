@@ -476,4 +476,52 @@ public class Database extends Observable {
             System.out.println("Unable to delete song");
         }
     }
+    
+    /**
+     * Gets the player settings from database
+     * @return string array containing settings
+     */
+    public String[] getPlayerSettings() {
+        String[] settings = new String[5]; 
+        try {
+            if (conn.isClosed()) {
+                this.getDBConnection();
+            }
+            Statement stat = conn.createStatement();
+            String query = "SELECT * FROM Configuration";
+            ResultSet rs = stat.executeQuery(query);
+            while (rs.next()) {
+                settings[0] = sanitizeEmptyString(rs.getString("showArtist"));
+                settings[1] = sanitizeEmptyString(rs.getString("showAlbum"));
+                settings[2] = sanitizeEmptyString(rs.getString("showYear"));
+                settings[3] = sanitizeEmptyString(rs.getString("showGenre"));
+                settings[4] = sanitizeEmptyString(rs.getString("showComments"));
+                System.out.println(settings[0]+ " " + settings[2]);
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Unable to get songs from database.");
+
+        }
+        return settings;
+    }
+    
+    public void setPlayerSettings(String fieldToUpdate, String value) {
+        try {
+            if (conn.isClosed()) {
+                this.getDBConnection();
+            }
+
+            String updateString =
+            "UPDATE Configuration SET " + fieldToUpdate + " = ?";
+            PreparedStatement pstat = conn.prepareStatement(updateString);
+            pstat.setString(1, value); // boolean used to update config setting
+            pstat.executeUpdate();
+            
+        } catch (SQLException e) {
+            System.out.println("Unable to change settings");
+            e.printStackTrace();
+        }
+    }
 }

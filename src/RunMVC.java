@@ -20,10 +20,10 @@ public class RunMVC {
         JSliderComponent slider = new JSliderComponent();
         
         if(loadFromPlaylist == true){
-            table = new SongsTableComponent(playlistName,database.getPlaylistSongsFromDatabase(playlistName), loadFromPlaylist);
+            table = new SongsTableComponent(playlistName,database.getPlaylistSongsFromDatabase(playlistName), loadFromPlaylist, database.getPlayerSettings());
             player = new Neptune(table, buttons, menu, text, slider);
         }else {
-            table = new SongsTableComponent("Library",database.getSongsFromDatabase(), loadFromPlaylist);
+            table = new SongsTableComponent("Library",database.getSongsFromDatabase(), loadFromPlaylist, database.getPlayerSettings());
             tree = new JTreeComponent(database.getPlaylistsFromDatabase());
             player = new Neptune(table, buttons, menu, text, tree, slider);
         }
@@ -40,14 +40,13 @@ public class RunMVC {
         controller.addDatabaseModel(database);
         controller.addButtonsView(buttons);
         controller.addMenuView(menu);
-        controller.addTextView(text);
-        controller.addTableModel(table);
+        controller.addTextView(text); 
         controller.addSlider(slider);
         if(tree != null){
             controller.addTree(tree);
         }
+        controller.addTableModel(table);
         
-
 	//tell View about Controller 
 	buttons.setController(controller);
         menu.setController(controller);

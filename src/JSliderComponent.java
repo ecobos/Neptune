@@ -20,16 +20,23 @@ public class JSliderComponent implements Observer{
         mSliderPanel = new JPanel();
         mSliderPanel.setBackground(Color.DARK_GRAY);
         mSliderPanel.setForeground(Color.DARK_GRAY);
+<<<<<<< HEAD
         mSlider = new JSlider(JSlider.HORIZONTAL, 5, 100, 100);
         mSlider.setMinorTickSpacing(10);
         mSlider.setMajorTickSpacing(20);
+=======
+        mSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        mSlider.setMinorTickSpacing(5);
+        mSlider.setMajorTickSpacing(25);
+>>>>>>> f5ef30424537f7b4f2b83b9ad30d06dc627a3cd7
         mSlider.setPaintTicks(true);
         mSlider.setPaintLabels(true);
         mSlider.setBackground(Color.DARK_GRAY);
         mSlider.setForeground(Color.WHITE);
+        mSlider.setSnapToTicks(true);
         
         // sets standard numeric labels 
-        mSlider.setLabelTable(mSlider.createStandardLabels(20));
+        mSlider.setLabelTable(mSlider.createStandardLabels(25));
         mSliderPanel.setMinimumSize(new Dimension(300,100));
         mSliderPanel.add(mSlider);
     }
@@ -44,6 +51,23 @@ public class JSliderComponent implements Observer{
         return mSliderPanel;
     }
     
+    public void incrementSlider(){
+        int newValue = mSlider.getValue();
+        if(newValue <= 95){
+            newValue += 5;
+            mSlider.setValue(newValue);
+        }     
+    }
+    
+    public void decrementSlider(){
+        int newValue = mSlider.getValue();
+        if(newValue >= 5){
+            newValue -= 5;
+            mSlider.setValue(newValue);
+        } 
+    }
+    
+    //Return a double between 0 and 1
     public double getValue() {
         return (mSlider.getValue()/volumeRate);
     }

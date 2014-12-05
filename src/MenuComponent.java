@@ -1,12 +1,16 @@
+import java.awt.Event;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.util.LinkedHashMap;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JCheckBox;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 
 public class MenuComponent implements Observer{
     private JMenuBar mMenuBar;
@@ -50,19 +54,37 @@ public class MenuComponent implements Observer{
         mQuit = new JMenuItem("Quit");
         
         // Controls JMenuItems
-        mPlay = new JMenuItem("Play (Space)");
-        mNext = new JMenuItem("Next (Ctrl+Right Arrow)");
-        mPrev = new JMenuItem("Previous (Ctrl+Left Arrow)");
+        mPlay = new JMenuItem("Play", KeyEvent.VK_SPACE);
+        mPlay.setActionCommand("Space");
+        mPlay.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
+        
+        mNext = new JMenuItem("Next", KeyEvent.VK_RIGHT);
+        mNext.setActionCommand("RightArrow");
+        mNext.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.CTRL_MASK));
+        
+        mPrev = new JMenuItem("Previous", KeyEvent.VK_LEFT);
+        mPrev.setActionCommand("LeftArrow");
+        mPrev.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.CTRL_MASK));
+        
         mPlayRecent = new JMenu("Play Recent");
+        
         mGotoCurrentSong = new JMenuItem("Go to Current Song");
-        mIncVol = new JMenuItem("Increase Volume (Ctrl+I)");
-        mDecVol = new JMenuItem("Decrease Volume (Ctrl+D)");
+        mIncVol = new JMenuItem("Increase Volume", KeyEvent.VK_I);
+        mIncVol.setActionCommand("IncVol");
+        mIncVol.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, Event.CTRL_MASK));
+        
+        mDecVol = new JMenuItem("Decrease Volume", KeyEvent.VK_D);
+        mDecVol.setActionCommand("DecVol");
+        mDecVol.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK));
 
         mShuffle = new JCheckBox("Shuffle", false);
+        mShuffle.setActionCommand("Shuffle");
+        
         mRepeat = new JCheckBox("Repeat", false);
+        mRepeat.setActionCommand("Repeat");
         //mShuffleItemListen = new ItemListener;
-        mShuffle.addItemListener(mShuffleListener);
-        mRepeat.addItemListener(mRepeatListener);
+       
+        
         
         mControls.add(mPlay);
         mControls.add(mNext);
@@ -113,6 +135,13 @@ public class MenuComponent implements Observer{
         mMenuBar.repaint();
     }
     
+    public boolean isShuffleEnabled(){
+        return mShuffle.isSelected();
+    }
+    
+    public boolean isRepeatEnabled(){
+        return mRepeat.isSelected();
+    }
     //**********************
     //Needed for the action listerns 
     public JMenuItem getAboutObj(){
@@ -151,19 +180,13 @@ public class MenuComponent implements Observer{
     public JMenuItem getPlayRecentControlObj(){
         return mPlayRecent;
     }
-    public JMenuItem getIncVolControlObj(){
-        return mIncVol;
-    }
-    public JMenuItem getDecVolControlObj(){
-        return mDecVol;
-    }
+//    public JMenuItem getIncVolControlObj(){
+//        return mIncVol;
+//    }
+//    public JMenuItem getDecVolControlObj(){
+//        return mDecVol;
+//    }
 
-    public JCheckBox getShuffleControlObj(){
-        return mShuffle;
-    }
-    public JCheckBox getRepeatControlObj(){
-        return mRepeat;
-    }
     
     public JMenuItem getGoToCurrentControlObj(){
         return mGotoCurrentSong;
@@ -199,8 +222,6 @@ public class MenuComponent implements Observer{
         mDecVol.addActionListener(controller);
         mShuffle.addActionListener(controller);
         mRepeat.addActionListener(controller);
-        
-        
     }
 
     @Override

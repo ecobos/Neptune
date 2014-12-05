@@ -54,6 +54,7 @@ public class JTreeComponent implements Observer {
         mPlaylistTree.setBackground(Color.DARK_GRAY);
         mPlaylistTree.setForeground(Color.DARK_GRAY);
         mPlaylistTree.setComponentPopupMenu(getPopupMenu());
+        mPlaylistTree.addSelectionRow(0);
         mTreePanel = new JPanel();
         mTreePanel.setBackground(Color.DARK_GRAY);
         mTreePanel.add(mPlaylistTree);
@@ -127,6 +128,12 @@ public class JTreeComponent implements Observer {
         playlistModel.insertNodeInto(node, playlist, treeIndex++);
     }
     
+    public void setNewBranchAsSelected(){
+        mPlaylistTree.removeSelectionRow(0);
+        mPlaylistTree.removeSelectionRow(1);
+        mPlaylistTree.addSelectionRow(treeIndex+1);
+    }
+    
     // assume the node to be deleted already exist within playlist table
     // I'm not sure if this will work since it might be making a new copy of a 
     // a child node since I make a child node with the string passed in
@@ -143,6 +150,7 @@ public class JTreeComponent implements Observer {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
         playlistModel.removeNodeFromParent(node);
         --treeIndex;
+        mPlaylistTree.addSelectionRow(0);  
     }
     
     public void setTreeCotroller(TreeSelectionEvent tse){
