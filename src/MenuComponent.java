@@ -52,7 +52,10 @@ public class MenuComponent implements Observer{
         mQuit = new JMenuItem("Quit");
         
         // Controls JMenuItems
-        mPlay = new JMenuItem("Play (Space)");
+        mPlay = new JMenuItem("Play", KeyEvent.VK_SPACE);
+        mPlay.setActionCommand("Space");
+        mPlay.setMnemonic(KeyEvent.VK_SPACE);
+        mPlay.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
         mNext = new JMenuItem("Next (Ctrl+Right Arrow)");
         mPrev = new JMenuItem("Previous (Ctrl+Left Arrow)");
         mPlayRecent = new JMenu("Play Recent");

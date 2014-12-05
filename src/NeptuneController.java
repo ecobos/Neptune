@@ -249,7 +249,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             //mTable.update(mDatabase, source);
         }
         // CONTROLS - PLAY SONG
-        else if (source == mMenuBar.getPlayControlObj()) {
+        else if (source == mMenuBar.getPlayControlObj() || e.getActionCommand().equals("Space")) {
             if(mMenuBar.getShuffleControlObj().isSelected()){
                 System.out.println("Shuffle songs on " + player.getStatus());
                 if(player.getStatus() == -1 || player.getStatus() == 2){
