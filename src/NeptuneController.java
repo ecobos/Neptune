@@ -222,10 +222,10 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 Logger.getLogger(Neptune.class.getName()).log(Level.SEVERE, null, ex);
             }
         } // NEXT SONG BUTTON
-        else if (source == mButtons.getNextObj()) {
+        else if (source == mButtons.getNextObj() || e.getActionCommand().equals("Ctrl+Right Arrow")) {
             playSong(mTable.getNextSong());
         } // PREVIOUS SONG BUTTON
-        else if (source == mButtons.getPrevObj()) {
+        else if (source == mButtons.getPrevObj() || e.getActionCommand().equals("Ctrl+Left Arrow")) {
             // this ensures that if the mouse is clicked to a different row, we 
             // can still play the song that is currently next
             playSong(mTable.getPrevSong());
@@ -269,11 +269,11 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             //mTable.update(mDatabase, source);
         }
         // CONTROLS - GO TO NEXT SONG
-        else if (source == mMenuBar.getNextControlObj()) {
+        else if (source == mMenuBar.getNextControlObj() || e.getActionCommand().equals("Ctrl+Right Arrow")) {
             playSong(mTable.getNextSong());
         }
         // CONTROLS - GO TO PREV SONG
-        else if (source == mMenuBar.getPrevControlObj()) {
+        else if (source == mMenuBar.getPrevControlObj() || e.getActionCommand().equals("Ctrl+Left Arrow")) {
             playSong(mTable.getPrevSong());
         }
         // CONTROLS - GO TO SHUFFLE
