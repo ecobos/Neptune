@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
@@ -191,8 +192,8 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
      *
      * @param currentSong Currently selected (clicked on) song
      */
-    public void setCurrentSongPlayingIndex(int currentSong) {
-        mCurrentSongPlayingIndex = currentSong;
+    public void setCurrentSongPlayingIndex() {
+        mCurrentSongPlayingIndex = mSongsTable.getSelectedRow();
     }
 
     /**
@@ -210,7 +211,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
      */
     public void setSelectionInterval(int row) {
         mSongsTable.setRowSelectionInterval(row, row);
-        mSongsTable.scrollRectToVisible(null);
+        mSongsTable.scrollRectToVisible(new Rectangle());
     }
 
     /**
@@ -355,6 +356,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
                 System.out.println("Column index selected " + col + " " + name);
             }
         });
+        
         mSongsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -367,7 +369,10 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
                 System.out.println("Selected object: " + selectedObj.toString());
                 System.out.println("Filepath: " + filepathObj);
             }
-        });
+        }
+    );
+        
+        
         mMenuAddSong.addMouseListener(controller);
         //mMenuAddToPlaylist.addMouseListener(controller);
         mMenuRemoveSong.addMouseListener(controller);

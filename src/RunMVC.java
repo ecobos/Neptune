@@ -40,13 +40,12 @@ public class RunMVC {
         controller.addDatabaseModel(database);
         controller.addButtonsView(buttons);
         controller.addMenuView(menu);
-        controller.addTextView(text);
-        controller.addTableModel(table);
+        controller.addTextView(text); 
         controller.addSlider(slider);
         if(tree != null){
             controller.addTree(tree);
         }
-        
+        controller.addTableModel(table);
 
 	//tell View about Controller 
 	buttons.setController(controller);

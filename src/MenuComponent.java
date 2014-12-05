@@ -1,7 +1,9 @@
 import java.awt.Event;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.util.LinkedHashMap;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JCheckBox;
@@ -76,10 +78,13 @@ public class MenuComponent implements Observer{
         mDecVol.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK));
 
         mShuffle = new JCheckBox("Shuffle", false);
+        mShuffle.setActionCommand("Shuffle");
+        
         mRepeat = new JCheckBox("Repeat", false);
+        mRepeat.setActionCommand("Repeat");
         //mShuffleItemListen = new ItemListener;
-        mShuffle.addItemListener(mShuffleListener);
-        mRepeat.addItemListener(mRepeatListener);
+       
+        
         
         mControls.add(mPlay);
         mControls.add(mNext);
@@ -130,6 +135,13 @@ public class MenuComponent implements Observer{
         mMenuBar.repaint();
     }
     
+    public boolean isShuffleEnabled(){
+        return mShuffle.isSelected();
+    }
+    
+    public boolean isRepeatEnabled(){
+        return mRepeat.isSelected();
+    }
     //**********************
     //Needed for the action listerns 
     public JMenuItem getAboutObj(){
@@ -175,12 +187,6 @@ public class MenuComponent implements Observer{
 //        return mDecVol;
 //    }
 
-    public JCheckBox getShuffleControlObj(){
-        return mShuffle;
-    }
-    public JCheckBox getRepeatControlObj(){
-        return mRepeat;
-    }
     
     public JMenuItem getGoToCurrentControlObj(){
         return mGotoCurrentSong;
