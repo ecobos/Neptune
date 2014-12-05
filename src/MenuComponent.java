@@ -54,19 +54,23 @@ public class MenuComponent implements Observer{
         // Controls JMenuItems
         mPlay = new JMenuItem("Play", KeyEvent.VK_SPACE);
         mPlay.setActionCommand("Space");
-        mPlay.setMnemonic(KeyEvent.VK_SPACE);
         mPlay.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
-        mNext = new JMenuItem("Next", Event.CTRL_MASK + KeyEvent.VK_RIGHT);
-        mPlay.setActionCommand("Ctrl+Right Arrow");
-        mNext.setMnemonic(KeyEvent.VK_RIGHT);
+        
+        mNext = new JMenuItem("Next", KeyEvent.VK_RIGHT);
+        mNext.setActionCommand("RightArrow");
         mNext.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.CTRL_MASK));
-        mPlay.setActionCommand("Ctrl+Left Arrow");
-        mPrev = new JMenuItem("Previous", Event.CTRL_MASK + KeyEvent.VK_LEFT);
-        mPrev.setMnemonic(KeyEvent.VK_LEFT);
+        
+        mPrev = new JMenuItem("Previous", KeyEvent.VK_LEFT);
+        mPrev.setActionCommand("LeftArrow");
         mPrev.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.CTRL_MASK));
+        
         mPlayRecent = new JMenu("Play Recent");
+        
         mGotoCurrentSong = new JMenuItem("Go to Current Song");
-        mIncVol = new JMenuItem("Increase Volume");
+        mIncVol = new JMenuItem("Increase Volume", KeyEvent.VK_I);
+        mIncVol.setActionCommand("IncVol");
+        mIncVol.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, Event.CTRL_MASK));
+        
         mDecVol = new JMenuItem("Decrease Volume", KeyEvent.VK_D);
         mDecVol.setActionCommand("DecVol");
         mDecVol.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK));
@@ -164,12 +168,12 @@ public class MenuComponent implements Observer{
     public JMenuItem getPlayRecentControlObj(){
         return mPlayRecent;
     }
-    public JMenuItem getIncVolControlObj(){
-        return mIncVol;
-    }
-    public JMenuItem getDecVolControlObj(){
-        return mDecVol;
-    }
+//    public JMenuItem getIncVolControlObj(){
+//        return mIncVol;
+//    }
+//    public JMenuItem getDecVolControlObj(){
+//        return mDecVol;
+//    }
 
     public JCheckBox getShuffleControlObj(){
         return mShuffle;

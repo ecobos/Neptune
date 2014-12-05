@@ -1,3 +1,4 @@
+
 import java.awt.Color;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -114,7 +115,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 playerControl.play();
 
             } catch (BasicPlayerException ex) {
-                Logger.getLogger(Neptune.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(mTable.getMenuAddObj(), "Song does not exist!");
             }
         }
     }
@@ -241,79 +242,87 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             mTree.setNewBranchAsSelected();
             mTree.getJTreeObj().treeDidChange();
             mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(playlistName)); // updates library table with empty playlist set
-        }
-        // CONTROLS - GO TO CURRENT SONG
+        } // CONTROLS - GO TO CURRENT SONG
         else if (source == mMenuBar.getGoToCurrentControlObj()) {
             mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
             mTable.setScrollBarPosition(mTable.getCurrentSongPlayingIndex()); // NOT WORKING
             //mTable.update(mDatabase, source);
-        }
-        // CONTROLS - PLAY SONG
+        } // CONTROLS - PLAY SONG
         else if (source == mMenuBar.getPlayControlObj() || e.getActionCommand().equals("Space")) {
-            if(mMenuBar.getShuffleControlObj().isSelected()){
+            if (mMenuBar.getShuffleControlObj().isSelected()) {
                 System.out.println("Shuffle songs on " + player.getStatus());
-                if(player.getStatus() == -1 || player.getStatus() == 2){
+                if (player.getStatus() == -1 || player.getStatus() == 2) {
                     playSong(mTable.getSongSelected(randomNum));
                 }
-            }
-            else{
-                if(mTable.getSongSelected() == null) {
-                playSong(mTable.getSongSelected(0));
-                }
-                else {
+            } else {
+                if (mTable.getSongSelected() == null) {
+                    playSong(mTable.getSongSelected(0));
+                } else {
                     mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
                     playSong(mTable.getSongSelected(filepath));
                     System.out.println("Playing: " + mTable.getSongSelected(filepath).get(1));
                 }
-            }            
+            }
             //mTable.update(mDatabase, source);
-        }
-        // CONTROLS - GO TO NEXT SONG
-        else if (source == mMenuBar.getNextControlObj() || e.getActionCommand().equals("Ctrl+Right Arrow")) {
+        } // CONTROLS - GO TO NEXT SONG
+        else if (source == mMenuBar.getNextControlObj() || e.getActionCommand().equals("RightArrow")) {
             playSong(mTable.getNextSong());
-        }
-        // CONTROLS - GO TO PREV SONG
-        else if (source == mMenuBar.getPrevControlObj() || e.getActionCommand().equals("Ctrl+Left Arrow")) {
+        } // CONTROLS - GO TO PREV SONG
+        else if (source == mMenuBar.getPrevControlObj() || e.getActionCommand().equals("LeftArrow")) {
             playSong(mTable.getPrevSong());
-        }
-        // CONTROLS - GO TO SHUFFLE
-        else if (source == mMenuBar.getShuffleControlObj()){
+        } // CONTROLS - GO TO SHUFFLE
+        else if (source == mMenuBar.getShuffleControlObj()) {
             //player.getStatus() = 2 if no song was stopped
             //player.getStatus() = 0 when playing song
             //player.getStatus() = -1 initial value
             randomNum = rand.nextInt(mTable.getSongsCount());
-            if(mMenuBar.getShuffleControlObj().isSelected()){
+            if (mMenuBar.getShuffleControlObj().isSelected()) {
                 System.out.println("Shuffle songs on " + player.getStatus());
-                if(player.getStatus() == -1 || player.getStatus() == 2){
+                if (player.getStatus() == -1 || player.getStatus() == 2) {
                     playSong(mTable.getSongSelected(randomNum));
                 }
-            }
-            else {
+            } else {
                 System.out.println("Shuffle songs off " + player.getStatus());
             }/*
-            if(mTable.getSongSelected() == null) {
-                    playSong(mTable.getSongSelected(randomNum));
-            }
-            else {
-                mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
-                playSong(mTable.getSongSelected());
-            }
-            playSong(mTable.getSongSelected(randomNum));*/
-        }
-        // CONTROLS - GO TO REPEAT
-        else if (source == mMenuBar.getRepeatControlObj()){
+             if(mTable.getSongSelected() == null) {
+             playSong(mTable.getSongSelected(randomNum));
+             }
+             else {
+             mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
+             playSong(mTable.getSongSelected());
+             }
+             playSong(mTable.getSongSelected(randomNum));*/
+
+        } // CONTROLS - GO TO REPEAT
+        else if (source == mMenuBar.getRepeatControlObj()) {
             //mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());                
-            if(mMenuBar.getRepeatControlObj().isSelected()){
+            if (mMenuBar.getRepeatControlObj().isSelected()) {
                 System.out.println("Repeat song on");
                 //playSong(mTable.getSongSelected());
-            }
-            else {
+            } else {
                 System.out.println("Repeat song off");
             }
-        }else if (e.getActionCommand().equals("DecVol")){
+        } // DECREASE VOLUME
+        else if (e.getActionCommand().equals("DecVol")) {
             System.out.println("Decrement volume");
+            try {
+                mSlider.incrementSlider();
+                playerControl.setGain(mSlider.getValue());
+            } catch (BasicPlayerException ex) {
+                Logger.getLogger(NeptuneController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } // INCREASE VOLUME
+        else if (e.getActionCommand().equals("IncVol")) {
+            System.out.println("Volume increase");
+            try {
+                mSlider.incrementSlider();
+                playerControl.setGain(mSlider.getValue());
+            } catch (BasicPlayerException ex) {
+                Logger.getLogger(NeptuneController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        
+        else{}
+
     }
 
     @Override
@@ -501,7 +510,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         try {
             playerControl.setGain(mSlider.getValue());
         } catch (BasicPlayerException ex) {
-            Logger.getLogger(NeptuneController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Nothing playing to be able to change volume");
         }
     }
 }
