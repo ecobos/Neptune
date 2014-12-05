@@ -15,6 +15,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -31,9 +32,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 import javazoom.jlgui.basicplayer.BasicController;
 import javazoom.jlgui.basicplayer.BasicPlayer;
+import javazoom.jlgui.basicplayer.BasicPlayerEvent;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
+import javazoom.jlgui.basicplayer.BasicPlayerListener;
 
-public class NeptuneController implements ActionListener, MouseListener, DropTargetListener, ChangeListener {
+public class NeptuneController implements ActionListener, MouseListener, DropTargetListener, ChangeListener, BasicPlayerListener {
 
     private Neptune neptune;
     private boolean isPaused;
@@ -55,9 +58,11 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
      */
     NeptuneController(boolean isPlaylistview) {
         player = new BasicPlayer();
+        player.addBasicPlayerListener(this);
         playerControl = (BasicController) player;
         isPaused = false;
         isPlaylistView = isPlaylistview;
+        
     }
 
     public void addPlayerView(Neptune mp) {
@@ -90,6 +95,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     public void addTableModel(SongsTableComponent table) {
         this.mTable = table;
+        mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase);
     }
 
     /**
@@ -383,9 +389,9 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             System.out.println("The Jtable was clicked");
             mTable.setSongSelected();
             // upon clicking on table, update popup menu with playlists
-            if (!isPlaylistView) {
-                mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase);
-            }
+//            if (!isPlaylistView) {
+//                mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase);
+//            }
 
         } else if (source == mTree.getJTreeObj()) {
             String leafName = mTree.getSelectedLeafName();
@@ -514,5 +520,25 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         } catch (BasicPlayerException ex) {
             System.out.println("Nothing playing to be able to change volume");
         }
+    }
+
+    @Override
+    public void opened(Object o, Map map) {
+        //throw new UnsupportedOperationException("Not supported yet."); 
+    }
+
+    @Override
+    public void progress(int i, long l, byte[] bytes, Map properties) {
+        System.out.println("Progress: "+ l);
+    }
+
+    @Override
+    public void stateUpdated(BasicPlayerEvent bpe) {
+        //throw new UnsupportedOperationException("Not supported yet."); 
+    }
+
+    @Override
+    public void setController(BasicController bc) {
+        //throw new UnsupportedOperationException("Not supported yet."); 
     }
 }

@@ -355,6 +355,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
                 System.out.println("Column index selected " + col + " " + name);
             }
         });
+        
         mSongsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -367,7 +368,10 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
                 System.out.println("Selected object: " + selectedObj.toString());
                 System.out.println("Filepath: " + filepathObj);
             }
-        });
+        }
+    );
+        
+        
         mMenuAddSong.addMouseListener(controller);
         //mMenuAddToPlaylist.addMouseListener(controller);
         mMenuRemoveSong.addMouseListener(controller);
