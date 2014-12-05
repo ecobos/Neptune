@@ -53,6 +53,14 @@ public class JSliderComponent implements Observer{
         }     
     }
     
+    public void decrementSlider(){
+        int newValue = mSlider.getValue();
+        if(newValue >= 5){
+            newValue -= 5;
+            mSlider.setValue(newValue);
+        } 
+    }
+    
     //Return a double between 0 and 1
     public double getValue() {
         return (mSlider.getValue()/volumeRate);

@@ -306,7 +306,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         else if (e.getActionCommand().equals("DecVol")) {
             System.out.println("Decrement volume");
             try {
-                mSlider.incrementSlider();
+                mSlider.decrementSlider();
                 playerControl.setGain(mSlider.getValue());
             } catch (BasicPlayerException ex) {
                 Logger.getLogger(NeptuneController.class.getName()).log(Level.SEVERE, null, ex);

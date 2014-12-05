@@ -87,19 +87,22 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         COLUMN_HEADER.addElement("Comments"); // swapped with track #
         
         mSongsVector = songSetFromDatabase;
-        mTableModel = new DefaultTableModel(mSongsVector, COLUMN_HEADER);
-        
-        mSongsTable = new JTable() {
+        mTableModel = new DefaultTableModel(mSongsVector, COLUMN_HEADER){
+
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 2 || column==3 || column==4 || column == 6 || column == 7 ? true : false;
+               //all cells false
+               return false;
             }
         };
+        
+        mSongsTable = new JTable();
         mSongsTable.setPreferredScrollableViewportSize(new Dimension(1200, (mSongsVector.size() + 10) * 10));
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setAutoCreateRowSorter(true);
         mSongsTable.setModel(mTableModel);
+     
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
