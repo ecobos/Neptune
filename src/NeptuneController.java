@@ -249,7 +249,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             //mTable.update(mDatabase, source);
         } // CONTROLS - PLAY SONG
         else if (source == mMenuBar.getPlayControlObj() || e.getActionCommand().equals("Space")) {
-            if (mMenuBar.getShuffleControlObj().isSelected()) {
+            if (mMenuBar.isShuffleEnabled()) {
                 System.out.println("Shuffle songs on " + player.getStatus());
                 if (player.getStatus() == -1 || player.getStatus() == 2) {
                     playSong(mTable.getSongSelected(randomNum));
@@ -271,14 +271,16 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         else if (source == mMenuBar.getPrevControlObj() || e.getActionCommand().equals("LeftArrow")) {
             playSong(mTable.getPrevSong());
         } // CONTROLS - GO TO SHUFFLE
-        else if (source == mMenuBar.getShuffleControlObj()) {
+        else if (e.getActionCommand().equals("shuffle")) {
             //player.getStatus() = 2 if no song was stopped
-            //player.getStatus() = 0 when playing song
-            //player.getStatus() = -1 initial value
+            //player.getStatus() = 0 song currently playing
+            //player.getStatus() = -1 initial value. Nothing is playing
+            //player.getStatus() = 1 song paused
+            
             randomNum = rand.nextInt(mTable.getSongsCount());
-            if (mMenuBar.getShuffleControlObj().isSelected()) {
+            if (mMenuBar.isShuffleEnabled()) {            
                 System.out.println("Shuffle songs on " + player.getStatus());
-                if (player.getStatus() == -1 || player.getStatus() == 2) {
+                if (player.getStatus() != 0) {
                     playSong(mTable.getSongSelected(randomNum));
                 }
             } else {
