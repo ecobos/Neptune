@@ -1,3 +1,4 @@
+import java.awt.Event;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -7,6 +8,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 
 public class MenuComponent implements Observer{
     private JMenuBar mMenuBar;
@@ -55,8 +57,10 @@ public class MenuComponent implements Observer{
         mPrev = new JMenuItem("Previous (Ctrl+Left Arrow)");
         mPlayRecent = new JMenu("Play Recent");
         mGotoCurrentSong = new JMenuItem("Go to Current Song");
-        mIncVol = new JMenuItem("Increase Volume (Ctrl+I)");
-        mDecVol = new JMenuItem("Decrease Volume (Ctrl+D)");
+        mIncVol = new JMenuItem("Increase Volume");
+        mDecVol = new JMenuItem("Decrease Volume", KeyEvent.VK_D);
+        mDecVol.setActionCommand("DecVol");
+        mDecVol.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK));
 
         mShuffle = new JCheckBox("Shuffle", false);
         mRepeat = new JCheckBox("Repeat", false);

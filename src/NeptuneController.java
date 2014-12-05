@@ -307,7 +307,10 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             else {
                 System.out.println("Repeat song off");
             }
+        }else if (e.getActionCommand().equals("DecVol")){
+            System.out.println("Decrement volume");
         }
+        
     }
 
     @Override
