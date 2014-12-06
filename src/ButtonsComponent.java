@@ -1,96 +1,92 @@
-
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
+//import java.util.Observer;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
 
-public class JProgressBarComponent {
-    public JProgressBar progressBar;
-    private JPanel mProgressPanel;
-    private int progress; 
-    private int seconds;
-    private int minuteHolder;
-    private String centerFormat;
+
+public class ButtonsComponent /*implements Observer*/{
+    private final JButton mAddButton, mPlayButton, mPauseButton, mPrevButton, mStopButton, mNextButton;
+    private JPanel mButtonsPanel;
+    /**
+     * Class constructor 
+     */
+    ButtonsComponent() {
+        mButtonsPanel = new JPanel();
+        mButtonsPanel.setLayout(new FlowLayout());
+        
+//        mButtonsPanel.setSize(width, height);
+//        FlowLayout layout = new FlowLayout();
+//        layout.setHgap(10);              
+//        layout.setVgap(10);
+//        mButtonsPanel.setLayout(layout);
+        
+        mAddButton = new JButton(new ImageIcon(this.getClass().getResource("/resources/add.png")));
+        mAddButton.setPreferredSize(new Dimension(70, 70));
+        
+        mPlayButton = new JButton(new ImageIcon(this.getClass().getResource("/resources/play.png")));
+        mPlayButton.setPreferredSize(new Dimension(85, 85));
+        
+        mPauseButton = new JButton(new ImageIcon(this.getClass().getResource("/resources/pause.png")));
+        mPauseButton.setPreferredSize(new Dimension(70, 70));
+        
+        mPrevButton = new JButton(new ImageIcon(this.getClass().getResource("/resources/prev.png")));
+        mPrevButton.setPreferredSize(new Dimension(70, 70));
+        
+        mStopButton = new JButton(new ImageIcon(this.getClass().getResource("/resources/stop.png")));
+        mStopButton.setPreferredSize(new Dimension(70, 70));
+        
+        mNextButton = new JButton(new ImageIcon(this.getClass().getResource("/resources/next.png")));
+        mNextButton.setPreferredSize(new Dimension(70, 70));
+        
+        mButtonsPanel.setBackground(Color.DARK_GRAY);
+        mButtonsPanel.add(mAddButton);
+        mButtonsPanel.add(mPlayButton);
+        mButtonsPanel.add(mPauseButton);
+        mButtonsPanel.add(mPrevButton);
+        mButtonsPanel.add(mStopButton);
+        mButtonsPanel.add(mNextButton);
+    }  
     
-    private JTextArea elapsedTime;
-    private JTextArea remainingTime;
-    
-    public JProgressBarComponent(){
-        mProgressPanel = new JPanel();
-        mProgressPanel.setBackground(Color.DARK_GRAY);
-        mProgressPanel.setForeground(Color.DARK_GRAY);
-        
-        elapsedTime = new JTextArea(4,4);
-        elapsedTime.setFont(new Font("Monospaced", Font.PLAIN, 16));     
-        elapsedTime.setBackground(Color.DARK_GRAY);
-        elapsedTime.setForeground(Color.WHITE);
-        elapsedTime.setEditable(false);
-        
-        remainingTime = new JTextArea(4,4);
-        remainingTime.setFont(new Font("Monospaced", Font.PLAIN, 16));     
-        remainingTime.setBackground(Color.DARK_GRAY);
-        remainingTime.setForeground(Color.WHITE);
-        remainingTime.setEditable(false);
-        
-        progressBar = new JProgressBar();
-        progressBar.setValue(0);
-        progressBar.setPreferredSize(new Dimension(400,7));
-        progress = 0;
-        minuteHolder = 0;
-        centerFormat = ":";
-        mProgressPanel.setMinimumSize(new Dimension(500,7));
-        
-        mProgressPanel.add(elapsedTime);
-        mProgressPanel.add(progressBar);
-        mProgressPanel.add(remainingTime);
-        elapsedTime.setText(" 0:00");
-        remainingTime.setText(" 0:00");
+    public JButton getAddSongObj(){
+        return mAddButton;
+    }
+    public JButton getPlayObj(){
+        return mPlayButton;
+    }
+    public JButton getPauseObj(){
+        return mPauseButton;
+    }
+    public JButton getPrevObj(){
+        return mPrevButton;
+    }
+    public JButton getStopObj(){
+        return mStopButton;
+    }
+    public JButton getNextObj(){
+        return mNextButton;
     }
     
-    public void updateProgress(long newValue, String length){
-        progress = (int)newValue/1000000;
-        minuteHolder = progress / 60;
-        
-        seconds = progress % 60;        
-        //System.out.println(length);
-        int songLength = Integer.parseInt(length) - progress;
-        int sLengthSeconds = songLength % 60;
-        int sLengthMinute = songLength / 60;
-        String sCenterFormat;
-           
-        // elapsed time
-        if(seconds < 10){
-            centerFormat = ":0";
-        }else{
-            centerFormat = ":";
-        }
-        
-        // remaining time
-        if(sLengthSeconds < 10){
-            sCenterFormat = ":0";
-        }else{ 
-            
-            sCenterFormat = ":";
-        }
-            
-        elapsedTime.setText(" "+minuteHolder +centerFormat+ Integer.toString(seconds));
-        remainingTime.setText(" "+sLengthMinute +sCenterFormat+ Integer.toString(sLengthSeconds));
-        progressBar.setValue(progress); //convert microseconds to seconds
-        if(Integer.parseInt(length) == progress) {
-            progressBar.setValue(seconds);
-        }
+    public JPanel getButtonsPanel(){
+        return mButtonsPanel;
     }
     
-    // parameter is in milliseconds
-    public void setLength(int songLength){
-        songLength /= 1000;
-        progressBar.setMinimum(0);
-        progressBar.setMaximum(songLength);
+    /**
+     * Links this view with a controller. Adds action events to the buttons which are then 
+     * handled by the controller. 
+     * 
+     * @param controller The controlling class
+     */
+    public void setController(ActionListener controller){  
+        mAddButton.addActionListener(controller);
+        mPlayButton.addActionListener(controller);
+        mPauseButton.addActionListener(controller);
+        mPrevButton.addActionListener(controller);
+        mStopButton.addActionListener(controller);
+        mNextButton.addActionListener(controller);
     }
-    
-    public JPanel getProgressPanel(){
-        return mProgressPanel;
-    }
+
 }
