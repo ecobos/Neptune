@@ -24,7 +24,7 @@ public class RunMVC {
             table = new SongsTableComponent(playlistName,database.getPlaylistSongsFromDatabase(playlistName), loadFromPlaylist);
             player = new Neptune(table, buttons, menu, text, slider, progress);
         }else {
-            table = new SongsTableComponent("Library",database.getSongsFromDatabase(), loadFromPlaylist);
+            table = new SongsTableComponent("Library",database.getSongsFromDatabase(), loadFromPlaylist, database.getPlayerSettings());
             tree = new JTreeComponent(database.getPlaylistsFromDatabase());
             player = new Neptune(table, buttons, menu, text, tree, slider, progress);
         }

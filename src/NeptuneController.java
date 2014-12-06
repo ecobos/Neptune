@@ -185,6 +185,10 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         // QUIT BUTTON
         if (source == mMenuBar.getQuitObj()) {
             System.out.println("Quit was clicked.");
+             String[] fields = {"showArtist", "showAlbum", "showYear", "showGenre", "showComments"}; 	 	
+            for(int i=0;i<5;i++) { 	 	
+                mDatabase.setPlayerSettings(fields[i], mTable.getChangedSettings()[i]); 	 	
+            }
             neptune.destroyFrame();
             //System.exit(0);
         } // ABOUT BUTTON        
@@ -439,6 +443,11 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             //String name = mTree.getJTreeObj().getSelectionPath().getLastPathComponent().toString();
             String leafName = mTree.getSelectedLeafName();
             System.out.println("The tree was clicked.Selected row: " + selRow + " with name: " + leafName);
+            // makes call to database to update column view on new playlist view 	 	
+            String[] fields = {"showArtist", "showAlbum", "showYear", "showGenre", "showComments"}; 	 	
+            for(int i=0;i<5;i++) { 	 	
+                mDatabase.setPlayerSettings(fields[i], mTable.getChangedSettings()[i]); 	 	
+            } 
             RunMVC playlist = new RunMVC(true, leafName);
             isPlaylistView = false;
             mTable.update(mDatabase, mDatabase.getSongsFromDatabase());
@@ -545,6 +554,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             playerControl.setGain(mSlider.getValue());
         } catch (BasicPlayerException ex) {
             System.out.println("Nothing playing to be able to change volume");
+            Logger.getLogger(NeptuneController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

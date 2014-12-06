@@ -17,6 +17,8 @@ import javax.swing.*;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel; 	 	
+import javax.swing.table.TableRowSorter;
 import javax.swing.tree.TreeNode;
 
 
@@ -59,10 +61,12 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     private JMenuItem item; //delete
     private JMenuItem[] subMenuItems;
     private final TableColumnHider mColumnHider;
+    private JCheckBox mCheckBox[];
     
     // made this two private so that scrollbar changes goes up or down when go to current song selected is clicked
     private JScrollPane mScrollPane;
     private JScrollBar mScrollBar;
+    private String[] settings; 
 
     /**
      * Class constructor.
@@ -70,8 +74,17 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
      * @param name The table's name
      * @param songSetFromDatabase Vector containing all the songs for this table
      * @param isPlaylist True means that its a playlist view
+     * @param playerSettings settings of the player 
      */
-    public SongsTableComponent(String name, Vector<Vector> songSetFromDatabase, boolean isPlaylist) {
+    public SongsTableComponent(String name, Vector<Vector> songSetFromDatabase, boolean isPlaylist, String[] playerSettings) { 
+        settings = new String[5]; 
+        mCheckBox = new JCheckBox[5];
+	         	 	
+        // SETTINGS -- upon start 	 	
+        for(int i=0; i<playerSettings.length; i++) { 	 	
+            settings[i] = playerSettings[i]; 	 	
+        } 	 	
+         	
         mSongSelectedIndex = 0;
         mTableName = name;
         mSubMenu = new ArrayList<JMenuItem>();
@@ -79,8 +92,8 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         //subMenuItems = new JMenuItem[20];
         COLUMN_HEADER = new Vector<String>();
         COLUMN_HEADER.addElement("Filepath");
-        COLUMN_HEADER.addElement("Title");
-        COLUMN_HEADER.addElement("Artist");
+        COLUMN_HEADER.addElement("Title"); // index 1
+        COLUMN_HEADER.addElement("Artist"); // index 2
         COLUMN_HEADER.addElement("Album");
         COLUMN_HEADER.addElement("Album Year");
         COLUMN_HEADER.addElement("Track #");
@@ -103,7 +116,10 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.setFillsViewportHeight(true);
         mSongsTable.setAutoCreateRowSorter(true);
         mSongsTable.setModel(mTableModel);
-     
+        RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(mTableModel); // added table sorter	106	         
+        sorter.toggleSortOrder(1); // sort on title 	 	
+        mSongsTable.setRowSorter(sorter); 
+        
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -143,9 +159,39 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         }
         
         mColumnHider = new TableColumnHider(mSongsTable);
+        hideColumnsUponStart(); 	 	
+        //mColumnHider.hide("Artist"); 
         //mTableModel.addTableModelListener(mSongsTable);
     }
 
+     /* ignore for now
+    public void sortSongsVector(int sortByIndex) {
+        switch(sortByIndex) {
+            case 1: 
+                break;
+            case 2:
+                break;
+            case 3: 
+                break;
+            case 4: 
+                break;
+        }
+    }
+    
+    public void sortByTitle() {
+        
+    }
+    */
+    public void hideColumnsUponStart() {String[] columnNames = {"Artist", "Album", "Album Year", "Genre", "Comments"};
+        for(int i=0;i<5;i++) { 	 	
+           if(settings[i].equals("false")) { 
+               mCheckBox[i].setSelected(false);
+               mColumnHider.hide(columnNames[i]); 	 	
+           }  	 	
+        } 	 	
+	         	 	
+    } 
+    
     public String getTableName() {
         return mTableName;
     }
@@ -292,14 +338,33 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         return mPopupMenu;
     }
 
+    public String[] getChangedSettings() {
+        return settings;
+    }
+    
+    public void setColSetting(String fieldToChange, String boolVal) {
+        switch(fieldToChange) {
+            case "Artist": settings[0] = boolVal;
+                break;
+            case "Album": settings[1] = boolVal;
+                break;                
+            case "Album Year": settings[2] = boolVal;
+                break; 
+            case "Genre": settings[3] = boolVal;
+                break;
+            case "Comments": settings[4] = boolVal;
+                break;
+        }
+    }
+    
     private JPopupMenu getColumnPopupMenu() {
         mColumnPopupMenu = new JPopupMenu();
         String[] columnNames = {"Artist", "Album", "Album Year", "Genre", "Comments"};
         
         for (int i = 0; i < columnNames.length; i++) {
-            JCheckBox checkBox = new JCheckBox(columnNames[i]);
-            checkBox.setSelected(true);
-            checkBox.addActionListener(new ActionListener() {
+            mCheckBox[i] = new JCheckBox(columnNames[i]);
+            mCheckBox[i].setSelected(true);
+            mCheckBox[i].addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent evt) {
@@ -308,12 +373,14 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
                     System.out.println(columnName);
                     if (cb.isSelected()) {
                         mColumnHider.show(columnName);
+                        setColSetting(columnName, "true");
                     } else {
                         mColumnHider.hide(columnName);
+                        setColSetting(columnName, "false");
                     }
                 }
             });
-            mColumnPopupMenu.add(checkBox);
+            mColumnPopupMenu.add(mCheckBox[i]);
         }
         return mColumnPopupMenu;
     }
@@ -452,6 +519,14 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         return mSongSelectedIndex;
     }
 
+    /**
+     * Returns the column by which the table is sorted
+     * @return column by which the table is sorted
+     */
+    //public int getSelectedColumnHeader() {
+    //    return mColumnHeaderIndex;
+    //}
+    
     /**
      * The number of song currently contained by the table
      * 
