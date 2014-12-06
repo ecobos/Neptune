@@ -68,6 +68,7 @@ public class Database extends Observable {
                 vectorData.addElement(sanitizeEmptyString(rs.getString("genre")));
                 vectorData.addElement(sanitizeEmptyString(rs.getString("comment")));
                 vectorData.addElement(Integer.toString(rs.getInt("song_ID")));
+                vectorData.addElement(sanitizeEmptyString(rs.getString("length")));
                 songsVector.addElement(vectorData);
             }
             conn.close();
@@ -262,6 +263,7 @@ public class Database extends Observable {
                 vectorData.addElement(sanitizeEmptyString(rs.getString("genre")));
                 vectorData.addElement(sanitizeEmptyString(rs.getString("comment")));
                 vectorData.addElement(Integer.toString(rs.getInt("song_ID")));
+                vectorData.addElement(sanitizeEmptyString(rs.getString("length")));
                 songsVector.addElement(vectorData);
             }
             notifyObservers(songsVector);
@@ -297,6 +299,7 @@ public class Database extends Observable {
                 vectorData.addElement(sanitizeEmptyString(rs.getString("genre")));
                 vectorData.addElement(sanitizeEmptyString(rs.getString("comment")));
                 vectorData.addElement(Integer.toString(rs.getInt("song_ID")));
+                vectorData.addElement(sanitizeEmptyString(rs.getString("length")));
                 songsVector.addElement(vectorData);
             }
             notifyObservers(songsVector);
@@ -334,7 +337,7 @@ public class Database extends Observable {
                 this.getDBConnection();
             }
 
-            PreparedStatement pstat = conn.prepareStatement("INSERT INTO Songs(filepath, title, artist, album, year, comment, genre, track_num) VALUES(?,?,?,?,?,?,?,?)");
+            PreparedStatement pstat = conn.prepareStatement("INSERT INTO Songs(filepath, title, artist, album, year, comment, genre, track_num, length) VALUES(?,?,?,?,?,?,?,?,?)");
             pstat.setString(1, songTags[0]); // value of filepath
             pstat.setString(2, songTags[1]); // value of title
             pstat.setString(3, songTags[2]); // value of artist
@@ -343,6 +346,7 @@ public class Database extends Observable {
             pstat.setString(6, songTags[7]); // value of track_num
             pstat.setString(7, songTags[6]); // value genre
             pstat.setString(8, songTags[5]); // value of comments
+            pstat.setString(9, songTags[8]); // value of song length in secs
             pstat.executeUpdate();
 
             Vector<String> newData = new Vector<String>();
@@ -476,7 +480,6 @@ public class Database extends Observable {
             System.out.println("Unable to delete song");
         }
     }
-    
     /**
      * Gets the player settings from database
      * @return string array containing settings
