@@ -68,7 +68,10 @@ public class MenuComponent implements Observer{
         
         mPlayRecent = new JMenu("Play Recent");
         
-        mGotoCurrentSong = new JMenuItem("Go to Current Song");
+        mGotoCurrentSong = new JMenuItem("Go to Current Song", Event.CTRL_MASK + KeyEvent.VK_L);
+        mGotoCurrentSong.setActionCommand("Current");
+        mGotoCurrentSong.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, Event.CTRL_MASK));
+        
         mIncVol = new JMenuItem("Increase Volume", KeyEvent.VK_I);
         mIncVol.setActionCommand("IncVol");
         mIncVol.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, Event.CTRL_MASK));

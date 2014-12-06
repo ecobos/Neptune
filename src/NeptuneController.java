@@ -284,10 +284,11 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             mTree.getJTreeObj().treeDidChange();
             mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(playlistName)); // updates library table with empty playlist set
         } // CONTROLS - GO TO CURRENT SONG
-        else if (source == mMenuBar.getGoToCurrentControlObj()) {
-            mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
-            mTable.setScrollBarPosition(mTable.getCurrentSongPlayingIndex()); // NOT WORKING
-            //mTable.update(mDatabase, source);
+        else if (source == mMenuBar.getGoToCurrentControlObj() || e.getActionCommand().equals("Current")) {
+            System.out.println("Go to current song");
+            //mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
+            //mTable.setScrollBarPosition(mTable.getCurrentSongPlayingIndex()); // NOT WORKING
+            mTable.scrollToCurrentSong();
         } // CONTROLS - PLAY SONG
         else if (source == mMenuBar.getPlayControlObj() || e.getActionCommand().equals("Space")) {
             if (mMenuBar.isShuffleEnabled()) {
