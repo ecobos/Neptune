@@ -23,6 +23,7 @@ public class Neptune {
     private JTreeComponent mTree;
     private JSliderComponent mSlider;
     private JFrame mainFrame;
+    private JProgressBarComponent mProgress;
 
     /**
      * Class constructor
@@ -33,7 +34,7 @@ public class Neptune {
      * @param text Text area content
      * @param slider Volume slider
      */
-    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JSliderComponent slider) {
+    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JSliderComponent slider, JProgressBarComponent progress) {
         mMainPanel = new JPanel(new BorderLayout());
         mContentPanel = new JPanel();
         mContentPanel.setLayout(new GridBagLayout());
@@ -47,6 +48,7 @@ public class Neptune {
         mMenuBar = menu;
 
         mSlider = slider;
+        mProgress = progress;
 
         //mBounds.anchor = GridBagConstraints.WEST;
         //mBounds.gridheight = 1;
@@ -56,6 +58,9 @@ public class Neptune {
         mBounds.gridwidth = 1;
         mBounds.gridx = 1;
         mContentPanel.add(mButtons.getButtonsPanel(), mBounds);
+        
+        mBounds.insets = new Insets(140, 0, 0, 0);
+        mContentPanel.add(mProgress.getProgressPanel(), mBounds);
 
         mBounds.gridx = 5;
         mBounds.gridy = 0;
@@ -102,9 +107,10 @@ public class Neptune {
      * @param text Text area content
      * @param tree Playlist tree structure
      * @param slider Volume slider
+     * @param progress
      */
-    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JTreeComponent tree, JSliderComponent slider) {
-        this(table, buttons, menu, text, slider);
+    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JTreeComponent tree, JSliderComponent slider, JProgressBarComponent progress) {
+        this(table, buttons, menu, text, slider, progress);
 
         mTree = tree;
         mTreePanel.setMinimumSize(new Dimension(100, 100));

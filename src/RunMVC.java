@@ -18,14 +18,15 @@ public class RunMVC {
         ButtonsComponent buttons = new ButtonsComponent();
         TextAreaComponent text = new TextAreaComponent();
         JSliderComponent slider = new JSliderComponent();
+        JProgressBarComponent progress = new JProgressBarComponent();
         
         if(loadFromPlaylist == true){
             table = new SongsTableComponent(playlistName,database.getPlaylistSongsFromDatabase(playlistName), loadFromPlaylist);
-            player = new Neptune(table, buttons, menu, text, slider);
+            player = new Neptune(table, buttons, menu, text, slider, progress);
         }else {
             table = new SongsTableComponent("Library",database.getSongsFromDatabase(), loadFromPlaylist);
             tree = new JTreeComponent(database.getPlaylistsFromDatabase());
-            player = new Neptune(table, buttons, menu, text, tree, slider);
+            player = new Neptune(table, buttons, menu, text, tree, slider, progress);
         }
         
         
@@ -46,6 +47,7 @@ public class RunMVC {
             controller.addTree(tree);
         }
         controller.addTableModel(table);
+        controller.addProgressBar(progress);
 
 	//tell View about Controller 
 	buttons.setController(controller);

@@ -52,6 +52,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     private TextAreaComponent mSongInfo;
     private SongsTableComponent mTable;
     private JSliderComponent mSlider;
+    private JProgressBarComponent mProgress;
     private JTreeComponent mTree;
     private boolean isPlaylistView;
     private LinkedHashMap<Integer, String> mRecentHashMap;
@@ -109,6 +110,10 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         this.mTable = table;
         mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase);
     }
+    
+    public void addProgressBar(JProgressBarComponent progress){
+        mProgress = progress;
+    }
 
     /**
      * Play the specified song.
@@ -134,6 +139,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 mSongInfo.setText("\n\n Current song playing:\n\tArtist: " + songToPlay.get(2)
                         + "\n\tSong: " + songToPlay.get(1) + "\n\tAlbum: "
                         + songToPlay.get(3) + "\n\tSong " + (mTable.getCurrentSongPlayingIndex() + 1) + " of " + mTable.getSongsCount());
+                mProgress.setLength(191000);
                 playerControl.play();
 
             } catch (BasicPlayerException ex) {
@@ -549,8 +555,10 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     @Override
     public void progress(int i, long l, byte[] bytes, Map properties) {
-        System.out.println("Progress: "+ l);
+    
+        mProgress.updateProgress((long)properties.get("mp3.position.microseconds"));
     }
+    
 
     @Override
     public void stateUpdated(BasicPlayerEvent bpe) {

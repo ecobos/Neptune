@@ -27,6 +27,7 @@ public class SongTags {
         String[] songTags = new String[8];
         try {
             mp3data = new Mp3File(pathToFile);
+            mp3data.getLengthInMilliseconds(); //GETS THE LENGTH OF THE SONG
         } catch (UnsupportedTagException ex) {
             Logger.getLogger(SongsTableComponent.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidDataException ex) {
