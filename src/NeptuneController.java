@@ -229,7 +229,6 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         } // PLAY BUTTON
         else if (source == mButtons.getPlayObj()) {
             mTable.setCurrentSongPlayingIndex();
-            //mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
             playSong(mTable.getSongSelected(filepath));
             System.out.println("Song playing filepath: " + filepath);
             System.out.println("Playing: " + mTable.getSongSelected(filepath).get(1));
@@ -251,13 +250,27 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 Logger.getLogger(Neptune.class.getName()).log(Level.SEVERE, null, ex);
             }
         } // NEXT SONG BUTTON
-        else if (source == mButtons.getNextObj() || e.getActionCommand().equals("Ctrl+Right Arrow")) {
-            playSong(mTable.getNextSong());
+        else if (source == mButtons.getNextObj() || source == mMenuBar.getNextControlObj() || e.getActionCommand().equals("RightArrow")) {
+            if (mMenuBar.isShuffleEnabled()) {
+                System.out.println("Shuffle songs on next" + player.getStatus());
+                playSong(mTable.getSongSelected(randomNum));
+            } else {
+                mTable.setNextSongPlayingIndex();
+                playSong(mTable.getSongSelected(mTable.getNextFilepath()));
+                mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
+            }
         } // PREVIOUS SONG BUTTON
-        else if (source == mButtons.getPrevObj() || e.getActionCommand().equals("Ctrl+Left Arrow")) {
+        else if (source == mButtons.getPrevObj() || source == mMenuBar.getPrevControlObj() || e.getActionCommand().equals("LeftArrow")) {
             // this ensures that if the mouse is clicked to a different row, we 
             // can still play the song that is currently next
-            playSong(mTable.getPrevSong());
+            if (mMenuBar.isShuffleEnabled()) {
+                System.out.println("Shuffle songs on previous" + player.getStatus());
+                playSong(mTable.getSongSelected(randomNum));
+            } else {
+                mTable.setPrevSongPlayingIndex();
+                playSong(mTable.getSongSelected(mTable.getPrevFilepath()));
+                mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
+            }
         } // CREATING PLAYLIST
         else if (source == mMenuBar.getPlaylistObj()) {
             System.out.println("Playlist clicked");
@@ -287,7 +300,6 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                     playSong(mTable.getSongSelected(0));
                 } else {
                     mTable.setCurrentSongPlayingIndex();
-                    
                     playSong(mTable.getSongSelected(filepath));
                     System.out.println("Playing: " + mTable.getSongSelected(filepath).get(1));
                     mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
@@ -295,12 +307,14 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             }
             //mTable.update(mDatabase, source);
         } // CONTROLS - GO TO NEXT SONG
+        /*
         else if (source == mMenuBar.getNextControlObj() || e.getActionCommand().equals("RightArrow")) {
             playSong(mTable.getNextSong());
         } // CONTROLS - GO TO PREV SONG
         else if (source == mMenuBar.getPrevControlObj() || e.getActionCommand().equals("LeftArrow")) {
             playSong(mTable.getPrevSong());
         } // CONTROLS - GO TO SHUFFLE
+        */
         else if (e.getActionCommand().equals("Shuffle")) {
             //player.getStatus() = 2 if no song was stopped
             //player.getStatus() = 0 song currently playing
@@ -408,16 +422,40 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             } else {
                 System.out.println("Playlist doesn't exist");
             }
-        } else if (source == mTable.getTableObj()) {
-            isPaused = false;
-            System.out.println("The Jtable was clicked");
-            mTable.setSongSelected();
+//        } else if (source == mTable.getTableObj()) {
+//            isPaused = false;
+//            System.out.println("The Jtable was clicked");
             // upon clicking on table, update popup menu with playlists
 //            if (!isPlaylistView) {
 //                mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase);
 //            }
 
-        } else if (source == mTree.getJTreeObj()) {
+        } else if (source == mTable.getSongsTableObj()){
+                int row = mTable.getSongsTableObj().rowAtPoint(e.getPoint());
+                int next = row + 1;
+                int prev = row - 1;
+                mTable.setSongSelected(row);
+                int col = mTable.getSongsTableObj().columnAtPoint(e.getPoint());
+                Object selectedObj = mTable.getSongsTableObj().getValueAt(row, col);
+                Object filepathObj = mTable.getSongsTableObj().getValueAt(row, 0);
+                mTable.setSongSelectedFilepath((String)filepathObj);
+                System.out.println("Filepath: " + filepathObj);
+                if (next >= mTable.getSongsCount()) {
+                    next = 0;
+                }
+                //mTable.setNextSongPlayingIndex(next);
+                filepathObj = mTable.getSongsTableObj().getValueAt(next, 0);
+                mTable.setNextSongFilepath((String)filepathObj);
+                if (prev < 0) {
+                    prev = mTable.getSongsCount() - 1; //wrap around the index
+                }
+                //mTable.setPrevSongPlayingIndex(prev);
+                filepathObj = mTable.getSongsTableObj().getValueAt(prev, 0);
+                System.out.println("Selected object: " + selectedObj.toString());
+                mTable.setPrevSongFilepath((String)filepathObj);
+                System.out.println("Next: " + next + " Prev: " + prev);
+                System.out.println("The Jtable was clicked" + "Row: " + row);
+        }else if (source == mTree.getJTreeObj()) {
             String leafName = mTree.getSelectedLeafName();
             if (leafName.equals("Library")) {
                 isPlaylistView = false;
