@@ -1,3 +1,4 @@
+
 import java.awt.Color;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -13,7 +14,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -30,9 +36,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 import javazoom.jlgui.basicplayer.BasicController;
 import javazoom.jlgui.basicplayer.BasicPlayer;
+import javazoom.jlgui.basicplayer.BasicPlayerEvent;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
+import javazoom.jlgui.basicplayer.BasicPlayerListener;
 
-public class NeptuneController implements ActionListener, MouseListener, DropTargetListener, ChangeListener {
+public class NeptuneController implements ActionListener, MouseListener, DropTargetListener, ChangeListener, BasicPlayerListener {
 
     private Neptune neptune;
     private boolean isPaused;
@@ -44,8 +52,11 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     private TextAreaComponent mSongInfo;
     private SongsTableComponent mTable;
     private JSliderComponent mSlider;
+    private JProgressBarComponent mProgress;
     private JTreeComponent mTree;
     private boolean isPlaylistView;
+    private LinkedHashMap<Integer, String> mRecentHashMap;
+    private int mRecentCount;
 
     /**
      * Class constructor.
@@ -54,9 +65,17 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
      */
     NeptuneController(boolean isPlaylistview) {
         player = new BasicPlayer();
+        player.addBasicPlayerListener(this);
         playerControl = (BasicController) player;
         isPaused = false;
         isPlaylistView = isPlaylistview;
+        mRecentHashMap = new LinkedHashMap<Integer, String>()
+        {
+           protected boolean removeEldestEntry(Map.Entry<Integer, String> eldest)
+           {
+              return this.size() > 10;   
+           }
+        };
     }
 
     public void addPlayerView(Neptune mp) {
@@ -89,6 +108,11 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     public void addTableModel(SongsTableComponent table) {
         this.mTable = table;
+        mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase);
+    }
+    
+    public void addProgressBar(JProgressBarComponent progress){
+        mProgress = progress;
     }
 
     /**
@@ -107,14 +131,19 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             isPaused = false;
         } else {
             try {
-                playerControl.open(new File(songToPlay.get(0)));
+                File filepath = new File(songToPlay.get(0));
+                if(!mMenuBar.isShuffleEnabled()){
+                    //mRecentHashMap.put(filepath.toString());
+                }
+                playerControl.open(filepath);
                 mSongInfo.setText("\n\n Current song playing:\n\tArtist: " + songToPlay.get(2)
                         + "\n\tSong: " + songToPlay.get(1) + "\n\tAlbum: "
                         + songToPlay.get(3) + "\n\tSong " + (mTable.getCurrentSongPlayingIndex() + 1) + " of " + mTable.getSongsCount());
+                mProgress.setLength(191000);
                 playerControl.play();
 
             } catch (BasicPlayerException ex) {
-                Logger.getLogger(Neptune.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(mTable.getMenuAddObj(), "Song does not exist!");
             }
         }
     }
@@ -156,11 +185,10 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         // QUIT BUTTON
         if (source == mMenuBar.getQuitObj()) {
             System.out.println("Quit was clicked.");
-            String[] fields = {"showArtist", "showAlbum", "showYear", "showGenre", "showComments"};
-            for(int i=0;i<5;i++) {
-                mDatabase.setPlayerSettings(fields[i], mTable.getChangedSettings()[i]);
+             String[] fields = {"showArtist", "showAlbum", "showYear", "showGenre", "showComments"}; 	 	
+            for(int i=0;i<5;i++) { 	 	
+                mDatabase.setPlayerSettings(fields[i], mTable.getChangedSettings()[i]); 	 	
             }
-            
             neptune.destroyFrame();
             //System.exit(0);
         } // ABOUT BUTTON        
@@ -206,10 +234,12 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             }
         } // PLAY BUTTON
         else if (source == mButtons.getPlayObj()) {
-            mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
+            mTable.setCurrentSongPlayingIndex();
+            //mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
             playSong(mTable.getSongSelected(filepath));
             System.out.println("Song playing filepath: " + filepath);
             System.out.println("Playing: " + mTable.getSongSelected(filepath).get(1));
+            mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
         } // STOP SONG BUTTON
         else if (source == mButtons.getStopObj()) {
             try {
@@ -246,79 +276,91 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             mTree.setNewBranchAsSelected();
             mTree.getJTreeObj().treeDidChange();
             mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(playlistName)); // updates library table with empty playlist set
-        }
-        // CONTROLS - GO TO CURRENT SONG
+        } // CONTROLS - GO TO CURRENT SONG
         else if (source == mMenuBar.getGoToCurrentControlObj()) {
             mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
             mTable.setScrollBarPosition(mTable.getCurrentSongPlayingIndex()); // NOT WORKING
             //mTable.update(mDatabase, source);
-        }
-        // CONTROLS - PLAY SONG
+        } // CONTROLS - PLAY SONG
         else if (source == mMenuBar.getPlayControlObj() || e.getActionCommand().equals("Space")) {
-            if(mMenuBar.getShuffleControlObj().isSelected()){
+            if (mMenuBar.isShuffleEnabled()) {
                 System.out.println("Shuffle songs on " + player.getStatus());
-                if(player.getStatus() == -1 || player.getStatus() == 2){
+                if (player.getStatus() == -1 || player.getStatus() == 2) {
                     playSong(mTable.getSongSelected(randomNum));
                 }
-            }
-            else{
-                if(mTable.getSongSelected() == null) {
-                playSong(mTable.getSongSelected(0));
-                }
-                else {
-                    mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
+            } else {
+                if (mTable.getSongSelected() == null) {
+                    playSong(mTable.getSongSelected(0));
+                } else {
+                    mTable.setCurrentSongPlayingIndex();
+                    
                     playSong(mTable.getSongSelected(filepath));
                     System.out.println("Playing: " + mTable.getSongSelected(filepath).get(1));
-                }
-            }            
-            //mTable.update(mDatabase, source);
-        }
-        // CONTROLS - GO TO NEXT SONG
-        else if (source == mMenuBar.getNextControlObj() || e.getActionCommand().equals("Ctrl+Right Arrow")) {
-            playSong(mTable.getNextSong());
-        }
-        // CONTROLS - GO TO PREV SONG
-        else if (source == mMenuBar.getPrevControlObj() || e.getActionCommand().equals("Ctrl+Left Arrow")) {
-            playSong(mTable.getPrevSong());
-        }
-        // CONTROLS - GO TO SHUFFLE
-        else if (source == mMenuBar.getShuffleControlObj()){
-            //player.getStatus() = 2 if no song was stopped
-            //player.getStatus() = 0 when playing song
-            //player.getStatus() = -1 initial value
-            randomNum = rand.nextInt(mTable.getSongsCount());
-            if(mMenuBar.getShuffleControlObj().isSelected()){
-                System.out.println("Shuffle songs on " + player.getStatus());
-                if(player.getStatus() == -1 || player.getStatus() == 2){
-                    playSong(mTable.getSongSelected(randomNum));
+                    mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
                 }
             }
-            else {
+            //mTable.update(mDatabase, source);
+        } // CONTROLS - GO TO NEXT SONG
+        else if (source == mMenuBar.getNextControlObj() || e.getActionCommand().equals("RightArrow")) {
+            playSong(mTable.getNextSong());
+        } // CONTROLS - GO TO PREV SONG
+        else if (source == mMenuBar.getPrevControlObj() || e.getActionCommand().equals("LeftArrow")) {
+            playSong(mTable.getPrevSong());
+        } // CONTROLS - GO TO SHUFFLE
+        else if (e.getActionCommand().equals("Shuffle")) {
+            //player.getStatus() = 2 if no song was stopped
+            //player.getStatus() = 0 song currently playing
+            //player.getStatus() = -1 initial value. Nothing is playing
+            //player.getStatus() = 1 song paused
+            
+            randomNum = rand.nextInt(mTable.getSongsCount());
+            if (mMenuBar.isShuffleEnabled()) {            
+                System.out.println("Shuffle songs on " + player.getStatus());
+                if (player.getStatus() != 0) {
+                    playSong(mTable.getSongSelected(randomNum));
+                }
+            } else {
                 System.out.println("Shuffle songs off " + player.getStatus());
             }/*
-            if(mTable.getSongSelected() == null) {
-                    playSong(mTable.getSongSelected(randomNum));
-            }
-            else {
-                mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
-                playSong(mTable.getSongSelected());
-            }
-            playSong(mTable.getSongSelected(randomNum));*/
-        }
-        // CONTROLS - GO TO REPEAT
-        else if (source == mMenuBar.getRepeatControlObj()){
+             if(mTable.getSongSelected() == null) {
+             playSong(mTable.getSongSelected(randomNum));
+             }
+             else {
+             mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());
+             playSong(mTable.getSongSelected());
+             }
+             playSong(mTable.getSongSelected(randomNum));*/
+
+        } // CONTROLS - GO TO REPEAT
+        else if (e.getActionCommand().equals("Repeat")) {
             //mTable.setCurrentSongPlayingIndex(mTable.getSongSelectedIndex());                
-            if(mMenuBar.getRepeatControlObj().isSelected()){
+            if (mMenuBar.isRepeatEnabled()) {
                 System.out.println("Repeat song on");
                 //playSong(mTable.getSongSelected());
-            }
-            else {
+            } else {
                 System.out.println("Repeat song off");
             }
-        }else if (e.getActionCommand().equals("DecVol")){
+        } // DECREASE VOLUME
+        else if (e.getActionCommand().equals("DecVol")) {
             System.out.println("Decrement volume");
+            try {
+                mSlider.decrementSlider();
+                playerControl.setGain(mSlider.getValue());
+            } catch (BasicPlayerException ex) {
+                Logger.getLogger(NeptuneController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } // INCREASE VOLUME
+        else if (e.getActionCommand().equals("IncVol")) {
+            System.out.println("Volume increase");
+            try {
+                mSlider.incrementSlider();
+                playerControl.setGain(mSlider.getValue());
+            } catch (BasicPlayerException ex) {
+                Logger.getLogger(NeptuneController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        
+        else{}
+
     }
 
     @Override
@@ -377,9 +419,9 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             System.out.println("The Jtable was clicked");
             mTable.setSongSelected();
             // upon clicking on table, update popup menu with playlists
-            if (!isPlaylistView) {
-                mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase);
-            }
+//            if (!isPlaylistView) {
+//                mTable.updatePopupSubmenu(mTree.getLeafNodeNames(), mDatabase);
+//            }
 
         } else if (source == mTree.getJTreeObj()) {
             String leafName = mTree.getSelectedLeafName();
@@ -401,11 +443,11 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             //String name = mTree.getJTreeObj().getSelectionPath().getLastPathComponent().toString();
             String leafName = mTree.getSelectedLeafName();
             System.out.println("The tree was clicked.Selected row: " + selRow + " with name: " + leafName);
-            // makes call to database to update column view on new playlist view
-            String[] fields = {"showArtist", "showAlbum", "showYear", "showGenre", "showComments"};
-            for(int i=0;i<5;i++) {
-                mDatabase.setPlayerSettings(fields[i], mTable.getChangedSettings()[i]);
-            }
+            // makes call to database to update column view on new playlist view 	 	
+            String[] fields = {"showArtist", "showAlbum", "showYear", "showGenre", "showComments"}; 	 	
+            for(int i=0;i<5;i++) { 	 	
+                mDatabase.setPlayerSettings(fields[i], mTable.getChangedSettings()[i]); 	 	
+            } 
             RunMVC playlist = new RunMVC(true, leafName);
             isPlaylistView = false;
             mTable.update(mDatabase, mDatabase.getSongsFromDatabase());
@@ -511,7 +553,30 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         try {
             playerControl.setGain(mSlider.getValue());
         } catch (BasicPlayerException ex) {
+            System.out.println("Nothing playing to be able to change volume");
             Logger.getLogger(NeptuneController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public void opened(Object o, Map map) {
+        //throw new UnsupportedOperationException("Not supported yet."); 
+    }
+
+    @Override
+    public void progress(int i, long l, byte[] bytes, Map properties) {
+        System.out.println((mTable.getSongSelected().get(9)));
+        mProgress.updateProgress((long)properties.get("mp3.position.microseconds"), mTable.getSongSelected().get(9).toString());
+    }
+    
+
+    @Override
+    public void stateUpdated(BasicPlayerEvent bpe) {
+        //throw new UnsupportedOperationException("Not supported yet."); 
+    }
+
+    @Override
+    public void setController(BasicController bc) {
+        //throw new UnsupportedOperationException("Not supported yet."); 
     }
 }
