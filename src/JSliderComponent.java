@@ -20,15 +20,9 @@ public class JSliderComponent implements Observer{
         mSliderPanel = new JPanel();
         mSliderPanel.setBackground(Color.DARK_GRAY);
         mSliderPanel.setForeground(Color.DARK_GRAY);
-<<<<<<< HEAD
-        mSlider = new JSlider(JSlider.HORIZONTAL, 5, 100, 100);
-        mSlider.setMinorTickSpacing(10);
-        mSlider.setMajorTickSpacing(20);
-=======
         mSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
         mSlider.setMinorTickSpacing(5);
         mSlider.setMajorTickSpacing(25);
->>>>>>> f5ef30424537f7b4f2b83b9ad30d06dc627a3cd7
         mSlider.setPaintTicks(true);
         mSlider.setPaintLabels(true);
         mSlider.setBackground(Color.DARK_GRAY);
