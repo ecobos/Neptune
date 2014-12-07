@@ -66,11 +66,8 @@ public class Neptune {
         mBounds.insets = new Insets(0, 0, 40, 0);
         mContentPanel.add(mButtons.getButtonsPanel(), mBounds);
         
-<<<<<<< HEAD (4f8151e) - Fixed #16 and #26
         mBounds.insets = new Insets(140, 10, 0, 10);
-=======
-        mBounds.insets = new Insets(140, 0, 0, 0);
->>>>>>> origin/master (286b22e) - Create JProgre
+
         mContentPanel.add(mProgress.getProgressPanel(), mBounds);
 
         mBounds.gridx = 5;

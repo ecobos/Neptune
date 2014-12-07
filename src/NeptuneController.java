@@ -568,12 +568,9 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     @Override
     public void progress(int i, long l, byte[] bytes, Map properties) {
-<<<<<<< HEAD (4f8151e) - Fixed #16 and #26
+
         mProgress.updateProgress((long)properties.get("mp3.position.microseconds"));
-=======
-        System.out.println((mTable.getSongSelected().get(9)));
-        mProgress.updateProgress((long)properties.get("mp3.position.microseconds"), mTable.getSongSelected().get(9).toString());
->>>>>>> origin/master (286b22e) - Create JProgre
+
     }
     
 
