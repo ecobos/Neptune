@@ -21,7 +21,7 @@ public class RunMVC {
         JProgressBarComponent progress = new JProgressBarComponent();
         
         if(loadFromPlaylist == true){
-            table = new SongsTableComponent(playlistName,database.getPlaylistSongsFromDatabase(playlistName), loadFromPlaylist);
+            table = new SongsTableComponent(playlistName,database.getPlaylistSongsFromDatabase(playlistName), loadFromPlaylist, database.getPlayerSettings());
             player = new Neptune(table, buttons, menu, text, slider, progress);
         }else {
             table = new SongsTableComponent("Library",database.getSongsFromDatabase(), loadFromPlaylist, database.getPlayerSettings());

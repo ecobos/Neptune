@@ -99,6 +99,8 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         COLUMN_HEADER.addElement("Track #");
         COLUMN_HEADER.addElement("Genre");
         COLUMN_HEADER.addElement("Comments"); // swapped with track #
+        COLUMN_HEADER.addElement("ID"); 
+        COLUMN_HEADER.addElement("Length");
         
         mSongsVector = songSetFromDatabase;
         mTableModel = new DefaultTableModel(mSongsVector, COLUMN_HEADER){
@@ -139,6 +141,12 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
         mSongsTable.getColumnModel().getColumn(7).setMinWidth(100);
         mSongsTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+        mSongsTable.getColumnModel().getColumn(8).setMinWidth(0);
+        mSongsTable.getColumnModel().getColumn(8).setMaxWidth(0);
+        mSongsTable.getColumnModel().getColumn(8).setPreferredWidth(0);
+        mSongsTable.getColumnModel().getColumn(9).setMinWidth(0);
+        mSongsTable.getColumnModel().getColumn(9).setMaxWidth(0);
+        mSongsTable.getColumnModel().getColumn(9).setPreferredWidth(0);
         
         mSongsTable.doLayout();
 
@@ -608,6 +616,12 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
         mSongsTable.getColumnModel().getColumn(7).setMinWidth(100);
         mSongsTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+        mSongsTable.getColumnModel().getColumn(8).setMinWidth(0);
+        mSongsTable.getColumnModel().getColumn(8).setMaxWidth(0);
+        mSongsTable.getColumnModel().getColumn(8).setPreferredWidth(0);
+        mSongsTable.getColumnModel().getColumn(9).setMinWidth(0);
+        mSongsTable.getColumnModel().getColumn(9).setMaxWidth(0);
+        mSongsTable.getColumnModel().getColumn(9).setPreferredWidth(0);
         
         mSongsTable.doLayout();
     }
