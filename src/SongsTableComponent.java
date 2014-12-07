@@ -88,6 +88,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         } 	 	
          	
         mSongSelectedIndex = 0;
+        mCurrentSongPlayingIndex = 0;
         mTableName = name;
         mSubMenu = new ArrayList<JMenuItem>();
         item = new JMenuItem("dummy");
@@ -101,6 +102,8 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         COLUMN_HEADER.addElement("Track #");
         COLUMN_HEADER.addElement("Genre");
         COLUMN_HEADER.addElement("Comments"); // swapped with track #
+        COLUMN_HEADER.addElement("ID"); 
+        COLUMN_HEADER.addElement("Length");
         
         mSongsVector = songSetFromDatabase;
         mTableModel = new DefaultTableModel(mSongsVector, COLUMN_HEADER){
@@ -141,6 +144,12 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
         mSongsTable.getColumnModel().getColumn(7).setMinWidth(100);
         mSongsTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+        mSongsTable.getColumnModel().getColumn(8).setMinWidth(0);
+        mSongsTable.getColumnModel().getColumn(8).setMaxWidth(0);
+        mSongsTable.getColumnModel().getColumn(8).setPreferredWidth(0);
+        mSongsTable.getColumnModel().getColumn(9).setMinWidth(0);
+        mSongsTable.getColumnModel().getColumn(9).setMaxWidth(0);
+        mSongsTable.getColumnModel().getColumn(9).setPreferredWidth(0);
         
         mSongsTable.doLayout();
 
@@ -576,6 +585,14 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     //}
     
     /**
+     * Returns the column by which the table is sorted
+     * @return column by which the table is sorted
+     */
+    //public int getSelectedColumnHeader() {
+    //    return mColumnHeaderIndex;
+    //}
+    
+    /**
      * The number of song currently contained by the table
      * 
      * @return number of songs
@@ -660,6 +677,12 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
         mSongsTable.getColumnModel().getColumn(7).setMinWidth(100);
         mSongsTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+        mSongsTable.getColumnModel().getColumn(8).setMinWidth(0);
+        mSongsTable.getColumnModel().getColumn(8).setMaxWidth(0);
+        mSongsTable.getColumnModel().getColumn(8).setPreferredWidth(0);
+        mSongsTable.getColumnModel().getColumn(9).setMinWidth(0);
+        mSongsTable.getColumnModel().getColumn(9).setMaxWidth(0);
+        mSongsTable.getColumnModel().getColumn(9).setPreferredWidth(0);
         
         mSongsTable.doLayout();
     }

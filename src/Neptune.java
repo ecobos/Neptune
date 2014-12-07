@@ -1,6 +1,8 @@
 
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -8,7 +10,10 @@ import java.awt.Insets;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
@@ -23,6 +28,7 @@ public class Neptune {
     private JTreeComponent mTree;
     private JSliderComponent mSlider;
     private JFrame mainFrame;
+    private JProgressBarComponent mProgress;
 
     /**
      * Class constructor
@@ -33,7 +39,8 @@ public class Neptune {
      * @param text Text area content
      * @param slider Volume slider
      */
-    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JSliderComponent slider) {
+    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JSliderComponent slider, JProgressBarComponent progress) {
+       
         mMainPanel = new JPanel(new BorderLayout());
         mContentPanel = new JPanel();
         mContentPanel.setLayout(new GridBagLayout());
@@ -47,6 +54,7 @@ public class Neptune {
         mMenuBar = menu;
 
         mSlider = slider;
+        mProgress = progress;
 
         //mBounds.anchor = GridBagConstraints.WEST;
         //mBounds.gridheight = 1;
@@ -56,6 +64,9 @@ public class Neptune {
         mBounds.gridwidth = 1;
         mBounds.gridx = 1;
         mContentPanel.add(mButtons.getButtonsPanel(), mBounds);
+        
+        mBounds.insets = new Insets(140, 0, 0, 0);
+        mContentPanel.add(mProgress.getProgressPanel(), mBounds);
 
         mBounds.gridx = 5;
         mBounds.gridy = 0;
@@ -80,6 +91,23 @@ public class Neptune {
         //split.setLeftComponent(mTreePanel);
         //split.setRightComponent(mContentPanel);
         mainFrame = new JFrame(mTable.getTableName());
+        
+        // add window listener 
+        mainFrame.addWindowListener( new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent we) {
+                        showDialog(mainFrame);
+                        //mMenuBar.getQuitObj();
+                        //System.out.println("Quit was clicked.");
+                        //String[] fields = {"showArtist", "showAlbum", "showYear", "showGenre", "showComments"}; 	 	
+                        //for(int i=0;i<5;i++) {
+                            //mTable.setPlayerSettings(, mTable.getChangedSettings()[i]); 
+                            //mTable.setColSetting(fields[i], mTable.getChangedSettings());
+                        //}
+                        System.exit(0);
+                    }
+                } );
+        
         //Closes program only when Library window is closed
         if(mTable.getTableName().matches("Library")){
             mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -102,10 +130,10 @@ public class Neptune {
      * @param text Text area content
      * @param tree Playlist tree structure
      * @param slider Volume slider
+     * @param progress
      */
-    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JTreeComponent tree, JSliderComponent slider) {
-        this(table, buttons, menu, text, slider);
-
+    public Neptune(SongsTableComponent table, ButtonsComponent buttons, MenuComponent menu, TextAreaComponent text, JTreeComponent tree, JSliderComponent slider, JProgressBarComponent progress) {
+        this(table, buttons, menu, text, slider, progress);
         mTree = tree;
         mTreePanel.setMinimumSize(new Dimension(100, 100));
 
@@ -155,8 +183,23 @@ public class Neptune {
     public void setMouseListener(MouseListener controller) {
         mTable.addMouseController(controller);
     }
+    
+//    public void setWindowLister() {
+//        addWindowListener(new WindowAdapter()
+//        {
+//            public void windowClosing(WindowEvent e)
+//            {
+//                System.out.println("Clicked on Red X");
+//                e.getWindow().dispose();
+//            }
+//        });
+//    }
 
     public void setDropController(DropTargetListener controller) {
         mTable.addDropController(controller);
+    }
+    
+    public static void showDialog(Component c) {
+        JOptionPane.showMessageDialog(c, "Trying to save settings on clicking X... Not working yet");
     }
 }

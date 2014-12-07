@@ -24,9 +24,11 @@ public class SongTags {
      */
     public String[] extractSongTags(String pathToFile){
         Mp3File mp3data = null;
-        String[] songTags = new String[8];
+        String[] songTags = new String[9];
         try {
             mp3data = new Mp3File(pathToFile);
+            mp3data.getLengthInMilliseconds(); //GETS THE LENGTH OF THE SONG
+            System.out.println("Seconds: " + mp3data.getLengthInMilliseconds()/1000.0);
         } catch (UnsupportedTagException ex) {
             Logger.getLogger(SongsTableComponent.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidDataException ex) {
@@ -49,6 +51,7 @@ public class SongTags {
             songTags[5] = id3v1Tags.getTrack();
             songTags[6] = id3v1Tags.getGenreDescription();
             songTags[7] = id3v1Tags.getComment();
+            songTags[8] = Long.toString((long) (mp3data.getLengthInMilliseconds()/1000.0));
         }
         return songTags;
     }
