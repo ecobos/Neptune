@@ -143,7 +143,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 int money = Integer.parseInt(somethign);
                 mProgress.setLength(Integer.parseInt(songToPlay.get(9).toString()));
                 playerControl.play();
-
+                mMenuBar.addSongToHistory(songToPlay.get(2), mTable.getCurrentSongPlayingIndex());
             } catch (BasicPlayerException ex) {
                 JOptionPane.showMessageDialog(mTable.getMenuAddObj(), "Song does not exist!");
             }

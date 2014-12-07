@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JCheckBox;
@@ -33,6 +34,7 @@ public class MenuComponent implements Observer{
     private JCheckBox mRepeat;
     private ItemListener mShuffleListener;
     private ItemListener mRepeatListener;
+    private LinkedList<Object[]> songHistory;
     
     /**
      * Class constructor. 
@@ -115,6 +117,7 @@ public class MenuComponent implements Observer{
         mMenuBar.add(mControls);
         mMenuBar.add(mAbout);
         
+        songHistory = new LinkedList();
     }
     
     /**
@@ -222,9 +225,32 @@ public class MenuComponent implements Observer{
         mShuffle.addActionListener(controller);
         mRepeat.addActionListener(controller);
     }
+    
+    public void addSongToHistory(String title, int songID){
+        //Object[] item = {title, songID};
+        if(songHistory.size() > 9 ){
+            //songHistory.removeLast();
+            //songHistory.addFirst(item);
+            mPlayRecent.remove(0);
+            mPlayRecent.add(title);
+        }else{
+            mPlayRecent.add(title);
+            //songHistory.addFirst(item);
+        }
+    }
+    
+    //Currently not used
+    public void updateHistory(LinkedList<Object[]> historyList){
+        mPlayRecent.removeAll();
+        for(Object[] aSong: historyList){
+            mPlayRecent.add((String)aSong[0]);
+            mPlayRecent.remove(0);
+        }
+       
+    }
 
     @Override
     public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        
     }
 }
