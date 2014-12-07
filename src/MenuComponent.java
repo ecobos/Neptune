@@ -86,7 +86,6 @@ public class MenuComponent implements Observer{
         mRepeat = new JCheckBox("Repeat", false);
         mRepeat.setActionCommand("Repeat");
         //mShuffleItemListen = new ItemListener;
-       
         
         
         mControls.add(mPlay);

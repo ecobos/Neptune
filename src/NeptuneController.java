@@ -139,7 +139,9 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 mSongInfo.setText("\n\n Current song playing:\n\tArtist: " + songToPlay.get(2)
                         + "\n\tSong: " + songToPlay.get(1) + "\n\tAlbum: "
                         + songToPlay.get(3) + "\n\tSong " + (mTable.getCurrentSongPlayingIndex() + 1) + " of " + mTable.getSongsCount());
-                mProgress.setLength(191000);
+                String somethign = songToPlay.get(9).toString();
+                int money = Integer.parseInt(somethign);
+                mProgress.setLength(Integer.parseInt(songToPlay.get(9).toString()));
                 playerControl.play();
 
             } catch (BasicPlayerException ex) {
@@ -606,18 +608,38 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     @Override
     public void opened(Object o, Map map) {
+        System.out.println(o.toString() +"\n" + map.toString());
         //throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
     public void progress(int i, long l, byte[] bytes, Map properties) {
-        System.out.println((mTable.getSongSelected().get(9)));
-        mProgress.updateProgress((long)properties.get("mp3.position.microseconds"), mTable.getSongSelected().get(9).toString());
+
+        mProgress.updateProgress((long)properties.get("mp3.position.microseconds"));
+
     }
     
 
     @Override
     public void stateUpdated(BasicPlayerEvent bpe) {
+        if(bpe.toString().startsWith("EOM")){
+            System.out.println("You've cat to be kitten me right meow. EOM");
+            if (mMenuBar.isRepeatEnabled()){
+                String filepath = mTable.getSongSelectedFilepath();
+                mTable.setCurrentSongPlayingIndex();
+                playSong(mTable.getSongSelected(filepath));
+                System.out.println("Song playing filepath: " + filepath);
+                System.out.println("Playing: " + mTable.getSongSelected(filepath).get(1));
+                mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
+            }else {
+                
+                if (mMenuBar.isShuffleEnabled()){
+                    //CODE FOR NEXT RANDOM SONG HERE
+                }else{
+                    playSong(mTable.getNextSong()); 
+                }          
+            }         
+        }
         //throw new UnsupportedOperationException("Not supported yet."); 
     }
 

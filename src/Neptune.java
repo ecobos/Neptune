@@ -1,5 +1,5 @@
 
-import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
+//import com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -63,9 +63,11 @@ public class Neptune {
         mBounds.fill = GridBagConstraints.HORIZONTAL;
         mBounds.gridwidth = 1;
         mBounds.gridx = 1;
+        mBounds.insets = new Insets(0, 0, 40, 0);
         mContentPanel.add(mButtons.getButtonsPanel(), mBounds);
         
-        mBounds.insets = new Insets(140, 0, 0, 0);
+        mBounds.insets = new Insets(140, 10, 0, 10);
+
         mContentPanel.add(mProgress.getProgressPanel(), mBounds);
 
         mBounds.gridx = 5;
