@@ -578,7 +578,21 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     public void stateUpdated(BasicPlayerEvent bpe) {
         if(bpe.toString().startsWith("EOM")){
             System.out.println("You've cat to be kitten me right meow. EOM");
-            playSong(mTable.getNextSong());
+            if (mMenuBar.isRepeatEnabled()){
+                String filepath = mTable.getSongSelectedFilepath();
+                mTable.setCurrentSongPlayingIndex();
+                playSong(mTable.getSongSelected(filepath));
+                System.out.println("Song playing filepath: " + filepath);
+                System.out.println("Playing: " + mTable.getSongSelected(filepath).get(1));
+                mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
+            }else {
+                
+                if (mMenuBar.isShuffleEnabled()){
+                    //CODE FOR NEXT RANDOM SONG HERE
+                }else{
+                    playSong(mTable.getNextSong()); 
+                }          
+            }         
         }
         //throw new UnsupportedOperationException("Not supported yet."); 
     }
