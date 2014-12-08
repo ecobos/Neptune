@@ -12,6 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.PLAIN_MESSAGE;
 import javax.swing.event.ChangeEvent;
@@ -40,7 +44,7 @@ import javazoom.jlgui.basicplayer.BasicPlayerEvent;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 import javazoom.jlgui.basicplayer.BasicPlayerListener;
 
-public class NeptuneController implements ActionListener, MouseListener, DropTargetListener, ChangeListener, BasicPlayerListener {
+public class NeptuneController implements ActionListener, MouseListener, DropTargetListener, ChangeListener, BasicPlayerListener, WindowListener {
 
     private Neptune neptune;
     private boolean isPaused;
@@ -139,11 +143,14 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 mSongInfo.setText("\n\n Current song playing:\n\tArtist: " + songToPlay.get(2)
                         + "\n\tSong: " + songToPlay.get(1) + "\n\tAlbum: "
                         + songToPlay.get(3) + "\n\tSong " + (mTable.getCurrentSongPlayingIndex() + 1) + " of " + mTable.getSongsCount());
-                String somethign = songToPlay.get(9).toString();
-                int money = Integer.parseInt(somethign);
-                mProgress.setLength(Integer.parseInt(songToPlay.get(9).toString()));
+                //String somethign = songToPlay.get(9).toString();
+                //int money = Integer.parseInt(somethign);
+                mProgress.setLength(Integer.parseInt(songToPlay.get(9)));
                 playerControl.play();
-                mMenuBar.addSongToHistory(songToPlay.get(2), mTable.getCurrentSongPlayingIndex());
+                if(!mMenuBar.isShuffleEnabled()){
+                    mMenuBar.addSongToHistory(songToPlay.get(1), songToPlay, this);
+                }
+                
             } catch (BasicPlayerException ex) {
                 JOptionPane.showMessageDialog(mTable.getMenuAddObj(), "Song does not exist!");
             }
@@ -361,7 +368,11 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 Logger.getLogger(NeptuneController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        else{}
+        else if (e.getActionCommand().equals("historyItem")){
+            JMenuItem historyItem = (JMenuItem) e.getSource();
+            Vector<String> theData = (Vector<String>)historyItem.getClientProperty("data");
+            playSong(theData);
+        }
 
     }
 
@@ -600,5 +611,37 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     @Override
     public void setController(BasicController bc) {
         //throw new UnsupportedOperationException("Not supported yet."); 
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        JOptionPane.showMessageDialog(e.getComponent(), "Peace biotch!");
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        
+        JOptionPane.showMessageDialog(e.getComponent(), "jajajaja");
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
     }
 }

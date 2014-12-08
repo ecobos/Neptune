@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
 import javax.swing.JCheckBox;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -35,6 +36,7 @@ public class MenuComponent implements Observer{
     private ItemListener mShuffleListener;
     private ItemListener mRepeatListener;
     private LinkedList<Object[]> songHistory;
+    private int mHistoryCounter;
     
     /**
      * Class constructor. 
@@ -118,6 +120,7 @@ public class MenuComponent implements Observer{
         mMenuBar.add(mAbout);
         
         songHistory = new LinkedList();
+        mHistoryCounter = 0;
     }
     
     /**
@@ -226,19 +229,25 @@ public class MenuComponent implements Observer{
         mRepeat.addActionListener(controller);
     }
     
-    public void addSongToHistory(String title, int songID){
-        //Object[] item = {title, songID};
-        if(songHistory.size() > 9 ){
+    public void addSongToHistory(String title, Vector<String> data, ActionListener controller){
+        //Object[] data = {title, songID};
+        JMenuItem item = new JMenuItem(title);
+        item.putClientProperty("data", data);
+        item.addActionListener(controller);
+        item.setActionCommand("historyItem");
+        if(mHistoryCounter > 9 ){
             //songHistory.removeLast();
             //songHistory.addFirst(item);
-            mPlayRecent.remove(0);
-            mPlayRecent.add(title);
+            mPlayRecent.remove(9);
+            mPlayRecent.insert(item, 0);
         }else{
-            mPlayRecent.add(title);
+            mPlayRecent.insert(item,0);
             //songHistory.addFirst(item);
         }
+        mHistoryCounter++;
     }
     
+   
     //Currently not used
     public void updateHistory(LinkedList<Object[]> historyList){
         mPlayRecent.removeAll();
