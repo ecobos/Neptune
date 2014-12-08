@@ -416,6 +416,9 @@ public class Database extends Observable {
                 songsVector.addElement(vectorData);
             }
            
+            
+            stat.executeUpdate("delete from SongHistory");
+            
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
