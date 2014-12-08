@@ -540,13 +540,15 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             int row = mTable.getSongsTableObj().rowAtPoint(e.getPoint());
             //int next = row + 1;
             //int prev = row - 1;
-            mTable.setSongSelected();
-            int col = mTable.getSongsTableObj().columnAtPoint(e.getPoint());
-            Object selectedObj = mTable.getSongsTableObj().getValueAt(row, col);
-            Object filepathObj = mTable.getSongsTableObj().getValueAt(row, 0);
-            mTable.setSongSelectedFilepath((String)filepathObj);
-            mTable.scrollToSelectedSong();
-            System.out.println("Selected object: " + selectedObj + "\nFilepath: " + filepathObj);
+            if (row >= 0){
+                mTable.setSongSelected();
+                int col = mTable.getSongsTableObj().columnAtPoint(e.getPoint());
+                Object selectedObj = mTable.getSongsTableObj().getValueAt(row, col);
+                Object filepathObj = mTable.getSongsTableObj().getValueAt(row, 0);
+                mTable.setSongSelectedFilepath((String)filepathObj);
+                mTable.scrollToSelectedSong();
+                System.out.println("Selected object: " + selectedObj + "\nFilepath: " + filepathObj);
+            }
             /*
             if (next >= mTable.getSongsCount()) {
                 next = 0;
