@@ -143,7 +143,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 int money = Integer.parseInt(somethign);
                 mProgress.setLength(Integer.parseInt(songToPlay.get(9).toString()));
                 playerControl.play();
-
+                mMenuBar.addSongToHistory(songToPlay.get(2), mTable.getCurrentSongPlayingIndex());
             } catch (BasicPlayerException ex) {
                 JOptionPane.showMessageDialog(mTable.getMenuAddObj(), "Song does not exist!");
             }
@@ -174,8 +174,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
      * Deletes the selected song from the database
      */
     private void deleteSongSelected() {
-        System.out.println("Deleted song: " + mTable.getSongSelected().get(2));
-        mDatabase.deleteSong(mTable.getSongSelected());
+        System.out.println("Deleted song: " + mTable.getSongSelectedVector().get(2));
+        mDatabase.deleteSong(mTable.getSongSelectedVector());
     }
 
     @Override
@@ -235,16 +235,40 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 System.out.println("Open command cancelled by user.\n");
             }
         } // PLAY BUTTON
-        else if (source == mButtons.getPlayObj()) {
-            if (mTable.getSongsTableObj().isColumnSelected(0)){//.getSongSelected(filepath) == null) {
-                mTable.setSongSelected(0);   
-                playSong(mTable.getSongSelected(0));
-            } else {
-                mTable.setCurrentSongPlayingIndex();
+        else if (source == mButtons.getPlayObj() || e.getActionCommand().equals("Space")) {
+            Object filepathObj = mTable.getSongsTableObj().getValueAt(0, 0);
+            if (mTable.getSongsTableObj().getSelectedRow() == -1) {
+                mTable.setSongPlayingIndex(0);
+                playSong(mTable.getSongSelected((String)filepathObj));
+                mTable.scrollToSongPlaying();
+                mTable.setSongSelected();
+                filepathObj = mTable.getSongsTableObj().getValueAt(1, 0);
+                mTable.setNextSongFilepath((String)filepathObj);
+                filepathObj = mTable.getSongsTableObj().getValueAt(mTable.getSongsCount() - 1, 0);
+                mTable.setPrevSongFilepath((String)filepathObj);
+            }
+            else {
+                mTable.setSongSelected();
+                int row = mTable.getSongSelected();
+                int next = row + 1;
+                int prev = row - 1;
+                filepath = mTable.getSongSelectedFilepath();
+                mTable.setSongPlayingIndex(row);
                 playSong(mTable.getSongSelected(filepath));
-                System.out.println("Song playing filepath: " + filepath);
-                System.out.println("Playing: " + mTable.getSongSelected(filepath).get(1));
-                mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
+                mTable.scrollToSongPlaying();
+                mTable.setSongSelected();
+                if (next >= mTable.getSongsCount()) {
+                    next = 0;
+                }
+                filepathObj = mTable.getSongsTableObj().getValueAt(next, 0);
+                mTable.setNextSongFilepath((String)filepathObj);
+                System.out.println("Next filepath: " + filepathObj + " " + next);
+                if (prev < 0) {
+                    prev = mTable.getSongsCount() - 1; //wrap around the index
+                }
+                filepathObj = mTable.getSongsTableObj().getValueAt(prev, 0);
+                mTable.setPrevSongFilepath((String)filepathObj);
+                System.out.println("Previous filepath: " + filepathObj + " " + prev);
             }
         } // STOP SONG BUTTON
         else if (source == mButtons.getStopObj()) {
@@ -264,25 +288,68 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             }
         } // NEXT SONG BUTTON
         else if (source == mButtons.getNextObj() || source == mMenuBar.getNextControlObj() || e.getActionCommand().equals("RightArrow")) {
-            if (mMenuBar.isShuffleEnabled()) {
+            if (mMenuBar.isShuffleEnabled() && player.getStatus() == 0) {//If shuffle is on and a song is playing shuffle to next
                 System.out.println("Shuffle songs on next" + player.getStatus());
+                mTable.setSongPlayingIndex(randomNum);
                 playSong(mTable.getSongSelected(randomNum));
+                System.out.println("Song playing filepath: " + filepath);
+                System.out.println("Playing: " + mTable.getSongSelectedVector().get(1));
+                mTable.scrollToSongPlaying();
             } else {
-                mTable.setNextSongPlayingIndex();
-                playSong(mTable.getSongSelected(mTable.getNextFilepath()));
-                mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
+                int row = mTable.getCurrentSongPlayingIndex();
+                int next = row + 1;
+                int prev = row; 
+                if (next >= mTable.getSongsCount()) {
+                    next = 0;
+                }
+                mTable.setSongPlayingIndex(next);
+                playSong(mTable.getSongSelected(mTable.getNextFilepath()));  
+                mTable.scrollToSongPlaying();
+                Object filepathObj = null;
+                if(next == mTable.getSongsCount() - 1){
+                    filepathObj = mTable.getSongsTableObj().getValueAt(0, 0);
+                }
+                else {
+                    filepathObj = mTable.getSongsTableObj().getValueAt(++next, 0);
+                }
+                mTable.setNextSongFilepath((String)filepathObj);
+                System.out.println("Next filepath: " + filepathObj + " next: " + next + " row: " + row);
+                filepathObj = mTable.getSongsTableObj().getValueAt(prev, 0);
+                mTable.setPrevSongFilepath((String)filepathObj);
+                System.out.println("Previous filepath: " + filepathObj + " " + prev);
             }
         } // PREVIOUS SONG BUTTON
         else if (source == mButtons.getPrevObj() || source == mMenuBar.getPrevControlObj() || e.getActionCommand().equals("LeftArrow")) {
-            // this ensures that if the mouse is clicked to a different row, we 
-            // can still play the song that is currently next
-            if (mMenuBar.isShuffleEnabled()) {
-                System.out.println("Shuffle songs on previous" + player.getStatus());
+            if (mMenuBar.isShuffleEnabled() && player.getStatus() == 0) { //If shuffle is on and a song is playing shuffle
+                System.out.println("Shuffle songs on prev" + player.getStatus());
+                mTable.setSongPlayingIndex(randomNum);
                 playSong(mTable.getSongSelected(randomNum));
+                System.out.println("Song playing filepath: " + filepath);
+                System.out.println("Playing: " + mTable.getSongSelectedVector().get(1));
+                mTable.scrollToSongPlaying();
             } else {
-                mTable.setPrevSongPlayingIndex();
-                playSong(mTable.getSongSelected(mTable.getPrevFilepath()));
-                mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
+                int row = mTable.getCurrentSongPlayingIndex();
+                int next = row;
+                int prev = row - 1; 
+                if (prev < 0) {
+                    prev = mTable.getSongsCount() - 1; //wrap around the index
+                }
+                mTable.setSongPlayingIndex(prev);                
+                playSong(mTable.getSongSelected(mTable.getPrevFilepath()));  
+                mTable.scrollToSongPlaying();
+                Object filepathObj = null;
+                if(prev == 0){
+                    filepathObj = mTable.getSongsTableObj().getValueAt(mTable.getSongsCount() - 1, 0);
+                }
+                else {
+                    filepathObj = mTable.getSongsTableObj().getValueAt(--prev, 0);
+                }
+                mTable.setPrevSongFilepath((String)filepathObj);
+                System.out.println("Previous filepath: " + filepathObj + " " + prev);                
+                filepathObj = mTable.getSongsTableObj().getValueAt(next, 0);
+                mTable.setNextSongFilepath((String)filepathObj);
+                System.out.println("Next filepath: " + filepathObj + " next: " + next + " row: " + row);
+                
             }
         } // CREATING PLAYLIST
         else if (source == mMenuBar.getPlaylistObj()) {
@@ -301,24 +368,42 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             System.out.println("Go to current song");
             //mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
             //mTable.setScrollBarPosition(mTable.getCurrentSongPlayingIndex()); // NOT WORKING
-            mTable.scrollToCurrentSong();
+            mTable.getSongSelected();
+            mTable.scrollToSelectedSong();
         } // CONTROLS - PLAY SONG
         else if (source == mMenuBar.getPlayControlObj() || e.getActionCommand().equals("Space")) {
             if (mMenuBar.isShuffleEnabled()) {
                 System.out.println("Shuffle songs on " + player.getStatus());
-                if (player.getStatus() == -1 || player.getStatus() == 2) {
+                if (player.getStatus() == 0) {
+                    System.out.println("Song is currently playing start shuffle after");
+                }
+                else{
+                    mTable.setSongPlayingIndex(randomNum);
                     playSong(mTable.getSongSelected(randomNum));
-                    mTable.setSongSelected(randomNum);
+                    System.out.println("Song playing filepath: " + filepath);
+                    System.out.println("Playing: " + mTable.getSongSelectedVector().get(1));
+                    //mTable.scrollToSongPlaying();
                 }
             } else {
-                if (mTable.getSongsTableObj().isColumnSelected(0)) {
-                    mTable.setSongSelected(0);
+                if (mTable.getSongsTableObj().getSelectedRow() == -1) {//getSongSelected(filepath) == null) { //getSongsTableObj().isColumnSelected(0)){//
+                    mTable.setSongPlayingIndex(0);
+                    Object filepathObj = mTable.getSongsTableObj().getValueAt(1, 0);
+                    mTable.setNextSongFilepath((String)filepathObj);
+                    filepathObj = mTable.getSongsTableObj().getValueAt(mTable.getSongsCount() - 1, 0);
+                    mTable.setPrevSongFilepath((String)filepathObj);
                     playSong(mTable.getSongSelected(0));
+                    System.out.println("No row is selected");
                 } else {
-                    mTable.setCurrentSongPlayingIndex();
+                    filepath = mTable.getSongSelectedFilepath();
+                    mTable.setSongSelected();
+                    int selected = mTable.getSongSelected();
+                    mTable.setSongPlayingIndex(selected);
                     playSong(mTable.getSongSelected(filepath));
-                    System.out.println("Playing: " + mTable.getSongSelected(filepath).get(1));
-                    mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
+                    System.out.println("Song playing filepath: " + filepath);
+                    System.out.println("Playing: " + mTable.getSongSelectedVector().get(1));
+                    System.out.println("Row: " + selected);
+                    //mTable.scrollToSongPlaying();
+                    //mTable.setSelectionInterval(mTable.getCurrentSongPlayingIndex());
                 }
             }
             //mTable.update(mDatabase, source);
@@ -450,7 +535,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 int row = mTable.getSongsTableObj().rowAtPoint(e.getPoint());
                 int next = row + 1;
                 int prev = row - 1;
-                mTable.setSongSelected(row);
+                mTable.setSongSelected();
                 int col = mTable.getSongsTableObj().columnAtPoint(e.getPoint());
                 Object selectedObj = mTable.getSongsTableObj().getValueAt(row, col);
                 Object filepathObj = mTable.getSongsTableObj().getValueAt(row, 0);
@@ -461,12 +546,14 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 }
                 //mTable.setNextSongPlayingIndex(next);
                 filepathObj = mTable.getSongsTableObj().getValueAt(next, 0);
+                System.out.println("Next filepath: " + filepathObj);
                 mTable.setNextSongFilepath((String)filepathObj);
                 if (prev < 0) {
                     prev = mTable.getSongsCount() - 1; //wrap around the index
                 }
                 //mTable.setPrevSongPlayingIndex(prev);
                 filepathObj = mTable.getSongsTableObj().getValueAt(prev, 0);
+                System.out.println("Previous filepath: " + filepathObj);
                 System.out.println("Selected object: " + selectedObj.toString());
                 mTable.setPrevSongFilepath((String)filepathObj);
                 System.out.println("Next: " + next + " Prev: " + prev);
@@ -626,7 +713,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             System.out.println("You've cat to be kitten me right meow. EOM");
             if (mMenuBar.isRepeatEnabled()){
                 String filepath = mTable.getSongSelectedFilepath();
-                mTable.setCurrentSongPlayingIndex();
+                mTable.setSongPlayingIndex(mTable.getSongSelected());
                 playSong(mTable.getSongSelected(filepath));
                 System.out.println("Song playing filepath: " + filepath);
                 System.out.println("Playing: " + mTable.getSongSelected(filepath).get(1));

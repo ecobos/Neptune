@@ -248,9 +248,16 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         return mMenuRemoveSong;
     }
     
-    public void scrollToCurrentSong(){
+    public void scrollToSongPlaying(){
+        System.out.println("Scroll: " + mCurrentSongPlayingIndex);
         mSongsTable.getSelectionModel().setSelectionInterval(mCurrentSongPlayingIndex, mCurrentSongPlayingIndex);
         mSongsTable.scrollRectToVisible(new Rectangle(mSongsTable.getCellRect(mCurrentSongPlayingIndex, 0, true)));
+    }
+    
+    public void scrollToSelectedSong(){
+        getSongSelected();
+        mSongsTable.getSelectionModel().setSelectionInterval(mSongSelectedIndex, mSongSelectedIndex);
+        mSongsTable.scrollRectToVisible(new Rectangle(mSongsTable.getCellRect(mSongSelectedIndex, 0, true)));
     }
 
     /**
@@ -258,12 +265,25 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
      *
      * @param currentSong Currently selected (clicked on) song
      */
-    public void setCurrentSongPlayingIndex() {
-        mCurrentSongPlayingIndex = mSongsTable.getSelectedRow();
+    public void setSongPlayingIndex() {
+        if(mSongsTable.getSelectedRow() == -1){
+            mCurrentSongPlayingIndex = 0;
+        } 
+        else {
+            mCurrentSongPlayingIndex = mSongsTable.getSelectedRow();
+        }
+    }
+    
+    public int getSongPlayingIndex(){
+        return mCurrentSongPlayingIndex;
+    }
+    
+    public void setSongPlayingIndex(int songPlaying) {
+        mCurrentSongPlayingIndex = songPlaying;
     }
     
     public void setNextSongPlayingIndex(){
-        int next = mSongsTable.getSelectedRow() + 1;
+        int next = mCurrentSongPlayingIndex + 1;
         if (next >= getSongsCount()) {
                     next = 0;
         }
@@ -271,7 +291,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     }
 
     public void setPrevSongPlayingIndex(){
-        int prev = mSongsTable.getSelectedRow()- 1;
+        int prev = mCurrentSongPlayingIndex - 1;
         if (prev < 0) {
             prev = getSongsCount() - 1; //wrap around the index
         }
@@ -456,7 +476,17 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
             public void mouseClicked(MouseEvent e) {
                 int col = mSongsTable.columnAtPoint(e.getPoint());
                 String name = mSongsTable.getColumnName(col);
+                int row = mSongsTable.rowAtPoint(e.getPoint());
+                mSongSelectedIndex = row;
                 System.out.println("Column index selected " + col + " " + name);
+                col = mSongsTable.columnAtPoint(e.getPoint());
+                Object selectedObj = mSongsTable.getValueAt(row, col);
+                Object filepathObj = mSongsTable.getValueAt(row, 0);
+                mSelectedSongFilePath = (String)filepathObj;
+                System.out.println("Selected object: " + selectedObj.toString());
+                System.out.println("Filepath: " + filepathObj);
+                setSongSelected();
+                System.out.println("Row selected: " + mSongSelectedIndex);
             }
         });
         
@@ -477,7 +507,6 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         
         
         mMenuAddSong.addMouseListener(controller);
-        //mMenuAddToPlaylist.addMouseListener(controller);
         mMenuRemoveSong.addMouseListener(controller);
         mPopupMenu.addMouseListener(controller);
 
@@ -487,12 +516,19 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     public void addDropController(DropTargetListener controller) {
         new DropTarget(mTablePanel, controller);
     }
-
+    
     /**
      * Set the currently selected (clicked on) song
      */
-    public void setSongSelected(int row) {
-        mSongSelectedIndex = row;//mSongsTable.getSelectedRow();
+    public void setSongSelected() {
+        mSongSelectedIndex = mSongsTable.getSelectedRow();
+    }
+    
+    /**
+     * Get the currently selected (clicked on) song
+     */
+    public int getSongSelected() {
+        return mSongSelectedIndex;
     }
 
     /**
@@ -500,7 +536,8 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
      * 
      * @return Vector containing selected songs data
      */
-    public Vector getSongSelected() {
+    public Vector getSongSelectedVector() {
+        //setSongSelected();
         Vector currentSongRow = mSongsVector.get(mSongSelectedIndex);
         mSongsTable.setRowSelectionInterval(mSongSelectedIndex, mSongSelectedIndex);
         return currentSongRow;
@@ -527,7 +564,6 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
             }
             size++;
         }
-        setSongSelected(index);
         Vector currentSongRow = mSongsVector.get(index);
         mSongsTable.setRowSelectionInterval(index, index);
         return currentSongRow;
@@ -544,6 +580,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
      * @return Filepath to currently selected song
      */
     public String getSongSelectedFilepath() {
+        setSongSelected();
         //Vector currentSongRow = mSongsVector.get(mSongSelectedIndex);
         return mSelectedSongFilePath;//(String) currentSongRow.get(0);
     }
