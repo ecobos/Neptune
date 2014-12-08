@@ -174,8 +174,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
      * Deletes the selected song from the database
      */
     private void deleteSongSelected() {
-        System.out.println("Deleted song: " + mTable.getSongSelectedVector().get(2));
         String filepath = mTable.getSongSelectedFilepath();
+        System.out.println("Deleted song: " + filepath);
         mDatabase.deleteSong(mTable.getSongSelected(filepath));
     }
 
