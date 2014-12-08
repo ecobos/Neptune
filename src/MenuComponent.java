@@ -232,13 +232,13 @@ public class MenuComponent implements Observer{
         mRepeat.addActionListener(controller);
     }
     
-    public void addSongToHistory(String title, Vector<String> data, ActionListener controller){
+    public void addSongToHistory(Vector<String> data, ActionListener controller){
         //Object[] data = {title, songID};
-        JMenuItem item = new JMenuItem(title);
+        JMenuItem item = new JMenuItem(data.get(1));
         item.putClientProperty("data", data);
         item.addActionListener(controller);
         item.setActionCommand("historyItem");
-        if(mHistoryCounter > 9 ){
+        if(mPlayRecent.getItemCount() > 9 ){
             //songHistory.removeLast();
             //songHistory.addFirst(item);
             mPlayRecent.remove(9);
@@ -247,9 +247,13 @@ public class MenuComponent implements Observer{
             mPlayRecent.insert(item,0);
             //songHistory.addFirst(item);
         }
-        mHistoryCounter++;
+        
     }
     
+    public JMenu getSongsHistory(){
+        //mPlayRecent.getItemCount();
+        return mPlayRecent;
+    }
    
     //Currently not used
     public void updateHistory(LinkedList<Object[]> historyList){

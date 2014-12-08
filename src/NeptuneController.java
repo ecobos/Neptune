@@ -1,5 +1,6 @@
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -136,7 +137,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 mProgress.setLength(Integer.parseInt(songToPlay.get(9)));
                 playerControl.play();
                 if(!mMenuBar.isShuffleEnabled()){
-                    mMenuBar.addSongToHistory(songToPlay.get(1), songToPlay, this);
+                    mMenuBar.addSongToHistory(songToPlay, this);
                 }
                 
             } catch (BasicPlayerException ex) {
@@ -716,13 +717,26 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     @Override
     public void windowOpened(WindowEvent e) {
+        
         JOptionPane.showMessageDialog(e.getComponent(), "Peace biotch!");
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
+        //The most recently played song get the index 0 and the older songs get a larger number
+        JMenu history = mMenuBar.getSongsHistory();
+        int historySize = history.getItemCount();
+        JMenuItem item;
+        for(int x = 0; x < historySize; x++){
+            item = history.getItem(x);       
+            mDatabase.storeSong((Vector<String>)item.getClientProperty("data"), x);
+        }
         
-        JOptionPane.showMessageDialog(e.getComponent(), "jajajaja");
+        String[] fields = {"showArtist", "showAlbum", "showYear", "showGenre", "showComments"}; 	 	
+        for(int i=0;i<5;i++) { 	 	
+            mDatabase.setPlayerSettings(fields[i], mTable.getChangedSettings()[i]); 	 	
+        }
+        JOptionPane.showMessageDialog(e.getComponent(), "Peace out!");
     }
 
     @Override

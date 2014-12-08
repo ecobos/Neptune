@@ -347,6 +347,7 @@ public class Database extends Observable {
             pstat.setString(7, songTags[6]); // value genre
             pstat.setString(8, songTags[5]); // value of comments
             pstat.setString(9, songTags[8]); // value of song length in secs
+            
             pstat.executeUpdate();
 
             Vector<String> newData = new Vector<String>();
@@ -363,7 +364,34 @@ public class Database extends Observable {
             e.printStackTrace();
         }
     }
+    
+    public void storeSong(Vector<String> songToStore, int theOrder){
 
+        try {
+            if (conn.isClosed()) {
+                this.getDBConnection();
+            }
+
+            PreparedStatement pstat = conn.prepareStatement("INSERT INTO SongHistory(filepath, title, artist, album, year, comment, genre, track_num, length, songOrder) VALUES(?,?,?,?,?,?,?,?,?,?)");
+            pstat.setString(1, songToStore.get(0)); // value of filepath
+            pstat.setString(2, songToStore.get(1)); // value of title
+            pstat.setString(3, songToStore.get(2)); // value of artist
+            pstat.setString(4, songToStore.get(3)); // value of album
+            pstat.setString(5, songToStore.get(4)); // value year
+            pstat.setString(6, songToStore.get(7)); // value of track_num
+            pstat.setString(7, songToStore.get(6)); // value genre
+            pstat.setString(8, songToStore.get(5)); // value of comments
+            pstat.setString(9, songToStore.get(8)); // value of song length in secs
+            pstat.setInt(10, theOrder); // order of songs in history
+            System.out.println(pstat);
+            pstat.executeUpdate();
+          
+        } catch (SQLException e) {
+            System.out.println("Unable to insert song. Song may already exist");
+            e.printStackTrace();
+        }
+    }
+    
     /**
      * Creates a new playlist
      *

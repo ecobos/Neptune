@@ -193,7 +193,8 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         
     }
     */
-    public void hideColumnsUponStart() {String[] columnNames = {"Artist", "Album", "Album Year", "Genre", "Comments"};
+    public void hideColumnsUponStart() {
+        String[] columnNames = {"Artist", "Album", "Album Year", "Genre", "Comments"};
         for(int i=0;i<5;i++) { 	 	
            if(settings[i].equals("false")) { 
                mCheckBox[i].setSelected(false);
@@ -722,6 +723,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(9).setPreferredWidth(0);
         
         mSongsTable.doLayout();
+        hideColumnsUponStart();
     }
 
 }
