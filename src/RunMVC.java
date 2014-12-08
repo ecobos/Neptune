@@ -12,8 +12,8 @@ public class RunMVC {
         SongsTableComponent table;
         JTreeComponent tree = null;
         Neptune player = null;
-
-
+        
+        
         MenuComponent menu = new MenuComponent(loadFromPlaylist);
         ButtonsComponent buttons = new ButtonsComponent();
         TextAreaComponent text = new TextAreaComponent();
