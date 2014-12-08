@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -95,7 +96,7 @@ public class Neptune {
         mainFrame = new JFrame(mTable.getTableName());
         
         // add window listener 
-        mainFrame.addWindowListener( new WindowAdapter() {
+        /*mainFrame.addWindowListener( new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent we) {
                         showDialog(mainFrame);
@@ -109,7 +110,7 @@ public class Neptune {
                         System.exit(0);
                     }
                 } );
-        
+        */
         //Closes program only when Library window is closed
         if(mTable.getTableName().matches("Library")){
             mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -181,10 +182,14 @@ public class Neptune {
         mButtons.setController(controller);
 
     }
-
-    public void setMouseListener(MouseListener controller) {
-        mTable.addMouseController(controller);
+    
+    public void setWindowListerner(WindowListener controller){
+        mainFrame.addWindowListener(controller);
     }
+
+//    public void setMouseListener(MouseListener controller) {
+//        mTable.addMouseController(controller);
+//    }
     
 //    public void setWindowLister() {
 //        addWindowListener(new WindowAdapter()
@@ -201,7 +206,7 @@ public class Neptune {
         mTable.addDropController(controller);
     }
     
-    public static void showDialog(Component c) {
-        JOptionPane.showMessageDialog(c, "Trying to save settings on clicking X... Not working yet");
-    }
+//    public static void showDialog(Component c) {
+//        JOptionPane.showMessageDialog(c, "Trying to save settings on clicking X... Not working yet");
+//    }
 }

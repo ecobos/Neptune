@@ -55,6 +55,7 @@ public class RunMVC {
         table.addDropController(controller);
         table.addMouseController(controller);
         slider.addMouseController(controller);
+        player.setWindowListerner(controller);
         if(tree != null){
             tree.setTreeMouseListener(controller);
         }
