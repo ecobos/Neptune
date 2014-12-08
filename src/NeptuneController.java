@@ -96,6 +96,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     public void addMenuView(MenuComponent menu) {
         this.mMenuBar = menu;
+        mMenuBar.restoreSongHistory(mDatabase.getSongHistory(), this);
     }
 
     public void addTextView(TextAreaComponent text) {
@@ -475,6 +476,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         } else if (source == mMenuBar.getDeleteSongObj() || source == mTable.getMenuRemoveObj()) {
             System.out.println("Remove song from library.");
             String filePath = mTable.getSongSelectedFilepath();
+            System.out.println("Filepath: " + filePath);
             if (isPlaylistView) {
                 System.out.println("playlist delete");
                 mDatabase.deleteSongFromPlaylist(mDatabase.getSongID(mTable.getSongSelectedFilepath()), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
@@ -511,32 +513,34 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 //            }
 
         } else if (source == mTable.getSongsTableObj()){
-            /*    
+            //*    
             int row = mTable.getSongsTableObj().rowAtPoint(e.getPoint());
-                int next = row + 1;
-                int prev = row - 1;
-                mTable.setSongSelected();
-                int col = mTable.getSongsTableObj().columnAtPoint(e.getPoint());
-                Object selectedObj = mTable.getSongsTableObj().getValueAt(row, col);
-                Object filepathObj = mTable.getSongsTableObj().getValueAt(row, 0);
-                mTable.setSongSelectedFilepath((String)filepathObj);
-                System.out.println("Filepath: " + filepathObj);
-                if (next >= mTable.getSongsCount()) {
-                    next = 0;
-                }
-                //mTable.setNextSongPlayingIndex(next);
-                filepathObj = mTable.getSongsTableObj().getValueAt(next, 0);
-                System.out.println("Next filepath: " + filepathObj);
-                mTable.setNextSongFilepath((String)filepathObj);
-                if (prev < 0) {
-                    prev = mTable.getSongsCount() - 1; //wrap around the index
-                }
-                filepathObj = mTable.getSongsTableObj().getValueAt(prev, 0);
-                System.out.println("Previous filepath: " + filepathObj);
-                System.out.println("Selected object: " + selectedObj.toString());
-                mTable.setPrevSongFilepath((String)filepathObj);
-                System.out.println("Next: " + next + " Prev: " + prev);
-                */
+            //int next = row + 1;
+            //int prev = row - 1;
+            mTable.setSongSelected();
+            int col = mTable.getSongsTableObj().columnAtPoint(e.getPoint());
+            Object selectedObj = mTable.getSongsTableObj().getValueAt(row, col);
+            Object filepathObj = mTable.getSongsTableObj().getValueAt(row, 0);
+            mTable.setSongSelectedFilepath((String)filepathObj);
+            mTable.scrollToSelectedSong();
+            System.out.println("Selected object: " + selectedObj + "\nFilepath: " + filepathObj);
+            /*
+            if (next >= mTable.getSongsCount()) {
+                next = 0;
+            }
+            //mTable.setNextSongPlayingIndex(next);
+            filepathObj = mTable.getSongsTableObj().getValueAt(next, 0);
+            System.out.println("Next filepath: " + filepathObj);
+            mTable.setNextSongFilepath((String)filepathObj);
+            if (prev < 0) {
+                prev = mTable.getSongsCount() - 1; //wrap around the index
+            }
+            filepathObj = mTable.getSongsTableObj().getValueAt(prev, 0);
+            System.out.println("Previous filepath: " + filepathObj);
+            System.out.println("Selected object: " + selectedObj.toString());
+            mTable.setPrevSongFilepath((String)filepathObj);
+            System.out.println("Next: " + next + " Prev: " + prev);
+            //*/
                 System.out.println("The Jtable was clicked");
         }else if (source == mTree.getJTreeObj()) {
             String leafName = mTree.getSelectedLeafName();

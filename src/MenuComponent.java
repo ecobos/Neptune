@@ -230,6 +230,13 @@ public class MenuComponent implements Observer{
         mDecVol.addActionListener(controller);
         mShuffle.addActionListener(controller);
         mRepeat.addActionListener(controller);
+        
+    }
+    
+    public void restoreSongHistory(Vector<Vector> songHistoryFromDatabase, ActionListener controller){
+        for(Vector<String> aSong: songHistoryFromDatabase ){
+            addSongToHistory(aSong, controller);
+        }
     }
     
     public void addSongToHistory(Vector<String> data, ActionListener controller){

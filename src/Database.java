@@ -372,7 +372,7 @@ public class Database extends Observable {
                 this.getDBConnection();
             }
 
-            PreparedStatement pstat = conn.prepareStatement("INSERT INTO SongHistory(filepath, title, artist, album, year, comment, genre, track_num, length, songOrder) VALUES(?,?,?,?,?,?,?,?,?,?)");
+            PreparedStatement pstat = conn.prepareStatement("INSERT INTO SongHistory(filepath, title, artist, album, year, comment, genre, track_num, length, song_ID, songOrder) VALUES(?,?,?,?,?,?,?,?,?,?,?)");
             pstat.setString(1, songToStore.get(0)); // value of filepath
             pstat.setString(2, songToStore.get(1)); // value of title
             pstat.setString(3, songToStore.get(2)); // value of artist
@@ -382,7 +382,8 @@ public class Database extends Observable {
             pstat.setString(7, songToStore.get(6)); // value genre
             pstat.setString(8, songToStore.get(5)); // value of comments
             pstat.setString(9, songToStore.get(8)); // value of song length in secs
-            pstat.setInt(10, theOrder); // order of songs in history
+            pstat.setString(10, songToStore.get(9)); // song_ID
+            pstat.setInt(11, theOrder); // order of songs in history
             System.out.println(pstat);
             pstat.executeUpdate();
           
@@ -390,6 +391,38 @@ public class Database extends Observable {
             System.out.println("Unable to insert song. Song may already exist");
             e.printStackTrace();
         }
+    }
+    
+    public Vector<Vector> getSongHistory() {
+        Vector<Vector> songsVector = new Vector<Vector>();
+        try {
+            this.getDBConnection();
+            Statement stat = conn.createStatement();
+            String query = "select * from SongHistory order by songOrder desc";
+            ResultSet rs = stat.executeQuery(query);
+
+            while (rs.next()) {
+                Vector<String> vectorData = new Vector<String>();
+                vectorData.addElement(rs.getString("filepath"));
+                vectorData.addElement(rs.getString("title"));
+                vectorData.addElement(rs.getString("artist"));
+                vectorData.addElement(rs.getString("album"));
+                vectorData.addElement(rs.getString("year"));
+                vectorData.addElement(rs.getString("track_num"));
+                vectorData.addElement(rs.getString("genre"));
+                vectorData.addElement(rs.getString("comment"));
+                vectorData.addElement(Integer.toString(rs.getInt("song_ID")));
+                vectorData.addElement(rs.getString("length"));
+                songsVector.addElement(vectorData);
+            }
+           
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Unable to get songs from database.");
+
+        }
+        return songsVector;
     }
     
     /**

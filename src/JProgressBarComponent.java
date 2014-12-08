@@ -30,13 +30,13 @@ public class JProgressBarComponent {
         mProgressPanel.setBackground(Color.DARK_GRAY);
         mProgressPanel.setForeground(Color.DARK_GRAY);
 
-        elapsedTime = new JTextArea(4, 4);
+        elapsedTime = new JTextArea(1, 4);
         elapsedTime.setFont(new Font("Monospaced", Font.PLAIN, 16));
         elapsedTime.setBackground(Color.DARK_GRAY);
         elapsedTime.setForeground(Color.WHITE);
         elapsedTime.setEditable(false);
 
-        remainingTime = new JTextArea(4, 4);
+        remainingTime = new JTextArea(1, 4);
         remainingTime.setFont(new Font("Monospaced", Font.PLAIN, 16));
         remainingTime.setBackground(Color.DARK_GRAY);
         remainingTime.setForeground(Color.WHITE);
@@ -44,11 +44,11 @@ public class JProgressBarComponent {
 
         progressBar = new JProgressBar();
         progressBar.setValue(0);
-        progressBar.setPreferredSize(new Dimension(400, 7));
+        progressBar.setPreferredSize(new Dimension(400, 10));
         progress = 0;
         eMinutes = 0;
         eMinSecFormat = ":";
-        mProgressPanel.setMinimumSize(new Dimension(500, 7));
+        mProgressPanel.setMinimumSize(new Dimension(500, 10));
 
         mProgressPanel.add(elapsedTime);
         mProgressPanel.add(progressBar);
