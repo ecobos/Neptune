@@ -210,8 +210,12 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             this.deleteSongSelected();
 
         } else if (source == mMenuBar.getDeleteSongPlaylistObj()) {
-            System.out.println("playlist delete");
-            mDatabase.deleteSongFromPlaylist(mTable.getSongSelectedID(), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
+//            System.out.println("playlist delete");
+//            mDatabase.deleteSongFromPlaylist(mTable.getSongSelectedID(), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
+//            mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(mTable.getTableName()));
+            
+            System.out.println("song association deleted from playlist");
+            mDatabase.deleteSongFromPlaylist(mDatabase.getSongID(mTable.getSongSelectedFilepath()), mDatabase.getPlaylistIDfromName(mTable.getTableName()));
             mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(mTable.getTableName()));
         } // PLAY SONG NOT IN LIBRARY
         else if (source == mMenuBar.getSongNotInLibObj()) {
@@ -748,7 +752,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     @Override
     public void windowOpened(WindowEvent e) {
         
-        JOptionPane.showMessageDialog(e.getComponent(), "Peace biotch!");
+        //JOptionPane.showMessageDialog(e.getComponent(), "HAAAAAAAAAiiiiiii!!!!");
     }
 
     @Override
@@ -766,7 +770,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         for(int i=0;i<5;i++) { 	 	
             mDatabase.setPlayerSettings(fields[i], mTable.getChangedSettings()[i]); 	 	
         }
-        JOptionPane.showMessageDialog(e.getComponent(), "Peace out!");
+        JOptionPane.showMessageDialog(e.getComponent(), "Your data is the weakest link, goodbye");
     }
 
     @Override
