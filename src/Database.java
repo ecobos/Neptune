@@ -281,6 +281,7 @@ public class Database extends Observable {
      * after a song is added or deleted from the library
      */
     private void updateSongsFromDatabase() {
+        
         Vector<Vector> songsVector = new Vector<Vector>();
         try {
             this.getDBConnection();
@@ -310,6 +311,12 @@ public class Database extends Observable {
 
         }
     }
+    
+    public void updateLibrary(){
+        setChanged();
+        updateSongsFromDatabase();
+    }
+    
 
     /**
      * Checks for an empty string, it it is empty then return a default value

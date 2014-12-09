@@ -1,17 +1,19 @@
 
 public class RunMVC {
-    
+    private Database database;
+    private NeptuneController parentControl;
     /**
      * Class constructor
      * 
      * @param loadFromPlaylist True means that its a playlist view
      * @param playlistName Only used if first parameter is true
      */
-    RunMVC(boolean loadFromPlaylist, String playlistName){
-        Database database = new Database();
+    RunMVC(boolean loadFromPlaylist, String playlistName, NeptuneController theParent){
+        database = new Database();
         SongsTableComponent table;
         JTreeComponent tree = null;
         Neptune player = null;
+        NeptuneController parent = null;
         
         
         MenuComponent menu = new MenuComponent(loadFromPlaylist);
@@ -23,20 +25,19 @@ public class RunMVC {
         if(loadFromPlaylist == true){
             table = new SongsTableComponent(playlistName,database.getPlaylistSongsFromDatabase(playlistName), loadFromPlaylist, database.getPlayerSettings());
             player = new Neptune(table, buttons, menu, text, slider, progress);
+            parent = theParent;
         }else {
             table = new SongsTableComponent("Library",database.getSongsFromDatabase(), loadFromPlaylist, database.getPlayerSettings());
             tree = new JTreeComponent(database.getPlaylistsFromDatabase());
             player = new Neptune(table, buttons, menu, text, tree, slider, progress);
         }
-        
-        
-        
+                
 	//tell Model about View. 
         database.addObserver(table);
         //database.addObserver();
 
 	//create Controller. tell it about Model and View, initialise model
-	NeptuneController controller = new NeptuneController(loadFromPlaylist);
+	NeptuneController controller = new NeptuneController(loadFromPlaylist, parent);
 	controller.addPlayerView(player);
         controller.addDatabaseModel(database);
         controller.addButtonsView(buttons);
@@ -58,9 +59,14 @@ public class RunMVC {
         player.setWindowListerner(controller);
         if(tree != null){
             tree.setTreeMouseListener(controller);
-        }
-        
+        }    
     }
+    
+    
+    public void updateLibraryData(){
+        parentControl.updateLibraryData();
+    }
+    
     
     /**
      * Main class. Just runs the program
@@ -68,6 +74,6 @@ public class RunMVC {
      * @param args none
      */
     public static void main(String args[]) {
-        RunMVC spawn = new RunMVC(false, "Pop");
+        RunMVC spawn = new RunMVC(false, "Pop", null);
     }
 }
