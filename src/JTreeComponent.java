@@ -133,6 +133,13 @@ public class JTreeComponent implements Observer {
         mPlaylistTree.removeSelectionRow(1);
         mPlaylistTree.addSelectionRow(treeIndex+1);
     }
+    /**
+     * sets the library as the focus node when a new window is created
+     */
+    public void setLibraryFocus() {
+        mPlaylistTree.removeSelectionInterval(0, mPlaylistTree.getRowCount());
+        mPlaylistTree.addSelectionRow(0);
+    }
     
     // assume the node to be deleted already exist within playlist table
     // I'm not sure if this will work since it might be making a new copy of a 

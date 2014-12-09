@@ -582,7 +582,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             }
 
         } else if (source == mTree.getNewWindowObj()) { //formerly mTree.getTreeObj()
-
+            
             int selRow = mTree.getJTreeObj().getRowForLocation(e.getX(), e.getY());
             //String name = mTree.getJTreeObj().getSelectionPath().getLastPathComponent().toString();
             String leafName = mTree.getSelectedLeafName();
@@ -592,6 +592,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             for(int i=0;i<5;i++) { 	 	
                 mDatabase.setPlayerSettings(fields[i], mTable.getChangedSettings()[i]); 	 	
             } 
+            mTree.setLibraryFocus();
             RunMVC playlist = new RunMVC(true, leafName);
             isPlaylistView = false;
             mTable.update(mDatabase, mDatabase.getSongsFromDatabase());
