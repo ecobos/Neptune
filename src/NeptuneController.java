@@ -261,7 +261,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             }
         } // PLAY BUTTON
         else if (source == mButtons.getPlayObj() || source == mMenuBar.getPlayControlObj() || e.getActionCommand().equals("Space")) {
-           if (!mMenuBar.isShuffleEnabled() || mMenuBar.isShuffleEnabled() && player.getStatus() == 0 || player.getStatus() == -1) {//{mMenuBar.isShuffleEnabled() && (player.getStatus() == 0 || player.getStatus() == -1)) {//If shuffle is on and a song is playing shuffle to next
+           if (!mMenuBar.isShuffleEnabled() || mMenuBar.isShuffleEnabled() && (player.getStatus() >= -1 || player.getStatus() <= 2)) {//{mMenuBar.isShuffleEnabled() && (player.getStatus() == 0 || player.getStatus() == -1)) {//If shuffle is on and a song is playing shuffle to next
            
                 //System.out.println("Shuffle songs on next" + player.getStatus());
                 //mTable.setSongPlayingIndex(randomNum);
@@ -324,8 +324,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             }
         } // NEXT SONG BUTTON
         else if (source == mButtons.getNextObj() || source == mMenuBar.getNextControlObj() || e.getActionCommand().equals("RightArrow")) {
-            if (mMenuBar.isShuffleEnabled() && player.getStatus() == 0) {//If shuffle is on and a song is playing shuffle to next
-                rand = new Random();
+            if (mMenuBar.isShuffleEnabled() && player.getStatus() != -1) {//If shuffle is on and a song is playing shuffle to next
+                rand = new Random(System.currentTimeMillis());
                 randomNum = rand.nextInt(mTable.getSongsCount());
                 int row = randomNum;
                 int next = row + 1;
@@ -373,7 +373,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             }
         } // PREVIOUS SONG BUTTON
         else if (source == mButtons.getPrevObj() || source == mMenuBar.getPrevControlObj() || e.getActionCommand().equals("LeftArrow")) {
-            if (mMenuBar.isShuffleEnabled() && player.getStatus() == 0) { //If shuffle is on and a song is playing shuffle
+            if (mMenuBar.isShuffleEnabled() && player.getStatus() != -1) { //If shuffle is on and a song is playing shuffle
                 rand = new Random();
                 randomNum = rand.nextInt(mTable.getSongsCount());
                 int row = randomNum;
@@ -438,7 +438,13 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         else if (source == mMenuBar.getGoToCurrentControlObj() || e.getActionCommand().equals("Current")) {
 //            System.out.println("Go to current song");
 //            mTable.getSongSelected();
-            mTable.scrollToSongPlaying();
+            if(player.getStatus() == 0){
+                mTable.scrollToSongPlaying();
+            } else{
+                mTable.setSongSelected();
+                mTable.scrollToSelectedSong();
+            }
+            
             //int index = mTable.getCurrentSongPlayingIndex();
             //mTable.setSelectionInterval(index);
         } // CONTROLS - PLAY SONG
