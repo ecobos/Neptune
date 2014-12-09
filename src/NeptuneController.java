@@ -60,18 +60,23 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
     private JProgressBarComponent mProgress;
     private JTreeComponent mTree;
     private boolean isPlaylistView;
+    private NeptuneController parent;
+
 
     /**
      * Class constructor.
      *
      * @param isPlaylistview True means that its a playlist view
      */
-    NeptuneController(boolean isPlaylistview) {
+    NeptuneController(boolean isPlaylistview, NeptuneController theParent) {
         player = new BasicPlayer();
         player.addBasicPlayerListener(this);
         playerControl = (BasicController) player;
         isPaused = false;
         isPlaylistView = isPlaylistview;
+        if(theParent != null){
+            parent = theParent;
+        }
     }
 
     public void addPlayerView(Neptune mp) {
@@ -148,6 +153,10 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 JOptionPane.showMessageDialog(mTable.getMenuAddObj(), "Song does not exist!");
             }
         }
+    }
+    
+    public void updateLibraryData(){
+        mDatabase.updateLibrary();
     }
 
     /**
@@ -597,7 +606,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 mDatabase.setPlayerSettings(fields[i], mTable.getChangedSettings()[i]); 	 	
             } 
             mTree.setLibraryFocus();
-            RunMVC playlist = new RunMVC(true, leafName);
+            RunMVC playlist = new RunMVC(true, leafName, this);
             isPlaylistView = false;
             mTable.update(mDatabase, mDatabase.getSongsFromDatabase());
             neptune.setPlaylistMenuBar(isPlaylistView);
@@ -662,11 +671,12 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
     @Override
     public void drop(DropTargetDropEvent drop) {
+        
         drop.acceptDrop(DnDConstants.ACTION_COPY);
         Transferable transferable = drop.getTransferable();
         DataFlavor[] dataTypes = transferable.getTransferDataFlavors();
         mTable.setBackground(Color.white);
-        for (DataFlavor type : dataTypes) {
+      for (DataFlavor type : dataTypes) {
 
             try {
                 if (type.isFlavorJavaFileListType()) {
@@ -681,6 +691,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                         if (isPlaylistView) {
                             mDatabase.addSongToPlaylist(mDatabase.getSongID(file.getAbsolutePath()), playlistID);
                             mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(mTable.getTableName()));
+                            parent.updateLibraryData();
                         }
                     }
                 }
@@ -693,6 +704,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 
         }
         System.out.println("Something was dropped here...is it yours?");
+        
     }
 
     @Override

@@ -158,6 +158,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(9).setPreferredWidth(0);
 
         mSongsTable.doLayout();
+        mSongsTable.setDragEnabled(true);
 
         mScrollPane = new JScrollPane(mSongsTable);
         mScrollPane.setWheelScrollingEnabled(true);
