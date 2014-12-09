@@ -118,7 +118,7 @@ public class Neptune {
         
         //mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
         mainFrame.setJMenuBar(mMenuBar.getMenu());
-        mainFrame.setMinimumSize(new Dimension(1330, 660));
+        mainFrame.setMinimumSize(new Dimension(1370, 660));
         mainFrame.add(mContentPanel);
         mainFrame.pack();
         mainFrame.setVisible(true);

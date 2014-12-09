@@ -198,7 +198,14 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         // QUIT BUTTON
         if (source == mMenuBar.getQuitObj()) {
             System.out.println("Quit was clicked.");
-             String[] fields = {"showArtist", "showAlbum", "showYear", "showGenre", "showComments"}; 	 	
+            JMenu history = mMenuBar.getSongsHistory();
+            int historySize = history.getItemCount();
+            JMenuItem item;
+            for(int x = 0; x < historySize; x++){
+                item = history.getItem(x);       
+                mDatabase.storeSong((Vector<String>)item.getClientProperty("data"), x);
+            }
+            String[] fields = {"showArtist", "showAlbum", "showYear", "showGenre", "showComments"}; 	 	
             for(int i=0;i<5;i++) { 	 	
                 mDatabase.setPlayerSettings(fields[i], mTable.getChangedSettings()[i]); 	 	
             }
@@ -432,8 +439,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
 //            System.out.println("Go to current song");
 //            mTable.getSongSelected();
             mTable.scrollToSongPlaying();
-            int index = mTable.getCurrentSongPlayingIndex();
-            mTable.setSelectionInterval(index);
+            //int index = mTable.getCurrentSongPlayingIndex();
+            //mTable.setSelectionInterval(index);
         } // CONTROLS - PLAY SONG
        /* else if (source == mMenuBar.getPlayControlObj() || e.getActionCommand().equals("Space")) {
             if (mMenuBar.isShuffleEnabled()) {
@@ -521,6 +528,9 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         else if (e.getActionCommand().equals("historyItem")){
             JMenuItem historyItem = (JMenuItem) e.getSource();
             Vector<String> theData = (Vector<String>)historyItem.getClientProperty("data");
+            mTable.removeHighlight();
+            mTable.setSongPlayingIndex(theData);
+            mTable.scrollToSongPlaying();
             playSong(theData);
         }
 

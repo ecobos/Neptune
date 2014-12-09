@@ -1,6 +1,7 @@
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
@@ -10,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Observable;
@@ -163,6 +165,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mScrollPane = new JScrollPane(mSongsTable);
         mScrollPane.setWheelScrollingEnabled(true);
         mScrollPane.getBounds();
+        mScrollPane.setAutoscrolls(true);
         mScrollBar = mScrollPane.getVerticalScrollBar();
         //vertical.setValue( vertical.getMaximum() );
 
@@ -262,13 +265,45 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
     public void scrollToSongPlaying() {
         System.out.println("Scroll: " + mCurrentSongPlayingIndex);
         mSongsTable.setRowSelectionInterval(mCurrentSongPlayingIndex, mCurrentSongPlayingIndex);
-        mSongsTable.scrollRectToVisible(new Rectangle(mSongsTable.getCellRect(mCurrentSongPlayingIndex, 0, true)));
+//        Rectangle rec = mSongsTable.getCellRect(mCurrentSongPlayingIndex, 1, true);
+//        mSongsTable.scrollRectToVisible(rec);
+        mSongsTable.scrollRectToVisible(mSongsTable.getCellRect(mCurrentSongPlayingIndex,1, true));
+        //scrollToVisible(mSongsTable, mCurrentSongPlayingIndex, 1);
+        
     }
+    
+    public void removeHighlight(){
+        mSongsTable.removeRowSelectionInterval(mCurrentSongPlayingIndex, mCurrentSongPlayingIndex);
+    }
+    
+//    public static void scrollToVisible(JTable table, int rowIndex, int vColIndex) {
+//        if (!(table.getParent() instanceof JViewport)) {
+//            return;
+//        }
+//        JViewport viewport = (JViewport)table.getParent();
+//
+//        // This rectangle is relative to the table where the
+//        // northwest corner of cell (0,0) is always (0,0).
+//        Rectangle rect = table.getCellRect(rowIndex, vColIndex, true);
+//
+//        // The location of the viewport relative to the table
+//        Point pt = viewport.getViewPosition();
+//
+//        // Translate the cell location so that it is relative
+//        // to the view, assuming the northwest corner of the
+//        // view is (0,0)
+//        rect.setLocation(rect.x-pt.x, rect.y-pt.y);
+//
+//        table.scrollRectToVisible(rect);
+//
+//        // Scroll the area into view
+//        //viewport.scrollRectToVisible(rect);
+//    }
 
     public void scrollToSelectedSong() {
         getSongSelected();
         mSongsTable.getSelectionModel().setSelectionInterval(mSongSelectedIndex, mSongSelectedIndex);
-        mSongsTable.scrollRectToVisible(new Rectangle(mSongsTable.getCellRect(mSongSelectedIndex+3, 0, true)));
+        mSongsTable.scrollRectToVisible(new Rectangle(mSongsTable.getCellRect(mSongSelectedIndex, 1, true)));
     }
 
     /**
@@ -299,7 +334,26 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         }
         mCurrentSongPlayingIndex = next;
     }
-
+    
+    public void setSongPlayingIndex(Vector<String> theSong){
+        int indexEstimate = 0;
+        String[] theArray = new String[mSongsVector.size()];
+        
+        for(int i=0; i< mSongsVector.size(); i++) {
+            theArray[i] = (String)mSongsVector.get(i).get(1);
+        }
+        
+        
+        Arrays.sort(theArray);
+        theArray.toString();
+        for(int x = 0; x < theArray.length ; x++){
+            if(theSong.get(1).equals(theArray[x])){
+                mCurrentSongPlayingIndex = x;
+                break;
+            }
+        }
+    }
+    
     public void setPrevSongPlayingIndex() {
         int prev = mCurrentSongPlayingIndex - 1;
         if (prev < 0) {
