@@ -74,6 +74,9 @@ public class JProgressBarComponent {
         rMinutes = songLength - progress;
         rHours = rMinutes / 3600;
         rSeconds = rMinutes % 60;
+        if(rSeconds < 0){
+            rSeconds = 0;
+        }
         rMinutes = rMinutes / 60;
 
         eMinSecFormat = (eSeconds < 10) ? ":0" : ":";

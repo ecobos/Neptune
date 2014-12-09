@@ -76,9 +76,9 @@ public class MenuComponent implements Observer{
         mGotoCurrentSong.setActionCommand("Current");
         mGotoCurrentSong.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, Event.CTRL_MASK));
         
-        mIncVol = new JMenuItem("Increase Volume", KeyEvent.VK_I);
+        mIncVol = new JMenuItem("Increase Volume", KeyEvent.VK_O);
         mIncVol.setActionCommand("IncVol");
-        mIncVol.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, Event.CTRL_MASK));
+        mIncVol.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
         
         mDecVol = new JMenuItem("Decrease Volume", KeyEvent.VK_D);
         mDecVol.setActionCommand("DecVol");
@@ -97,8 +97,10 @@ public class MenuComponent implements Observer{
         mControls.add(mPrev);
         mControls.add(mPlayRecent);
         mControls.add(mGotoCurrentSong);
+        mControls.addSeparator();
         mControls.add(mIncVol);
         mControls.add(mDecVol);
+        mControls.addSeparator();
         mControls.add(mShuffle);
         mControls.add(mRepeat);
 

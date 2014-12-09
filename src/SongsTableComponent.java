@@ -132,8 +132,8 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         sorter.toggleSortOrder(mLastSortOrder); // sort on title 	 	
         mSongsTable.setRowSorter(sorter);
 
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        //DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        //centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
         mSongsTable.getColumnModel().getColumn(0).setMinWidth(0);
         mSongsTable.getColumnModel().getColumn(0).setMaxWidth(0);
@@ -142,14 +142,14 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(2).setMinWidth(200);
         mSongsTable.getColumnModel().getColumn(3).setMinWidth(100);
         mSongsTable.getColumnModel().getColumn(4).setMinWidth(100);
-        mSongsTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        //mSongsTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
         mSongsTable.getColumnModel().getColumn(5).setMinWidth(0);
         mSongsTable.getColumnModel().getColumn(5).setMaxWidth(0);
         mSongsTable.getColumnModel().getColumn(5).setPreferredWidth(0);
         mSongsTable.getColumnModel().getColumn(6).setMinWidth(100);
         //mSongsTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
         mSongsTable.getColumnModel().getColumn(7).setMinWidth(100);
-        mSongsTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+        //mSongsTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
         mSongsTable.getColumnModel().getColumn(8).setMinWidth(0);
         mSongsTable.getColumnModel().getColumn(8).setMaxWidth(0);
         mSongsTable.getColumnModel().getColumn(8).setPreferredWidth(0);
@@ -261,14 +261,14 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
 
     public void scrollToSongPlaying() {
         System.out.println("Scroll: " + mCurrentSongPlayingIndex);
-        mSongsTable.getSelectionModel().setSelectionInterval(mCurrentSongPlayingIndex, mCurrentSongPlayingIndex);
+        mSongsTable.setRowSelectionInterval(mCurrentSongPlayingIndex, mCurrentSongPlayingIndex);
         mSongsTable.scrollRectToVisible(new Rectangle(mSongsTable.getCellRect(mCurrentSongPlayingIndex, 0, true)));
     }
 
     public void scrollToSelectedSong() {
         getSongSelected();
         mSongsTable.getSelectionModel().setSelectionInterval(mSongSelectedIndex, mSongSelectedIndex);
-        mSongsTable.scrollRectToVisible(new Rectangle(mSongsTable.getCellRect(mSongSelectedIndex, 0, true)));
+        mSongsTable.scrollRectToVisible(new Rectangle(mSongsTable.getCellRect(mSongSelectedIndex+3, 0, true)));
     }
 
     /**
@@ -718,8 +718,8 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
          */
         mTableModel.setDataVector(mSongsVector, COLUMN_HEADER);
         //mTableModel.fireTableDataChanged();
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(SwingConstants.LEFT); // changed to left
+        //DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        //centerRenderer.setHorizontalAlignment(SwingConstants.LEFT); // changed to left
 
         mSongsTable.getColumnModel().getColumn(0).setMinWidth(0);
         mSongsTable.getColumnModel().getColumn(0).setMaxWidth(0);
@@ -728,14 +728,14 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
         mSongsTable.getColumnModel().getColumn(2).setMinWidth(200);
         mSongsTable.getColumnModel().getColumn(3).setMinWidth(100);
         mSongsTable.getColumnModel().getColumn(4).setMinWidth(100);
-        mSongsTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer); // issue
+        //mSongsTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer); // issue
         mSongsTable.getColumnModel().getColumn(5).setMinWidth(0);
         mSongsTable.getColumnModel().getColumn(5).setMaxWidth(0);
         mSongsTable.getColumnModel().getColumn(5).setPreferredWidth(0);
         mSongsTable.getColumnModel().getColumn(6).setMinWidth(100);
         //mSongsTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
         mSongsTable.getColumnModel().getColumn(7).setMinWidth(100);
-        mSongsTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+        //mSongsTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
         mSongsTable.getColumnModel().getColumn(8).setMinWidth(0);
         mSongsTable.getColumnModel().getColumn(8).setMaxWidth(0);
         mSongsTable.getColumnModel().getColumn(8).setPreferredWidth(0);

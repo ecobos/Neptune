@@ -144,6 +144,8 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 //int money = Integer.parseInt(somethign);
                 mProgress.setLength(Integer.parseInt(songToPlay.get(9)));
                 playerControl.play();
+                playerControl.setGain(mSlider.getValue());
+                
                 if(!mMenuBar.isShuffleEnabled()){
                     mMenuBar.addSongToHistory(songToPlay, this);
                 }
@@ -201,7 +203,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                 mDatabase.setPlayerSettings(fields[i], mTable.getChangedSettings()[i]); 	 	
             }
             neptune.destroyFrame();
-            //System.exit(0);
+            System.exit(0);
         } // ABOUT BUTTON        
         else if (source == mMenuBar.getAboutObj()) {
             System.out.println("Clicked the about section");
@@ -427,9 +429,11 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
             mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(playlistName)); // updates library table with empty playlist set
         } // CONTROLS - GO TO CURRENT SONG
         else if (source == mMenuBar.getGoToCurrentControlObj() || e.getActionCommand().equals("Current")) {
-            System.out.println("Go to current song");
-            mTable.getSongSelected();
-            mTable.scrollToSelectedSong();
+//            System.out.println("Go to current song");
+//            mTable.getSongSelected();
+            mTable.scrollToSongPlaying();
+            int index = mTable.getCurrentSongPlayingIndex();
+            mTable.setSelectionInterval(index);
         } // CONTROLS - PLAY SONG
        /* else if (source == mMenuBar.getPlayControlObj() || e.getActionCommand().equals("Space")) {
             if (mMenuBar.isShuffleEnabled()) {
@@ -725,7 +729,10 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
                         if (isPlaylistView) {
                             mDatabase.addSongToPlaylist(mDatabase.getSongID(file.getAbsolutePath()), playlistID);
                             mTable.update(mDatabase, mDatabase.getPlaylistSongsFromDatabase(mTable.getTableName()));
-                            parent.updateLibraryData();
+                            if(parent != null){
+                                parent.updateLibraryData();
+                            }
+                            
                         }
                     }
                 }
@@ -856,7 +863,7 @@ public class NeptuneController implements ActionListener, MouseListener, DropTar
         for(int i=0;i<5;i++) { 	 	
             mDatabase.setPlayerSettings(fields[i], mTable.getChangedSettings()[i]); 	 	
         }
-        JOptionPane.showMessageDialog(e.getComponent(), "Your data is the weakest link, goodbye");
+        //JOptionPane.showMessageDialog(e.getComponent(), "Your data is the weakest link, goodbye");
     }
 
     @Override
