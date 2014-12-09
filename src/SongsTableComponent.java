@@ -591,7 +591,7 @@ public class SongsTableComponent implements Observer /*, MouseListener, DropTarg
 
     public int getSongSelectedID() {
         Vector currentSongRow = mSongsVector.get(mSongSelectedIndex);
-        return Integer.parseInt((String) currentSongRow.lastElement());
+        return Integer.parseInt((String) currentSongRow.get(8));
     }
 
     /**
